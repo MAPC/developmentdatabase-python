@@ -4,7 +4,7 @@ from django.contrib.gis.db import models
 # Create your models here.
 
 class Project(models.Model):
-    taz = models.IntegerField()
+    taz = models.IntegerField('TAZ')
     name = models.CharField(max_length=200)
     status_choices = (
                       ('completed', 'Completed'),
@@ -26,7 +26,7 @@ class Project(models.Model):
     ed_sqft = models.FloatField('Square footage', blank=True, null=True)
     ed_type = models.CharField('Type of development', max_length=200, blank=True)
     comments = models.TextField('Comments', blank=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    last_modified = models.DateTimeField(editable=False, auto_now=True)
     confirmed = models.BooleanField()
     confirmed_by = models.CharField(max_length=30, blank=True)
     located = models.BooleanField()
