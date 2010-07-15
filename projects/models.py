@@ -4,7 +4,8 @@ from django.contrib.gis.db import models
 # Create your models here.
 
 class Project(models.Model):
-    taz = models.IntegerField('TAZ')
+    # taz = models.IntegerField('TAZ')
+    taz = models.ForeignKey('projects.Taz')
     name = models.CharField(max_length=200)
     status_choices = (
                       ('completed', 'Completed'),
@@ -44,4 +45,21 @@ class Project(models.Model):
     # Returns the string representation of the model.
     def __unicode__(self):
         return self.name
+    
+class Taz(models.Model):
+    """ taz, town_id, town_name, x, y """
+    taz_id = models.IntegerField('TAZ', primary_key=True)
+    town_id = models.IntegerField('Town ID')
+    town_name = models.CharField(max_length=50)
+    x = models.FloatField('Centroid X')
+    y = models.FloatField('Centroid Y')
+    
+    # GeoDjango-specific: a geometry field and overriding 
+    # the default manager with a GeoManager instance.
+    geometry = models.MultiPolygonField(srid=26986)
+    objects = models.GeoManager()
+    
+    # Returns the string representation of the model.
+    def __unicode__(self):
+        return self.taz_id
     

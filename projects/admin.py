@@ -15,3 +15,12 @@ class ProjectAdmin(admin.GeoModelAdmin):
     search_fields = ['comments']
     
 admin.site.register(Project, ProjectAdmin)
+
+class TazAdmin(admin.GeoModelAdmin):
+     list_display = ('taz_id','town_name')
+     fieldsets = (
+       (None, {'fields': (('taz_id','town_id','town_name'))}),
+       ('Map', {'fields': ('geometry',)}),
+     )
+ 
+admin.site.register(Taz, TazAdmin)
