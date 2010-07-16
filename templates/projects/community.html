@@ -1,9 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block header %}
+
 {% if project_list %}
-    <ul>
-    {% for project in project_list %}
-        <li><a href="/project/{{ project.id }}/">{{ project.name }}</a> ({{ project.taz.town_name }}, TAZ: {{ project.taz }}) </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
+	<h2>{{ project_list.0.taz.town_name }}</h2>
 {% endif %}
+
+{% endblock %}
+
+{% block table %}
+
+{% if project_list %}
+	<table>
+		<tr>
+			<th>TAZ</th>
+			<th>Name</th>
+			<th>Status</th>
+		</tr>
+			
+		{% for project in project_list %}
+	
+		<tr>
+			<td>{{ project.taz }}</td>
+			<td><a href="/project/{{ project.id }}/">{{ project.name }}</a></td>
+			<td>{{ project.get_status_display }}</td>
+		</tr>
+	
+		{% endfor %}
+			
+	</table>
+{% else %}
+    <p>No projects found.</p>
+{% endif %}
+
+{% endblock %}

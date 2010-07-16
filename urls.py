@@ -6,9 +6,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Example:
-    # (r'^communitycomments/', include('communitycomments.foo.urls')),
     (r'^$', 'communitycomments.projects.views.index'),
-    (r'^(?P<community_name>\w+)/$', 'communitycomments.projects.views.community'),
     (r'^project/(?P<project_id>\d+)/$', 'communitycomments.projects.views.detail'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
@@ -17,4 +15,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
+    
+    # Filter by community name
+    (r'^(?P<community_name>\w+)/$', 'communitycomments.projects.views.community'),
 )

@@ -59,6 +59,10 @@ class Taz(models.Model):
     geometry = models.MultiPolygonField(srid=26986)
     objects = models.GeoManager()
     
+    # So the model is pluralized correctly in the admin.
+    class Meta:
+        verbose_name_plural = "TAZs"
+    
     # Returns the string representation of the model.
     def __unicode__(self):
         return self.taz_id
