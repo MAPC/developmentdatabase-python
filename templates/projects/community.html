@@ -1,0 +1,9 @@
+{% if project_list %}
+    <ul>
+    {% for project in project_list %}
+        <li><a href="/project/{{ project.id }}/">{{ project.name }}</a> ({{ project.taz.town_name }}, TAZ: {{ project.taz }}) </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}

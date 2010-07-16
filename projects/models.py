@@ -1,4 +1,3 @@
-from django.db import models
 from django.contrib.gis.db import models
 
 # Create your models here.
@@ -48,11 +47,12 @@ class Project(models.Model):
     
 class Taz(models.Model):
     """ taz, town_id, town_name, x, y """
-    taz_id = models.IntegerField('TAZ', primary_key=True)
+    taz_id = models.CharField('TAZ ID', max_length=10, primary_key=True)
     town_id = models.IntegerField('Town ID')
     town_name = models.CharField(max_length=50)
-    x = models.FloatField('Centroid X')
-    y = models.FloatField('Centroid Y')
+    x = models.FloatField()
+    y = models.FloatField()
+    
     
     # GeoDjango-specific: a geometry field and overriding 
     # the default manager with a GeoManager instance.

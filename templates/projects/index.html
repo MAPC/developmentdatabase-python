@@ -1,7 +1,7 @@
-{% if latest_project_list %}
+{% if project_list %}
     <ul>
-    {% for project in latest_project_list %}
-        <li><a href="/projects/{{ project.id }}/">{{ project.name }}</a> ({{ project.taz }}) </li>
+    {% for project in project_list %}
+        <li><a href="/project/{{ project.id }}/">{{ project.name }}</a> ({{ project.taz.town_name }}, TAZ: {{ project.taz }}) </li>
     {% endfor %}
     </ul>
 {% else %}
