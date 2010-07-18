@@ -6,7 +6,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Example:
-    (r'^$', 'communitycomments.projects.views.index'),
+	url(r'^$', 'communitycomments.projects.views.index', name='home'),
+
     (r'^project/(?P<project_id>\d+)/$', 'communitycomments.projects.views.detail'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
@@ -18,4 +19,7 @@ urlpatterns = patterns('',
     
     # Filter by community name
     (r'^(?P<community_name>\w+)/$', 'communitycomments.projects.views.community'),
+
+	# (r'^game', direct_to_template,
+    #        { 'template': 'game.html' }, 'game'	),
 )
