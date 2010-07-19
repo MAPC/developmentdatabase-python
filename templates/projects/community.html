@@ -9,29 +9,26 @@
 
 {% endblock %}
 
-{% block table %}
+{% block inlinejs %}
 
-{% if project_list %}
-	<table>
-		<tr>
-			<th>TAZ</th>
-			<th>Name</th>
-			<th>Status</th>
-		</tr>
-			
-		{% for project in project_list %}
+$(document).ready(function() {
 	
-		<tr>
-			<td>{{ project.taz }}</td>
-			<td><a href="/project/{{ project.id }}/">{{ project.name }}</a></td>
-			<td>{{ project.get_status_display }}</td>
-		</tr>
+	CC.featurecollection.projects = {
+		"type": "FeatureCollection", 
+	  		"features": [
+	    		{"geometry": {
+	        		"type": "GeometryCollection", 
+	        		"geometries": [
+						{% for project in project_list %}
+						{{ project.location.geojson|safe }},
+						{% endfor %}
+	        		]}
+				}
+	  		]
+	};
 	
-		{% endfor %}
-			
-	</table>
-{% else %}
-    <p>No projects found.</p>
-{% endif %}
+	init('project_list');
+	
+});
 
 {% endblock %}

@@ -41,8 +41,36 @@
 			
 			<div class="span-24 last" id="table">
 				
-				{% block table %}{% endblock %}
+			{% block table %}
 				
+				{% if project_list %}
+				
+				<table>
+					<tr>
+						<th>TAZ</th>
+						<th>Name</th>
+						<th>Status</th>
+					</tr>
+						
+					{% for project in project_list %}
+				
+					<tr>
+						<td>{{ project.taz }}</td>
+						<td><a href="/project/{{ project.id }}/">{{ project.name }}</a></td>
+						<td>{{ project.get_status_display }}</td>
+					</tr>
+				
+					{% endfor %}
+						
+				</table>
+	
+				{% else %}
+			    
+				<p>No projects found.</p>
+				
+				{% endif %}
+				
+			{% endblock %}			
 				
 			</div>
 			
@@ -55,6 +83,12 @@
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>	
 		
 		<script type="text/javascript" src="{{ MEDIA_URL }}js/main.js"></script>
+		
+		<script type="text/javascript">
+			
+			{% block inlinejs %}{% endblock %}
+			
+		</script>
 		
     </body>
 </html>

@@ -5,13 +5,16 @@ from communitycomments.projects.models import Project, Taz
 from django.template import RequestContext
 
 def index(request):
-    project_list = Project.objects.all().order_by('-last_modified')[:25]
+    project_list = Project.objects.transform(900913).all().order_by('-last_modified')[:25]
+    
+    # stations = GreenlineStation.objects.transform(900913).all()
+    
     return render_to_response('projects/index.html', 
                               {'project_list': project_list}, 
                               context_instance=RequestContext(request))
 
 def community(request, community_name):
-    project_list = Project.objects.filter(taz__town_name__iexact=community_name)[:25]
+    project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=community_name)[:25]
     return render_to_response('projects/community.html', 
                               {'project_list': project_list}, 
                               context_instance=RequestContext(request))

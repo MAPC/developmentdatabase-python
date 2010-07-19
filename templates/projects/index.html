@@ -1,17 +1,26 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block inlinejs %}
 
-{% block table %}
+$(document).ready(function() {
+	
+	CC.featurecollection.projects = {
+		"type": "FeatureCollection", 
+	  		"features": [
+	    		{"geometry": {
+	        		"type": "GeometryCollection", 
+	        		"geometries": [
+						{% for project in project_list %}
+						{{ project.location.geojson|safe }},
+						{% endfor %}
+	        		]}
+				}
+	  		]
+	};
+	
+	init('project_list');
 
-{% if project_list %}
-    <ul>
-    {% for project in project_list %}
-        <li><a href="/project/{{ project.id }}/">{{ project.name }}</a> ({{ project.taz.town_name }}, TAZ: {{ project.taz }}) </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+});
 
 {% endblock %}
