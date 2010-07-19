@@ -1,4 +1,6 @@
 from django.contrib.gis.db import models
+# from django import forms
+from django.forms import ModelForm, Textarea
 
 # Create your models here.
 
@@ -44,7 +46,21 @@ class Project(models.Model):
     # Returns the string representation of the model.
     def __unicode__(self):
         return self.name
-    
+
+
+class ProjectForm(ModelForm):
+    class Meta:
+        model = Project
+        fields = ('name', 'status', 'comments')
+        widgets = {
+           'comments': Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
+
+"""
+class ProjectForm(forms.Form):
+    name = forms.CharField(max_length=200)
+"""
+   
 class Taz(models.Model):
     """ taz, town_id, town_name, x, y """
     taz_id = models.CharField('TAZ ID', max_length=10, primary_key=True)

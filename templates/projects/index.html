@@ -1,6 +1,41 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block projectlist %}
+
+	<p><button>Add New Project</button></p>
+	
+	{% if project_list %}
+	
+	<table>
+		<tr>
+			<th>Community</th>
+			<th>Name</th>
+			<th>Status</th>
+			<th>&nbsp;</th>
+		</tr>
+			
+		{% for project in project_list %}
+	
+		<tr>
+			<td><a href="/{{ project.taz.town_name }}">{{ project.taz.town_name }}</a></td>
+			<td><a href="/project/{{ project.id }}/">{{ project.name }}</a></td>
+			<td>{{ project.get_status_display }}</td>
+			<td><a href="/project/{{ project.id }}/edit/">edit</a></td>
+		</tr>
+	
+		{% endfor %}
+			
+	</table>
+
+	{% else %}
+    
+	<p>No projects found.</p>
+	
+	{% endif %}
+	
+{% endblock %}
+
 {% block inlinejs %}
 
 $(document).ready(function() {
@@ -19,7 +54,7 @@ $(document).ready(function() {
 	  		]
 	};
 	
-	init('project_list');
+	init("project_list");
 
 });
 

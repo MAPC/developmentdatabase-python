@@ -9,6 +9,7 @@ urlpatterns = patterns('',
 	url(r'^$', 'communitycomments.projects.views.index', name='home'),
 
     (r'^project/(?P<project_id>\d+)/$', 'communitycomments.projects.views.detail'),
+    (r'^project/(?P<project_id>\d+)/edit/$', 'communitycomments.projects.views.edit'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

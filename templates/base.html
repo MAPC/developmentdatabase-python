@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>{% block title %}{% endblock %} | Community Comments</title>
+        <title>{% block title %}{% endblock %}Community Comments</title>
 		<meta name="description" content="Community Comments">
 		<meta name="keywords" content="Boston, Metro, Planning, Projections">
 		<meta name="author" content="MAPC">
@@ -40,38 +40,11 @@
 			</div>
 			
 			<div class="span-24 last" id="table">
-				
-			{% block table %}
-				
-				{% if project_list %}
-				
-				<table>
-					<tr>
-						<th>TAZ</th>
-						<th>Name</th>
-						<th>Status</th>
-					</tr>
-						
-					{% for project in project_list %}
-				
-					<tr>
-						<td>{{ project.taz }}</td>
-						<td><a href="/project/{{ project.id }}/">{{ project.name }}</a></td>
-						<td>{{ project.get_status_display }}</td>
-					</tr>
-				
-					{% endfor %}
-						
-				</table>
-	
-				{% else %}
-			    
-				<p>No projects found.</p>
-				
-				{% endif %}
-				
-			{% endblock %}			
-				
+			
+			{% block projectlist %}{% endblock %}	
+			
+			{% block editform %}{% endblock %}
+			
 			</div>
 			
 		</div>
