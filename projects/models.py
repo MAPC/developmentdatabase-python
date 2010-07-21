@@ -6,14 +6,14 @@ from django.forms import ModelForm, Textarea
 
 class Project(models.Model):
     # taz = models.IntegerField('TAZ')
-    taz = models.ForeignKey('projects.Taz')
+    taz = models.ForeignKey('projects.Taz', editable=False)
     name = models.CharField(max_length=200)
     status_choices = (
                       ('completed', 'Completed'),
                       ('construction', 'Under construction'),
                       ('planning', 'Advanced planning/permitting'),
                       )
-    status = models.CharField(max_length=20, blank=True, choices=status_choices)
+    status = models.CharField(max_length=20, blank=True, null=True, choices=status_choices)
     compl_date = models.DateField('Estimated date of completion', blank=True, null=True)
     area = models.FloatField('Project area [acres]', blank=True, null=True)
     redevelopment = models.BooleanField('Redevelopment of developed land?')
@@ -23,7 +23,11 @@ class Project(models.Model):
     hd_cluster = models.BooleanField('Cluster subdivision?')
     hd_over55 = models.BooleanField('Over 55?')
     hd_mixeduse = models.BooleanField('Mixed use project?')
-    hd_40b = models.BooleanField('40B? 40R?')
+    zoning_tools = (
+                    ('40B', 'Chapter 40B Comprehensive Permit Law'),
+                    ('40R', 'Chapter 40R Smart Growth Zoning and Housing Production Law')
+                    )
+    zoning_tool = models.CharField(max_length=10, blank=True, null=True, choices=zoning_tools)
     ed_jobs = models.IntegerField('Jobs or Job losses', blank=True, null=True)
     ed_sqft = models.FloatField('Square footage', blank=True, null=True)
     ed_type = models.CharField('Type of development', max_length=200, blank=True)
@@ -39,6 +43,12 @@ class Project(models.Model):
     location = models.PointField(srid=26986) # SRS mass state plane
     objects = models.GeoManager()
 
+    # find taz for project
+#    def save(self, *args, **kwargs):
+#        try find taz, otherwise don't validate form! ...probably move to form_save
+#        self.taz = Taz.objects.filter(geometry__contains=self.location)[0].taz_id
+#        super(Project, self).save(*args, **kwargs)
+        
     # So the model is pluralized correctly in the admin.
     class Meta:
         verbose_name_plural = "Projects"
@@ -46,6 +56,9 @@ class Project(models.Model):
     # Returns the string representation of the model.
     def __unicode__(self):
         return self.name
+    
+    def town_name(self):
+        return self.taz.town_name
 
 
 class ProjectForm(ModelForm):
