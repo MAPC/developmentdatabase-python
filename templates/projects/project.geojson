@@ -1,0 +1,10 @@
+{
+	"type": "FeatureCollection",
+	"features": [{ 
+		"type": "Feature", 
+		"properties": 
+			{ "Name": "{{ project.name }}" }, 
+		"geometry": 
+			{{ project.location.geojson|safe }} 
+	}]
+}

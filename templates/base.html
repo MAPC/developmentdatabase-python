@@ -29,17 +29,23 @@
 		
 		<div class="container">
 			<div class="span-24 last" id="head">
-				<h1><a href="{% url home %}">Community Comments</a></h1>
+				<h1><a href="{% url home %}">Boston Regional Transportation Plan</a></h1>
+				<h2>MAPC Projections Update - New Developments</h2>
 				{% block header %}{% endblock %}
 				
   			</div>
 			
+			{% block map %}
+			
 			<div class="span-24 last">
+					
 				<div id="map"></div>
 				
 			</div>
 			
-			<div class="span-24 last" id="table">
+			{% endblock %}
+			
+			<div class="span-24 last">
 			
 			{% block projectlist %}{% endblock %}	
 			

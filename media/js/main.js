@@ -23,7 +23,9 @@ function init(section) {
 			new OpenLayers.Control.Navigation(),
 			new OpenLayers.Control.PanZoom(),
 			new OpenLayers.Control.LayerSwitcher(),
-			new OpenLayers.Control.Attribution()]
+			new OpenLayers.Control.Attribution()],
+		projection: CC.projection.OSM,
+		displayProjection: CC.projection.WGS84,
 	});
 	
 	CC.layer.osm = new OpenLayers.Layer.OSM(
@@ -47,7 +49,8 @@ function init(section) {
 CC.section.project_list = function () {
 
 	CC.layer.projects = new OpenLayers.Layer.Vector("Projects", {
-		format: OpenLayers.Format.GeoJSON
+		format: OpenLayers.Format.GeoJSON,
+		projection: CC.projection.WGS84
 		// styleMap: CC.styles.projects
 	});
 	
@@ -61,16 +64,15 @@ CC.section.project_list = function () {
 
 CC.section.project_edit = function () {
 
-	CC.layer.project = new OpenLayers.Layer.Vector(CC.project.title, {
-		format: OpenLayers.Format.GeoJSON
+	CC.layer.project = new OpenLayers.Layer.GML(CC.project.title, "/project/" + CC.project.id + "/geojson/", {
+		format: OpenLayers.Format.GeoJSON,
+		projection: CC.map.displayProjection
 		// styleMap: CC.styles.projects
 	});
 	
-	CC.layer.project.addFeatures(CC.geojson.read(CC.featurecollection.project));
-	
 	CC.map.addLayers([CC.layer.project]);
 	
-	CC.map.setCenter(CC.project.location, 13);
+	CC.map.setCenter(CC.project.location.transform(CC.projection.WGS84, CC.projection.OSM), 13);
 	
 	// drag action
 	CC.map.addControl(new OpenLayers.Control.MousePosition());

@@ -1,6 +1,13 @@
 from django.contrib.gis.db import models
 # from django import forms
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, HiddenInput
+
+import datetime
+from django.core.exceptions import ValidationError
+# required for finding taz for project location
+# from django.contrib.gis.geos import *
+
+from django.template import RequestContext
 
 # Create your models here.
 
@@ -31,12 +38,14 @@ class Project(models.Model):
     ed_jobs = models.IntegerField('Jobs or Job losses', blank=True, null=True)
     ed_sqft = models.FloatField('Square footage', blank=True, null=True)
     ed_type = models.CharField('Type of development', max_length=200, blank=True)
-    comments = models.TextField('Comments', blank=True)
+    comments = models.TextField('Comments', blank=True, null=True)
     last_modified = models.DateTimeField(editable=False, auto_now=True)
     confirmed = models.BooleanField()
     confirmed_by = models.CharField(max_length=30, blank=True)
     located = models.BooleanField()
     located_by = models.CharField(max_length=30, blank=True)
+    
+    # user = models.ForeignKey(User, editable=False)
     
     # GeoDjango-specific: a geometry field and overriding 
     # the default manager with a GeoManager instance.
@@ -44,11 +53,31 @@ class Project(models.Model):
     objects = models.GeoManager()
 
     # find taz for project
-#    def save(self, *args, **kwargs):
-#        try find taz, otherwise don't validate form! ...probably move to form_save
-#        self.taz = Taz.objects.filter(geometry__contains=self.location)[0].taz_id
-#        super(Project, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+#        # try find taz, otherwise don't validate form! ...probably move to form_save
+        # l = 'POINT (243617.8433000145596452 901646.1310999535489827)'
+#        t = Taz.objects.get(geometry__contains=l)
+#        self.taz = t
+         # dummy until we figure another solution out
+        # if not self.id:
+        # try
+        self.taz = Taz.objects.get(geometry__contains=self.location)
+            # geometry__contains=self.location
+        #    self.last_modified = datetime.date.today()
+        # self.comments = self.location
         
+        self.last_modified = datetime.datetime.today()
+        # return super(Entry, self).save()
+        
+        
+        super(Project, self).save(*args, **kwargs)
+        
+# topology rule
+#    def clean(self): 
+#        tv = Taz.objects.filter(geometry__contains=self.location)
+#        if len(tv) <= 1:
+#            raise ValidationError(len('Location is not within a TAZ. Please re-locate project.'))
+           
     # So the model is pluralized correctly in the admin.
     class Meta:
         verbose_name_plural = "Projects"
@@ -64,10 +93,14 @@ class Project(models.Model):
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ('name', 'status', 'comments')
+        fields = ['name', 'status', 'comments', 'location']
+        exclude = ['taz']
         widgets = {
            'comments': Textarea(attrs={'cols': 80, 'rows': 20}),
+           'location': HiddenInput(),
         }
+    
+
 
 """
 class ProjectForm(forms.Form):

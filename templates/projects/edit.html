@@ -17,7 +17,15 @@
 
 {% block editform %}
 
+
+<form action="/project/{{ project.id }}/edit/" method="post">
+
+{% csrf_token %}
+
 {{ form.as_p }}
+
+<input type="submit" value="Submit" />
+</form>
 
 {% endblock %}
 
@@ -27,21 +35,11 @@
 $(document).ready(function() {
 	
 	CC.project.title = "{{ project.name }}";
+	CC.project.id = "{{ project.id }}"
 	
+	// to better adjust zoomlevel and map-extent
 	CC.project.location = new OpenLayers.LonLat({{ project.location.x }}, {{ project.location.y }});
-	
-	CC.featurecollection.project = {
-		"type": "FeatureCollection", 
-	  		"features": [
-	    		{"geometry": {
-	        		"type": "GeometryCollection", 
-	        		"geometries": [
-						{{ project.location.geojson|safe }}
-	        		]}
-				}
-	  		]
-	};
-	
+
 	init("project_edit");
 	
 });
