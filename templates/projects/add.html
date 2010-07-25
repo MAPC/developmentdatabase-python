@@ -34,16 +34,13 @@ Add a new project in townname |
 
 $(document).ready(function() {
 	
-	$("#id_location").val("POINT ({{ map_center.x }} {{ map_center.y }})");
-	
 	// CC.project.title = "{{ project.name }}";
 	// CC.project.id = "{{ project.id }}"
 	
-	CC.project.locationLonLat = new OpenLayers.LonLat({{ map_center.x }}, {{ map_center.y }});
-	
 	// to better adjust zoomlevel and map-extent
-
-
+	CC.project.locationLonLat = new OpenLayers.LonLat({{ map_center.x }}, {{ map_center.y }});
+	$("#id_location").val("POINT (" + CC.project.locationLonLat.lon + " " +  CC.project.locationLonLat.lat + ")");
+	
 	init("project_add");
 	
 });

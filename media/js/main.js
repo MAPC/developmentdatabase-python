@@ -102,9 +102,26 @@ CC.section.project_add = function () {
 	// drag action
 	CC.map.addControl(new OpenLayers.Control.MousePosition());
 	CC.drag = new OpenLayers.Control.DragFeature(CC.layer.project);
-	CC.map.addControl(CC.drag);
-	CC.drag.activate();
+	CC.drag.onComplete = function(f) {
 
+		CC.project.locationLonLat = new OpenLayers.LonLat(CC.project.locationFeature.geometry.x, CC.project.locationFeature.geometry.y).transform(CC.projection.OSM, CC.projection.WGS84);
+		
+		// write loc coord to hidden geometry field (in WGS84)
+		$("#id_location").val("POINT (" + CC.project.locationLonLat.lon + " " +  CC.project.locationLonLat.lat + ")");
+	};
+	
+	CC.map.addControl(CC.drag);
+	CC.drag.activate();	
+	
+	var click = new OpenLayers.Control.SelectFeature(
+	   [CC.layer.project],
+	   {
+	       clickout: true, toggle: false,
+	       multiple: false, hover: false,
+	       toggleKey: "ctrlKey", // ctrl key removes from selection
+	       multipleKey: "shiftKey" // shift key adds to selection
+	   }
+	);
 }
 
 
