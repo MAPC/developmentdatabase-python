@@ -41,17 +41,22 @@ def add(request):
 		if form.is_valid():
 			entry = form.save(commit=False)
 			pnt =  GEOSGeometry(entry.location)
-            pnt.srid = 4326
-            pnt.transform(26986)
-            entry.location = pnt
-            entry.save()            
-            return HttpResponseRedirect('/') # Redirect after POST
+			pnt.srid = 4326
+			pnt.transform(26986)
+			entry.location = pnt
+			entry.save()
+			return HttpResponseRedirect('/') # Redirect after POST
             # return HttpResponse('ok')
 	else:
-		form = ProjectForm(request.POST)
+		form = ProjectForm()
+		# FIXME: hardcoded town for testing, should be user user-town
+		town = Taz.objects.filter(town_name='Boston').collect()
+		town.transform(4326)
+		map_center = town.centroid
 	
 	return render_to_response('projects/add.html', 
-								{'form': form,}, 
+								{'form': form,
+								'map_center': map_center}, 
 								context_instance=RequestContext(request))
     
 def edit(request, project_id):

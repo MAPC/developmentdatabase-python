@@ -40,7 +40,10 @@ function init(section) {
 	  		break;	
 		case "project_edit":
 			CC.section.project_edit();
-	  		break;	
+	  		break;
+		case "project_add":
+			CC.section.project_add();
+		  	break;
 		default:
 			CC.map.setCenter(new OpenLayers.LonLat(-71.08, 42.34).transform(CC.projection.WGS84, CC.projection.OSM), 9);
 	}
@@ -73,6 +76,28 @@ CC.section.project_edit = function () {
 	CC.map.addLayers([CC.layer.project]);
 	
 	CC.map.setCenter(CC.project.location.transform(CC.projection.WGS84, CC.projection.OSM), 13);
+	
+	// drag action
+	CC.map.addControl(new OpenLayers.Control.MousePosition());
+	CC.drag = new OpenLayers.Control.DragFeature(CC.layer.project);
+	CC.map.addControl(CC.drag);
+	CC.drag.activate();
+
+}
+
+CC.section.project_add = function () {
+
+	CC.layer.project = new OpenLayers.Layer.Vector("New Project Location");
+	
+	CC.project.locationLonLat.transform(CC.projection.WGS84, CC.projection.OSM);
+	
+	CC.project.locationPoint = new OpenLayers.Geometry.Point(CC.project.locationLonLat.lon, CC.project.locationLonLat.lat)
+	CC.project.locationFeature = new OpenLayers.Feature.Vector(CC.project.locationPoint);
+	
+	CC.layer.project.addFeatures([CC.project.locationFeature]);
+	CC.map.addLayers([CC.layer.project]);
+	
+	CC.map.setCenter(CC.project.locationLonLat, 10);
 	
 	// drag action
 	CC.map.addControl(new OpenLayers.Control.MousePosition());
