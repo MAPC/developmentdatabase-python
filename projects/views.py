@@ -34,6 +34,25 @@ def geojson(request, project_id):
      return render_to_response('projects/project.geojson', 
                               {'project': project}, 
                               context_instance=RequestContext(request))
+
+def add(request):
+	if request.method == 'POST':
+		form = ProjectForm(request.POST)
+		if form.is_valid():
+			entry = form.save(commit=False)
+			pnt =  GEOSGeometry(entry.location)
+            pnt.srid = 4326
+            pnt.transform(26986)
+            entry.location = pnt
+            entry.save()            
+            return HttpResponseRedirect('/') # Redirect after POST
+            # return HttpResponse('ok')
+	else:
+		form = ProjectForm(request.POST)
+	
+	return render_to_response('projects/add.html', 
+								{'form': form,}, 
+								context_instance=RequestContext(request))
     
 def edit(request, project_id):
     

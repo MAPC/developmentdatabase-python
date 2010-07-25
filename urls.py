@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 
     (r'^project/(?P<project_id>\d+)/$', 'communitycomments.projects.views.detail'),
     (r'^project/(?P<project_id>\d+)/edit/$', 'communitycomments.projects.views.edit'),
+	(r'^project/add/$', 'communitycomments.projects.views.add'),
     # (r'^project/(?P<project_id>\d+)/save/$', 'communitycomments.projects.views.save'),
     (r'^project/(?P<project_id>\d+)/geojson/$', 'communitycomments.projects.views.geojson'),
 
