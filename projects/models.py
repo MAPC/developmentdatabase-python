@@ -13,7 +13,7 @@ from django.template import RequestContext
 
 class Project(models.Model):
     # taz = models.IntegerField('TAZ')
-    taz = models.ForeignKey('projects.Taz', editable=False)
+    taz = models.ForeignKey('projects.Taz', to_field='taz_id', editable=False)
     name = models.CharField(max_length=200)
     status_choices = (
                       ('completed', 'Completed'),
@@ -109,7 +109,7 @@ class ProjectForm(forms.Form):
    
 class Taz(models.Model):
     """ taz, town_id, town_name, x, y """
-    taz_id = models.CharField('TAZ ID', max_length=10, primary_key=True)
+    taz_id = models.CharField('TAZ ID', max_length=10, unique=True)
     town_id = models.IntegerField('Town ID')
     town_name = models.CharField(max_length=50)
     x = models.FloatField()

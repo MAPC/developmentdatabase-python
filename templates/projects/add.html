@@ -10,7 +10,7 @@ Add a new project in townname |
 
 {% block header %}
 
-	<h3>Add a new project in townname</h3>
+	<h3>Add a new project in {{ town }}</h3>
 
 {% endblock %}
 
@@ -33,6 +33,8 @@ Add a new project in townname |
 {% block inlinejs %}
 
 $(document).ready(function() {
+
+	CC.town = "{{ town }}";
 	
 	// CC.project.title = "{{ project.name }}";
 	// CC.project.id = "{{ project.id }}"

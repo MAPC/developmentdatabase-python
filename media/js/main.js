@@ -1,4 +1,5 @@
 var CC = {
+	baseurl: "/",
 	map: {}, // the map
 	symbolizer: {}, // icons
 	styles: {}, // map styles
@@ -34,26 +35,51 @@ function init(section) {
 	
 	CC.map.addLayers([CC.layer.osm]);
 	
+	// default center
+	CC.map.setCenter(new OpenLayers.LonLat(-71.08, 42.34).transform(CC.projection.WGS84, CC.projection.OSM), 9);
+	
 	switch (section) {
+		case "index":
+			CC.section.project_list();
+			CC.section.town_taz();
+	  		break;
 		case "project_list":
 			CC.section.project_list();
 	  		break;	
 		case "project_edit":
 			CC.section.project_edit();
+			CC.section.town_taz();
 	  		break;
 		case "project_add":
 			CC.section.project_add();
+			CC.section.town_taz();
 		  	break;
 		default:
 			CC.map.setCenter(new OpenLayers.LonLat(-71.08, 42.34).transform(CC.projection.WGS84, CC.projection.OSM), 9);
 	}
 }
 
+CC.section.town_taz = function () {
+		
+	CC.layer.taz = new OpenLayers.Layer.Vector("TAZ", {
+		format: OpenLayers.Format.GeoJSON
+		// styleMap: CC.styles.projects
+	});
+	
+	// FIXME: ajax loading with OL (loadend event)
+	$.getJSON(CC.baseurl + CC.town + "/taz/geojson/", function(data) {
+  		CC.featurecollection.taz = data;
+		CC.layer.taz.addFeatures(CC.geojson.read(CC.featurecollection.taz));		
+		// CC.map.zoomToExtent(CC.layer.taz.getDataExtent());
+	});
+
+	CC.map.addLayers([CC.layer.taz]);	
+}
+
 CC.section.project_list = function () {
 
 	CC.layer.projects = new OpenLayers.Layer.Vector("Projects", {
 		format: OpenLayers.Format.GeoJSON,
-		projection: CC.projection.WGS84
 		// styleMap: CC.styles.projects
 	});
 	
@@ -67,7 +93,7 @@ CC.section.project_list = function () {
 
 CC.section.project_edit = function () {
 
-	CC.layer.project = new OpenLayers.Layer.GML(CC.project.title, "/project/" + CC.project.id + "/geojson/", {
+	CC.layer.project = new OpenLayers.Layer.GML(CC.project.title, CC.baseurl + "project/" + CC.project.id + "/geojson/", {
 		format: OpenLayers.Format.GeoJSON,
 		projection: CC.map.displayProjection
 		// styleMap: CC.styles.projects
@@ -97,7 +123,7 @@ CC.section.project_add = function () {
 	CC.layer.project.addFeatures([CC.project.locationFeature]);
 	CC.map.addLayers([CC.layer.project]);
 	
-	CC.map.setCenter(CC.project.locationLonLat, 10);
+	CC.map.setCenter(CC.project.locationLonLat, 14);
 	
 	// drag action
 	CC.map.addControl(new OpenLayers.Control.MousePosition());
@@ -113,6 +139,7 @@ CC.section.project_add = function () {
 	CC.map.addControl(CC.drag);
 	CC.drag.activate();	
 	
+	
 	var click = new OpenLayers.Control.SelectFeature(
 	   [CC.layer.project],
 	   {
@@ -122,6 +149,7 @@ CC.section.project_add = function () {
 	       multipleKey: "shiftKey" // shift key adds to selection
 	   }
 	);
+	
 }
 
 

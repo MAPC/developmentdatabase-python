@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class UserProfile(models.Model):  
 	user = models.ForeignKey(User, unique=True)
-	municipality = models.CharField(max_length=50)
+	town = models.CharField(max_length=50)
 	position = models.CharField(max_length=100)
 
 	# view.py

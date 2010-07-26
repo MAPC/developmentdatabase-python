@@ -1,7 +1,29 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block map %}{% endblock %}
+{% block header %}
+
+	{% if user.is_authenticated %}
+
+	<h3>Projects in {{ town }}</h3>
+
+	{% endif %}
+
+{% endblock %}
+
+{% block map %}
+
+{% if user.is_authenticated %}
+
+<div class="span-24 last">
+					
+	<div id="map"></div>
+				
+</div>
+
+{% endif %}
+
+{% endblock %}
 
 {# block projectlist #}
 
@@ -37,8 +59,6 @@
 {# endblock #}
 
 {% block projectlist %}
-
-	<p><button>Add New Project</button></p>
 	
 	{% if project_list %}
 	
@@ -63,6 +83,8 @@
 			
 	</table>
 
+	<p><a href='/project/add/'>Add New Project</a></p>
+
 	{% else %}
     
 	<p>No projects found.</p>
@@ -75,22 +97,24 @@
 
 $(document).ready(function() {
 	
-	CC.featurecollection.projects = {
-		"type": "FeatureCollection", 
-	  		"features": [
-	    		{"geometry": {
-	        		"type": "GeometryCollection", 
-	        		"geometries": [
-						{% for project in project_list %}
-						{{ project.location.geojson|safe }},
-						{% endfor %}
-	        		]}
-				}
-	  		]
-	};
+	CC.town = "{{ town }}";
 	
-	init("project_list");
-
+	CC.featurecollection.projects = {
+	"type": "FeatureCollection", 
+  		"features": [
+    		{"geometry": {
+        		"type": "GeometryCollection", 
+        		"geometries": [
+					{% for project in project_list %}
+					{{ project.location.geojson|safe }},
+					{% endfor %}
+        		]}
+			}
+  		]
+	};
+		
+	init("index");
+	
 });
 
 {% endblock %}

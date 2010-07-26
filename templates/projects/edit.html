@@ -10,7 +10,7 @@
 
 {% block header %}
 
-	<h2>{{ project.name }}</h2>
+	<h3>{{ project.name }}</h3>
 
 {% endblock %}
 
@@ -33,6 +33,8 @@
 {% block inlinejs %}
 
 $(document).ready(function() {
+	
+	CC.town = "{{ project.taz.town_name }}";
 	
 	CC.project.title = "{{ project.name }}";
 	CC.project.id = "{{ project.id }}"
