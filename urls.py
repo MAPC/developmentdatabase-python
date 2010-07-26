@@ -2,6 +2,8 @@ from django.conf.urls.defaults import *
 
 from django.views.generic.simple import direct_to_template
 
+from registration.views import register
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -9,10 +11,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Example:
 	url(r'^$', 'communitycomments.projects.views.index', name='home'),
-    
-    ('^watershed/$', direct_to_template, {
-        'template': 'watershed.json'
-    }),
     
     (r'^project/(?P<project_id>\d+)/$', 'communitycomments.projects.views.detail'),
     (r'^project/(?P<project_id>\d+)/edit/$', 'communitycomments.projects.views.edit'),
@@ -29,8 +27,13 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
     
-    # Filter by community name
     
+    
+    
+    
+    (r'^accounts/', include('accounts.urls')),
+    
+    # Filter by community name
     (r'^(?P<community_name>\w+)/taz/geojson/$', 'communitycomments.projects.views.town_taz_geojson'),
     (r'^(?P<community_name>\w+)/$', 'communitycomments.projects.views.community'),
     # (r'^(?P<community_name>\w+)/$', 'communitycomments.projects.views.community')

@@ -21,4 +21,5 @@ class UserProfile(models.Model):
 
 	# post_save.connect(create_user_profile, sender=User)
 	
+	
 User.profile = property(lambda u: UserProfile.objects.get_or_create(user=u)[0])
