@@ -4,14 +4,16 @@ from django.utils.translation import ugettext_lazy as _
 from accounts.models import UserProfile
 from registration.models import RegistrationProfile
 
-from projects.models import Town
+from projects.models import Taz, Town
 
 attrs_dict = { 'class': 'required' }
 
 class ExtendedRegistrationForm(RegistrationForm):
-    town = forms.ModelChoiceField(queryset=Town.objects.all(), empty_label="(Nothing)")
+    town = forms.ModelChoiceField(label='Municipality', queryset=Town.objects.filter(geometry__bboverlaps=Taz.objects.all().collect()).order_by('town_name'), empty_label='No Municipality selected')
     position = forms.CharField(label='Position in Municipality', max_length=100, widget=forms.TextInput(attrs=attrs_dict))
     
+    # filter(geometry__bboverlaps=Taz.objects.all().collect())
+    # all()
     # town = forms.CharField(label='Municipality', max_length=50, widget=forms.TextInput(attrs=attrs_dict))
     # t = Taz.objects.all().values('town_name').annotate(count=Count('town_name')).order_by('town_name')
     # forms.ModelChoiceField(queryset=Taz.objects.all().values('town_name').annotate(count=Count('town_name')).order_by('town_name'), empty_label="(Nothing)")

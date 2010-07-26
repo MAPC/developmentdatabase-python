@@ -14,8 +14,8 @@ from vectorformats.Formats import Django, GeoJSON
 def index(request):
     # project_list = Project.objects.transform(900913).all().order_by('-last_modified')[:25]
     
-    user_town = request.user.profile.town
-    project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=user_town)[:25]
+    user_town = request.user.profile.town.town_name
+    project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=user_town)
     
     return render_to_response('projects/index.html', 
                               {'project_list': project_list,
@@ -23,7 +23,7 @@ def index(request):
                               context_instance=RequestContext(request))
 
 def community(request, community_name):
-    project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=community_name)[:25]
+    project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=community_name)
     return render_to_response('projects/community.html', 
                               {'project_list': project_list}, 
                               context_instance=RequestContext(request))
@@ -43,7 +43,7 @@ def project_geojson(request, project_id):
 
 def add(request):
     
-    user_town = request.user.profile.town
+    user_town = request.user.profile.town.town_name
     
     if request.method == 'POST':
 		form = ProjectForm(request.POST)
@@ -58,7 +58,6 @@ def add(request):
             # return HttpResponse('ok')
     else:
         form = ProjectForm()
-        # FIXME: hardcoded town for testing, should be user user-town
         town = Taz.objects.filter(town_name=user_town).collect()
         town.transform(4326)
         map_center = town.centroid

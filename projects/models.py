@@ -40,9 +40,9 @@ class Project(models.Model):
     ed_type = models.CharField('Type of development', max_length=200, blank=True)
     comments = models.TextField('Comments', blank=True, null=True)
     last_modified = models.DateTimeField(editable=False, auto_now=True)
-    confirmed = models.BooleanField()
+    confirmed = models.BooleanField('Confirmed, project information is correct.')
     confirmed_by = models.CharField(max_length=30, blank=True)
-    located = models.BooleanField()
+    located = models.BooleanField('Located, project location is correct.')
     located_by = models.CharField(max_length=30, blank=True)
     
     # user = models.ForeignKey(User, editable=False)
@@ -93,11 +93,13 @@ class Project(models.Model):
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'status', 'comments', 'location']
+        # fields = ['name', 'status', 'comments', 'location']
         exclude = ['taz']
         widgets = {
            'comments': Textarea(attrs={'cols': 80, 'rows': 20}),
            'location': HiddenInput(),
+           'confirmed_by': HiddenInput(), 
+           'located_by': HiddenInput(),
         }
     
 
@@ -130,8 +132,8 @@ class Taz(models.Model):
         return self.taz_id
     
 class Town(models.Model):
-    town_id = models.IntegerField('Municipality ID')
-    town_name = models.CharField('Municipality Name', max_length=50)
+    town_id = models.IntegerField('Municipality ID', unique=True)
+    town_name = models.CharField('Municipality Name', max_length=50, unique=True)
     type = models.CharField(max_length=10)
     
     # GeoDjango-specific: a geometry field and overriding 

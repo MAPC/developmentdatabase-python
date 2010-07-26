@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User 
+from projects.models import Town
 
 class UserProfile(models.Model):  
 	user = models.ForeignKey(User, unique=True)
-	town = models.CharField(max_length=50)
+	town = models.ForeignKey('projects.Town')
 	position = models.CharField(max_length=100)
 
 	# view.py

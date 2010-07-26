@@ -42,6 +42,8 @@ $(document).ready(function() {
 	// to better adjust zoomlevel and map-extent
 	CC.project.locationLonLat = new OpenLayers.LonLat({{ map_center.x }}, {{ map_center.y }});
 	$("#id_location").val("POINT (" + CC.project.locationLonLat.lon + " " +  CC.project.locationLonLat.lat + ")");
+	$("#id_located_by").val("{{ user.username }}");
+	$("#id_confirmed_by").val("{{ user.username }}");
 	
 	init("project_add");
 	
