@@ -89,6 +89,39 @@ class Project(models.Model):
     def town_name(self):
         return self.taz.town_name
 
+#    the short elegant version
+#    def get_fields(self):
+#        return [(field.name, field.value_to_string(self)) for field in Project._meta.fields]
+
+#   more control over fields 
+    def get_all_fields(self):
+        """Returns a list of all field names on the instance."""
+        """http://stackoverflow.com/questions/2170228/django-iterate-over-model-instance-field-names-and-values-in-template/2226150#2226150"""
+        fields = []
+        for f in self._meta.fields:
+    
+            fname = f.name        
+            # resolve picklists/choices, with get_xyz_display() function
+            get_choice = 'get_'+fname+'_display'
+            if hasattr( self, get_choice):
+                value = getattr( self, get_choice)()
+            else:
+                try :
+                    value = getattr(self, fname)
+                except User.DoesNotExist:
+                    value = None
+    
+            # only display fields with values and skip some fields entirely
+            if f.editable and value and f.name not in ('id', 'name', 'location', 'confirmed_by', 'located_by', 'located', 'confirmed') :
+    
+                fields.append(
+                  {
+                   'label':f.verbose_name, 
+                   'name':f.name, 
+                   'value':value,
+                  }
+                )
+        return fields
 
 class ProjectForm(ModelForm):
     class Meta:
@@ -102,13 +135,6 @@ class ProjectForm(ModelForm):
            'located_by': HiddenInput(),
         }
     
-
-
-"""
-class ProjectForm(forms.Form):
-    name = forms.CharField(max_length=200)
-"""
-   
 class Taz(models.Model):
     """ taz, town_id, town_name, x, y """
     taz_id = models.CharField('TAZ ID', max_length=10, unique=True)

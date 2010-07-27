@@ -31,7 +31,7 @@ def community(request, community_name):
         
 @login_required
 def detail(request, project_id):
-	project = get_object_or_404(Project, pk=project_id)
+	project = Project.objects.transform(4326).get(pk = project_id)
 	return render_to_response('projects/detail.html', 
 							{'project': project}, 
 							context_instance=RequestContext(request))
@@ -45,20 +45,25 @@ def project_geojson(request, project_id):
 
 @login_required
 def add(request):
-    
-	user_town = request.user.profile.town.town_name
+        
+    user_town = request.user.profile.town.town_name
 	
-	if request.method == 'POST':
-		form = ProjectForm(request.POST)
-		if form.is_valid():
-			entry = form.save(commit=False)
-			pnt =  GEOSGeometry(entry.location)
-			pnt.srid = 4326
-			pnt.transform(26986)
-			entry.location = pnt
-			entry.save()
-			return HttpResponseRedirect('/')
-	else:
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            entry = form.save(commit=False)
+            pnt =  GEOSGeometry(entry.location)
+            pnt.srid = 4326
+            pnt.transform(26986)
+            entry.location = pnt
+            entry.save()
+            # needed for map display
+            entry.location.transform(4326)
+            return render_to_response('projects/detail.html', 
+                                      {'project': entry, 
+                                       'task': 'added',},
+                                      context_instance=RequestContext(request))
+    else:
 		form = ProjectForm()
 		town = Taz.objects.filter(town_name=user_town).collect()
 		town.transform(4326)
@@ -71,26 +76,31 @@ def add(request):
  
 @login_required    
 def edit(request, project_id):
+    
+    # ProjectForm = forms.form_for_model(Project)
+    
+    project = Project.objects.transform(4326).get(pk = project_id)
 
-	# ProjectForm = forms.form_for_model(Project)
-
-	project = Project.objects.transform(4326).get(pk = project_id)
-
-	if request.method == 'POST': # If the form has been submitted...
-		form = ProjectForm(request.POST, instance=project) # A form bound to the POST data        
-		if form.is_valid(): # All validation rules pass
-			# TODO: send notification email
-			entry = form.save(commit=False)
-			pnt =  GEOSGeometry(entry.location)
-			pnt.srid = 4326
-			pnt.transform(26986)
-			entry.location = pnt
-			entry.save()            
-			return HttpResponseRedirect('/')
-	else:
-		form = ProjectForm(instance=project)
+    if request.method == 'POST': # If the form has been submitted...
+        form = ProjectForm(request.POST, instance=project) # A form bound to the POST data        
+        if form.is_valid(): # All validation rules pass
+            # TODO: send notification email
+            entry = form.save(commit=False)
+            pnt =  GEOSGeometry(entry.location)
+            pnt.srid = 4326
+            pnt.transform(26986)
+            entry.location = pnt
+            entry.save()
+            # needed for map display
+            entry.location.transform(4326)           
+            return render_to_response('projects/detail.html', 
+                                      {'project': entry, 
+                                       'task': 'edited',},
+                                      context_instance=RequestContext(request))
+    else:
+        form = ProjectForm(instance=project)
 		
-	return render_to_response('projects/edit.html', 
+    return render_to_response('projects/edit.html', 
 							{'project': project,
 							'form': form,}, 
 							context_instance=RequestContext(request))

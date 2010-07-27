@@ -40,8 +40,9 @@ $(document).ready(function() {
 	CC.project.id = "{{ project.id }}"
 	
 	// to better adjust zoomlevel and map-extent
-	CC.project.location = new OpenLayers.LonLat({{ project.location.x }}, {{ project.location.y }});
+	CC.project.locationLonLat = new OpenLayers.LonLat({{ project.location.x }}, {{ project.location.y }});
 	
+	// write username when modified
 	$("#id_confirmed").change(function() {
 		$("#id_confirmed_by").val("{{ user.username }}");
 	});
@@ -49,7 +50,7 @@ $(document).ready(function() {
 		$("#id_located_by").val("{{ user.username }}");
 	});
 
-	init("project_edit");
+	init("project_locate");
 	
 });
 

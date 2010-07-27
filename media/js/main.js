@@ -43,15 +43,14 @@ function init(section) {
 			CC.section.project_list();
 			CC.section.town_taz();
 	  		break;
+		case "project_detail":
+			CC.section.project_detail();
+			break;
 		case "project_list":
 			CC.section.project_list();
 	  		break;	
-		case "project_edit":
-			CC.section.project_edit();
-			CC.section.town_taz();
-	  		break;
-		case "project_add":
-			CC.section.project_add();
+		case "project_locate":
+			CC.section.project_locate();
 			CC.section.town_taz();
 		  	break;
 		default:
@@ -91,8 +90,8 @@ CC.section.project_list = function () {
 
 }
 
-CC.section.project_edit = function () {
-
+CC.section.project_detail = function () {
+	
 	CC.layer.project = new OpenLayers.Layer.GML(CC.project.title, CC.baseurl + "project/" + CC.project.id + "/geojson/", {
 		format: OpenLayers.Format.GeoJSON,
 		projection: CC.map.displayProjection
@@ -101,17 +100,11 @@ CC.section.project_edit = function () {
 	
 	CC.map.addLayers([CC.layer.project]);
 	
-	CC.map.setCenter(CC.project.location.transform(CC.projection.WGS84, CC.projection.OSM), 13);
+	CC.map.setCenter(CC.project.location.transform(CC.projection.WGS84, CC.projection.OSM), 14);
 	
-	// drag action
-	CC.map.addControl(new OpenLayers.Control.MousePosition());
-	CC.drag = new OpenLayers.Control.DragFeature(CC.layer.project);
-	CC.map.addControl(CC.drag);
-	CC.drag.activate();
-
 }
 
-CC.section.project_add = function () {
+CC.section.project_locate = function () {
 
 	CC.layer.project = new OpenLayers.Layer.Vector("New Project Location");
 	
@@ -138,17 +131,6 @@ CC.section.project_add = function () {
 	
 	CC.map.addControl(CC.drag);
 	CC.drag.activate();	
-	
-	
-	var click = new OpenLayers.Control.SelectFeature(
-	   [CC.layer.project],
-	   {
-	       clickout: true, toggle: false,
-	       multiple: false, hover: false,
-	       toggleKey: "ctrlKey", // ctrl key removes from selection
-	       multipleKey: "shiftKey" // shift key adds to selection
-	   }
-	);
 	
 }
 

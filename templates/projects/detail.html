@@ -1,4 +1,60 @@
-<h1>{{ project.name }}</h1>
-<p>{{ project.taz }}</p>
-<p>{{ project.status }}</p>
-<p>{{ project.location.x }}</p>
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block header %}
+	
+	{# called after form update #}
+	{% if task %}
+
+	<h3>Thank you, <a href="/project/{{ project.id }}/">{{ project.name }}</a> has been {{ task }}.
+	
+	{% else %}
+	
+	<h3>{{ project.name }}
+	
+	{% endif %}
+	
+	<span class="small"><a href='/project/{{ project.id }}/edit/'>continue editing</a> or <a href='/project/add/'>add a new project</a></span></h3>
+	
+{% endblock %}
+
+{% block map %}
+
+<div class="span-24 last">
+					
+	<div id="map"></div>
+				
+</div>
+
+{% endblock %}
+
+{% block content %}
+
+{% for f in project.get_all_fields %}
+    <p><b>{{f.label|capfirst}}</b>: <span class="projectproperty">{{ f.value|escape|urlize }}</span></p>	
+{% endfor %}
+	
+{% endblock %}
+
+{% block inlinejs %}
+
+$(document).ready(function() {
+	
+	$(".projectproperty").each(function(index) {
+		
+		if ($(this).text() === "True") $(this).text("Yes");
+	});
+	
+	CC.town = "{{ project.taz.town_name }}";
+	
+	CC.project.title = "{{ project.name }}";
+	CC.project.id = "{{ project.id }}"
+	
+	// to better adjust zoomlevel and map-extent
+	CC.project.location = new OpenLayers.LonLat({{ project.location.x }}, {{ project.location.y }});
+	
+	init("project_detail");
+
+});
+
+{% endblock %}
