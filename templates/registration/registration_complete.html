@@ -1,11 +1,20 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block title %}Registration | {% endblock %}
+
 {% block login %}
 {% endblock %}
 
+{% block header %}
+
+<h3>{% trans "You are now registered. Activation email sent." %}</h3>
+
+{% endblock %}
+
+{% block map %}{% endblock %}
+
 {% block content %}
-<p>
-	{% trans "You are now registered. Activation email sent." %}
-</p>
+
+	
 {% endblock %}

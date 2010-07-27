@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User 
-from projects.models import Town
+from communitycomments.projects.models import Town
 
 class UserProfile(models.Model):  
 	user = models.ForeignKey(User, unique=True)

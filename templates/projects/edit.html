@@ -18,7 +18,7 @@
 {% block editform %}
 
 
-<form action="/project/{{ project.id }}/edit/" method="post">
+<form action="{{ base_url }}/project/{{ project.id }}/edit/" method="post">
 
 {% csrf_token %}
 

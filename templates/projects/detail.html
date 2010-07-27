@@ -6,7 +6,7 @@
 	{# called after form update #}
 	{% if task %}
 
-	<h3>Thank you, <a href="/project/{{ project.id }}/">{{ project.name }}</a> has been {{ task }}.
+	<h3>Thank you, <a href="{{ base_url }}/project/{{ project.id }}/">{{ project.name }}</a> has been {{ task }}.
 	
 	{% else %}
 	
@@ -14,7 +14,7 @@
 	
 	{% endif %}
 	
-	<span class="small"><a href='/project/{{ project.id }}/edit/'>continue editing</a> or <a href='/project/add/'>add a new project</a></span></h3>
+	(<span class="small"><a href="{{ base_url }}/project/{{ project.id }}/edit/">Continue Editing</a> or <a href="{{ base_url }}/project/add/">Add Another Project</a></span>)</h3>
 	
 {% endblock %}
 

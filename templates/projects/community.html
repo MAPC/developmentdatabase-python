@@ -34,9 +34,9 @@
 	
 		<tr>
 			<td>{{ project.taz }}</td>
-			<td><a href="/project/{{ project.id }}/">{{ project.name }}</a></td>
+			<td><a href="{{ base_url }}/project/{{ project.id }}/">{{ project.name }}</a></td>
 			<td>{{ project.get_status_display }}</td>
-			<td><a href="/project/{{ project.id }}/edit/">edit</a></td>
+			<td><a href="{{ base_url }}/project/{{ project.id }}/edit/">edit</a></td>
 		</tr>
 	
 		{% endfor %}

@@ -1,3 +1,76 @@
+html {
+	overflow-y: scroll; 
+} 
+
+body {
+	margin: 10px 0;
+}
+
+#head img {
+	float: right;
+	margin-botton: 20px;
+}
+
+h1 a {
+	color: rgb(0,72,144);
+	text-decoration: none;
+}
+
+#head h3 {
+	
+}
+
+.addedit {
+	float: right;
+}
+
+#main {
+	background-color: #ffffff;
+	padding-bottom: 80px;
+}
+
 #map {
 	height: 300px;
+}
+
+#content {
+	padding-top: 18px;
+}
+
+#content p {
+	padding: 0 6px;
+}
+
+#footer	{
+    background: #ffffff;
+
+    /* over-ride sticky-footer.css - http://cfc.kizzx2.com/index.php/blueprint-css-with-sticky-footer-revisited/ */
+    padding-top: 20px;
+    height: 60px;
+    margin-top: -80px;
+	text-align: right;
+}
+
+#footer img {
+	margin-right: 20px;
+}
+
+#content form table tbody tr th {
+	width: 140px;	
+}
+
+#content form {
+	margin-bottom: 18px;
+	padding: 0 6px;
+}
+
+ul.errorlist {
+	padding-left: 0;
+	margin-bottom: 0;
+}
+
+ul.errorlist li {
+	color: red;
+	list-style: none;
+	
 }

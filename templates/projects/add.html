@@ -18,7 +18,7 @@ Add a new project in {{ town }} |
 {% block editform %}
 
 
-<form action="/project/add/" method="post">
+<form action="{{ base_url }}/project/add/" method="post">
 
 {% csrf_token %}
 

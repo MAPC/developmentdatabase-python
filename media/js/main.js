@@ -1,5 +1,5 @@
 var CC = {
-	baseurl: "/",
+	baseurl: "/projections",
 	map: {}, // the map
 	symbolizer: {}, // icons
 	styles: {}, // map styles
@@ -60,7 +60,7 @@ function init(section) {
 			fontColor: "rgb(0,72,144)",
 			fontSize: "8pt",
 			fontFamily: "Arial",
-			fontWeight: "normal",
+			fontWeight: "bold",
 			labelAlign: "tr",
 			labelXOffset: "4",
 			labelYOffset: "6"
@@ -94,7 +94,7 @@ function init(section) {
 	CC.map.addLayers([CC.layer.osm]);
 	
 	// default center
-	CC.map.setCenter(new OpenLayers.LonLat(-71.08, 42.34).transform(CC.projection.WGS84, CC.projection.OSM), 9);
+	// CC.map.setCenter(new OpenLayers.LonLat(-71.08, 42.34).transform(CC.projection.WGS84, CC.projection.OSM), 9);
 	
 	switch (section) {
 		case "index":
@@ -102,6 +102,7 @@ function init(section) {
 			CC.section.project_list();
 	  		break;
 		case "project_detail":
+			CC.section.town_taz();
 			CC.section.project_detail();
 			break;
 		case "project_list":
@@ -112,7 +113,7 @@ function init(section) {
 			CC.section.project_locate();
 		  	break;
 		default:
-			CC.map.setCenter(new OpenLayers.LonLat(-71.08, 42.34).transform(CC.projection.WGS84, CC.projection.OSM), 9);
+			CC.map.setCenter(new OpenLayers.LonLat(-71.1, 42.4).transform(CC.projection.WGS84, CC.projection.OSM), 9);
 	}
 }
 
@@ -124,7 +125,7 @@ CC.section.town_taz = function () {
 	});
 	
 	// FIXME: ajax loading with OL (loadend event)
-	$.getJSON(CC.baseurl + CC.town + "/taz/geojson/", function(data) {
+	$.getJSON(CC.baseurl + "/" + CC.town + "/taz/geojson/", function(data) {
   		CC.featurecollection.taz = data;
 		CC.layer.taz.addFeatures(CC.geojson.read(CC.featurecollection.taz));		
 		// CC.map.zoomToExtent(CC.layer.taz.getDataExtent());
@@ -150,7 +151,7 @@ CC.section.project_list = function () {
 
 CC.section.project_detail = function () {
 	
-	CC.layer.project = new OpenLayers.Layer.GML(CC.project.title, CC.baseurl + "project/" + CC.project.id + "/geojson/", {
+	CC.layer.project = new OpenLayers.Layer.GML(CC.project.title, CC.baseurl + "/project/" + CC.project.id + "/geojson/", {
 		format: OpenLayers.Format.GeoJSON,
 		projection: CC.map.displayProjection,
 		styleMap: CC.styles.project

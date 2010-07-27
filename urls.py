@@ -31,7 +31,7 @@ urlpatterns = patterns('',
     
     
     
-    (r'^accounts/', include('accounts.urls')),
+    (r'^accounts/', include('communitycomments.accounts.urls')),
     
     # Filter by community name
     (r'^(?P<community_name>\w+)/taz/geojson/$', 'communitycomments.projects.views.town_taz_geojson'),

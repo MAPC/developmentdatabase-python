@@ -1,18 +1,27 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block title %}Registration | {% endblock %}
+
+{% block header %}
+
+<h3>Register to view, edit or add projects in your municipality:</h3>
+
+{% endblock %}
+
 {% block map %}{% endblock %}
 
 {% block content %}
 
-<p>
 	<form method="post" action=".">
 		
 		{% csrf_token %}
 		
-	  {{ form.as_p }}
+	  	<table>
+			{{ form.as_table }}
+		</table>
 	
-	  <p><input type="submit" value="{% trans 'submit' %}" /></p>
+	  <input type="submit" value="{% trans 'register' %}" />
 	</form>
-</p>
+
 {% endblock %}

@@ -1,10 +1,10 @@
 from django import forms
 from registration.forms import RegistrationForm
 from django.utils.translation import ugettext_lazy as _
-from accounts.models import UserProfile
+from communitycomments.accounts.models import UserProfile
 from registration.models import RegistrationProfile
 
-from projects.models import Taz, Town
+from communitycomments.projects.models import Taz, Town
 
 attrs_dict = { 'class': 'required' }
 

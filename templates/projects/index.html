@@ -5,7 +5,7 @@
 
 	{% if user.is_authenticated %}
 
-	<h3>Projects in {{ town }} <span class="small"><a href='/project/add/'>Add New Project</a></span></h3>
+	<h3>Projects in {{ town }} (<span class="small"><a href='{{ base_url }}/project/add/'>Add New Project</a></span>)</h3>
 	
 
 	{% endif %}
@@ -30,7 +30,6 @@
 
 	<table>
 		<tr>
-			<th>Community</th>
 			<th>Name</th>
 			<th>Status</th>
 			<th>&nbsp;</th>
@@ -39,10 +38,9 @@
 		{% for project in project_list %}
 
 		<tr>
-			<td><a href="/{{ project.taz.town_name }}">{{ project.taz.town_name }}</a></td>
-			<td><a href="/project/{{ project.id }}/">{{ project.name }}</a></td>
+			<td><a href="{{ base_url }}/project/{{ project.id }}/">{{ project.name }}</a></td>
 			<td>{{ project.get_status_display }}</td>
-			<td><a href="/project/{{ project.id }}/edit/">edit</a></td>
+			<td><a href="{{ base_url }}/project/{{ project.id }}/edit/">edit</a></td>
 		</tr>
 
 		{% endfor %}
@@ -63,18 +61,20 @@
 		Transportation Plan, <i>Paths to a Sustainable Region</i>, which establishes priorities for future transportation spending. MAPC's population and employment 
 		projections are also used for many other state, regional and local planning efforts, including water demand forecasting. 
 		We are asking you for information about current or anticipated developments that should be included in the projections. 
-		We will need <b>your response no later than Monday August 23<sup>rd</sup>, 2010</b>.
+		We will need <b>your response no later than Monday August 24, 2010</b>.
 	</p>
 
 	<p>
 		We are seeking your input to ensure that the next round of population and employment projections reflects the most up-to-date information 
 		available about developments already completed or anticipated.  In particular, we are interested in developments since the beginning 2007: 
-		<ul>
+	</p>
+	<ul>
 		<li>Large residential or mixed-use developments (single family or multifamily) already completed, under construction or in advanced planning 
 		stages;</li>
 		<li>Large job gains though new commercial, industrial or mixed-use developments already completed, under construction, or in advanced planning; and</li>
 		<li>Job losses or major changes in the type of jobs at a particular location.</li>
-		</ul>
+	</ul>
+	<p>
 		Please be as specific as possible, by including the name of the project, number of units, type of housing, stage of planning development, and other 
 		details about the project.  Please do not include projects that are purely speculative, such as the expectation that an existing farm will be 
 		converted to residential subdivisions at some point in the next 20 years.
@@ -87,18 +87,21 @@
 	<h3>Login to view, edit or add projects in your municipality:</h3>
 	
 	<p>
-	<form method="post" action="/accounts/login/">
+	<form method="post" action="{{ base_url }}/accounts/login/">
 	  
 	  	{% csrf_token %}
 	  	
-		<p><label for="id_username">Username:</label> <input id="id_username" type="text" name="username" maxlength="30" /></p>
-		<p><label for="id_password">Password:</label> <input type="password" name="password" id="id_password" /></p>
-		<p><input type="submit" value="log in" /></p>
+		<table>
+			<tr><th><label for="id_username">Username:</label></th><td><input id="id_username" type="text" name="username" maxlength="30" /></td></tr>
+			<tr><th><label for="id_password">Password:</label></th><td><input type="password" name="password" id="id_password" /></td></tr>
+		</table>
+		
+		<input type="submit" value="log in" />
 		<input type="hidden" name="next" value="{{ request.get_full_path }}" />
 	</form>
 	
-	<p>Forgot password? <a href="/accounts/password/reset/">Reset it</a>!</p>
-	<p>Not a member? <a href="/accounts/register/">Register</a>!</p>
+	<p>Forgot password? <a href="{{ base_url }}/accounts/password/reset/">Reset it</a>!</p>
+	<p>Not a member? <a href="{{ base_url }}/accounts/register/">Register</a>!</p>
 
 </p>
 
