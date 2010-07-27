@@ -84,7 +84,25 @@
 
 	<p>If you have questions, please contact Christian Spanring, GIS Analyst at (617) 451- 2770 ext. 2028 or cspanring@mapc.org.</p>
 	
-	<p><b>Login (email, password) or register (Name, email, Municipality, position) to add and edit projects in your community.</b></p>
+	<h3>Login to view, edit or add projects in your municipality:</h3>
+	
+	<p>
+	<form method="post" action="/accounts/login/">
+	  
+	  	{% csrf_token %}
+	  	
+		<p><label for="id_username">Username:</label> <input id="id_username" type="text" name="username" maxlength="30" /></p>
+		<p><label for="id_password">Password:</label> <input type="password" name="password" id="id_password" /></p>
+		<p><input type="submit" value="log in" /></p>
+		<input type="hidden" name="next" value="{{ request.get_full_path }}" />
+	</form>
+	
+	<p>Forgot password? <a href="/accounts/password/reset/">Reset it</a>!</p>
+	<p>Not a member? <a href="/accounts/register/">Register</a>!</p>
+
+</p>
+
+
 
 {% endif %}
 	

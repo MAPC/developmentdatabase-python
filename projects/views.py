@@ -7,21 +7,19 @@ from django.template import RequestContext
 
 # required for finding taz for project location
 from django.contrib.gis.geos import GEOSGeometry
-
 # GeoJSON output
 from vectorformats.Formats import Django, GeoJSON
 
 def index(request):
-    # project_list = Project.objects.transform(900913).all().order_by('-last_modified')[:25]
 
-	if request.user.is_authenticated():
-		user_town = request.user.profile.town.town_name
-		project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=user_town)
-		return render_to_response('projects/index.html', 
-	                              {'project_list': project_list,
-	                               'town': user_town,}, 
-	                              context_instance=RequestContext(request))
-	else:
+    if request.user.is_authenticated():
+        user_town = request.user.profile.town.town_name
+        project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=user_town)
+        return render_to_response('projects/index.html', 
+                                  {'project_list': project_list,
+                                   'town': user_town,}, 
+                                  context_instance=RequestContext(request))
+    else:
 		return render_to_response('projects/index.html', context_instance=RequestContext(request))
 
 def community(request, community_name):
