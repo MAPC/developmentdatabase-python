@@ -91,7 +91,22 @@ function init(section) {
 		"OpenStreetMap"
 	);
 	
-	CC.map.addLayers([CC.layer.osm]);
+	CC.layer.googsat = new OpenLayers.Layer.Google(
+		"Google Satellite",
+		{
+			type: G_SATELLITE_MAP, 
+			sphericalMercator: true
+		}
+	);
+	CC.layer.googstreet = new OpenLayers.Layer.Google(
+		"Google Streetmap",
+		{
+			type: G_NORMAL_MAP, 
+			sphericalMercator: true
+		}
+	);
+	
+	CC.map.addLayers([CC.layer.osm, CC.layer.googstreet, CC.layer.googsat]);
 	
 	// default center
 	// CC.map.setCenter(new OpenLayers.LonLat(-71.08, 42.34).transform(CC.projection.WGS84, CC.projection.OSM), 9);
