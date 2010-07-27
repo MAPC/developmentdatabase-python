@@ -3,7 +3,7 @@
 	"features": [{ 
 		"type": "Feature", 
 		"properties": 
-			{ "Name": "{{ project.name }}" }, 
+			{ "name": "{{ project.name }}" }, 
 		"geometry": 
 			{{ project.location.geojson|safe }} 
 	}]

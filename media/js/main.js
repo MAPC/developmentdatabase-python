@@ -56,7 +56,7 @@ function init(section) {
 			fillColor: "rgb(0,72,144)",
 			fillOpacity: 1,
 			pointRadius: 6,
-			label: "${Name}",
+			label: "${name}",
 			fontColor: "rgb(0,72,144)",
 			fontSize: "8pt",
 			fontFamily: "Arial",

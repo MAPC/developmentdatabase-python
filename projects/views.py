@@ -16,9 +16,16 @@ def index(request):
     if request.user.is_authenticated():
         user_town = request.user.profile.town.town_name
         project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=user_town)
+        
+        djf = Django.Django(geodjango='location', properties=['name'])
+        geoj = GeoJSON.GeoJSON()
+        project_list_geojson = geoj.encode(djf.decode(project_list))
+        
+        
         return render_to_response('projects/index.html', 
                                   {'project_list': project_list,
                                    'town': user_town,
+                                   'project_list_geojson': project_list_geojson,
                                    'base_url': settings.BASE_URL,}, 
                                   context_instance=RequestContext(request))
     else:
