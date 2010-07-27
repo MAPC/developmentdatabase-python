@@ -3,14 +3,14 @@
 
 {% block title %}
 
-Add a new project in {{ town }} | 
+Add a New Project in {{ town }} | 
 
 {% endblock %}
 
 
 {% block header %}
 
-	<h3>Add a new project in {{ town }}</h3>
+	<h3>Add a New Project in {{ town }}</h3>
 
 {% endblock %}
 
@@ -22,7 +22,9 @@ Add a new project in {{ town }} |
 
 {% csrf_token %}
 
-{{ form.as_p }}
+<table>
+{{ form.as_table }}
+</table>
 
 <input type="submit" value="Submit" />
 </form>

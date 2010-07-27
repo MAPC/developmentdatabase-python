@@ -14,7 +14,7 @@
 	
 	{% endif %}
 	
-	(<span class="small"><a href="{{ base_url }}/project/{{ project.id }}/edit/">Continue Editing</a> or <a href="{{ base_url }}/project/add/">Add Another Project</a></span>)</h3>
+	(<span class="small"><a href="{{ base_url }}/project/{{ project.id }}/edit/">Edit This Project</a> or <a href="{{ base_url }}/project/add/">Add Another Project</a></span>)</h3>
 	
 {% endblock %}
 
@@ -30,9 +30,13 @@
 
 {% block content %}
 
+<table>
+
 {% for f in project.get_all_fields %}
-    <p><b>{{f.label|capfirst}}</b>: <span class="projectproperty">{{ f.value|escape|urlize }}</span></p>	
+    <tr><th>{{f.label|capfirst}}:</th><td><span class="projectproperty">{{ f.value|escape|urlize }}</span></td></tr>	
 {% endfor %}
+
+</table>
 	
 {% endblock %}
 

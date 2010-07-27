@@ -21,9 +21,9 @@
 <form action="{{ base_url }}/project/{{ project.id }}/edit/" method="post">
 
 {% csrf_token %}
-
-{{ form.as_p }}
-
+<table>
+{{ form.as_table }}
+</table>
 <input type="submit" value="Submit" />
 </form>
 

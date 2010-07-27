@@ -41,6 +41,23 @@ h1 a {
 	padding: 0 6px;
 }
 
+#content table tbody tr th {
+	width: 140px;	
+}
+
+td, th {
+	vertical-align: top;
+}
+
+td.projectproperty, th.projectproperty {
+	text-align: center;
+}
+
+#summarytable tbody tr th {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
 #footer	{
     background: #ffffff;
 
