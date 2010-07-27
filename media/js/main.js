@@ -29,6 +29,64 @@ function init(section) {
 		displayProjection: CC.projection.WGS84,
 	});
 	
+	CC.styles.taz = new OpenLayers.StyleMap({
+		"default": {
+			strokeColor: "rgb(64,64,64)",
+			strokeOpacity: 1,
+			strokeWidth: 0.5,
+			fillColor: "rgb(192,192,192)",
+			fillOpacity: 0.4
+			// FIXME add label depending on zoomlevel
+			// label: "${taz_id}",
+			// fontColor: "rgb(64,64,64)",
+			// fontSize: "6pt",
+			// fontFamily: "Arial",
+			// fontWeight: "normal",
+			// labelAlign: "cm",
+			// labelXOffset: "0",
+			// labelYOffset: "0"
+		}
+	});
+	
+	CC.styles.project = new OpenLayers.StyleMap({
+		"default": {
+			strokeColor: "rgb(200,227,174)",
+			strokeOpacity: 1,
+			strokeWidth: 1,
+			fillColor: "rgb(0,72,144)",
+			fillOpacity: 1,
+			pointRadius: 6,
+			label: "${Name}",
+			fontColor: "rgb(0,72,144)",
+			fontSize: "8pt",
+			fontFamily: "Arial",
+			fontWeight: "normal",
+			labelAlign: "tr",
+			labelXOffset: "4",
+			labelYOffset: "6"
+		}
+	});
+	
+	CC.styles.addproject = new OpenLayers.StyleMap({
+		"default": {
+			strokeColor: "rgb(200,227,174)",
+			strokeOpacity: 1,
+			strokeWidth: 1,
+			fillColor: "rgb(0,72,144)",
+			fillOpacity: 1,
+			pointRadius: 8,
+			graphicName: "x",
+			label: "drag to locate project",
+			fontColor: "rgb(0,72,144)",
+			fontSize: "8pt",
+			fontFamily: "Arial",
+			fontWeight: "bold",
+			labelAlign: "tr",
+			labelXOffset: "8",
+			labelYOffset: "10"
+		}
+	});
+	
 	CC.layer.osm = new OpenLayers.Layer.OSM(
 		"OpenStreetMap"
 	);
@@ -40,8 +98,8 @@ function init(section) {
 	
 	switch (section) {
 		case "index":
-			CC.section.project_list();
 			CC.section.town_taz();
+			CC.section.project_list();
 	  		break;
 		case "project_detail":
 			CC.section.project_detail();
@@ -50,8 +108,8 @@ function init(section) {
 			CC.section.project_list();
 	  		break;	
 		case "project_locate":
-			CC.section.project_locate();
 			CC.section.town_taz();
+			CC.section.project_locate();
 		  	break;
 		default:
 			CC.map.setCenter(new OpenLayers.LonLat(-71.08, 42.34).transform(CC.projection.WGS84, CC.projection.OSM), 9);
@@ -61,8 +119,8 @@ function init(section) {
 CC.section.town_taz = function () {
 		
 	CC.layer.taz = new OpenLayers.Layer.Vector("TAZ", {
-		format: OpenLayers.Format.GeoJSON
-		// styleMap: CC.styles.projects
+		format: OpenLayers.Format.GeoJSON,
+		styleMap: CC.styles.taz
 	});
 	
 	// FIXME: ajax loading with OL (loadend event)
@@ -72,19 +130,19 @@ CC.section.town_taz = function () {
 		// CC.map.zoomToExtent(CC.layer.taz.getDataExtent());
 	});
 
-	CC.map.addLayers([CC.layer.taz]);	
+	CC.map.addLayer(CC.layer.taz);	
 }
 
 CC.section.project_list = function () {
 
 	CC.layer.projects = new OpenLayers.Layer.Vector("Projects", {
 		format: OpenLayers.Format.GeoJSON,
-		// styleMap: CC.styles.projects
+		styleMap: CC.styles.project
 	});
 	
 	CC.layer.projects.addFeatures(CC.geojson.read(CC.featurecollection.projects));
 	
-	CC.map.addLayers([CC.layer.projects]);
+	CC.map.addLayer(CC.layer.projects);
 	
 	CC.map.zoomToExtent(CC.layer.projects.getDataExtent());
 
@@ -94,11 +152,11 @@ CC.section.project_detail = function () {
 	
 	CC.layer.project = new OpenLayers.Layer.GML(CC.project.title, CC.baseurl + "project/" + CC.project.id + "/geojson/", {
 		format: OpenLayers.Format.GeoJSON,
-		projection: CC.map.displayProjection
-		// styleMap: CC.styles.projects
+		projection: CC.map.displayProjection,
+		styleMap: CC.styles.project
 	});
 	
-	CC.map.addLayers([CC.layer.project]);
+	CC.map.addLayer(CC.layer.project);
 	
 	CC.map.setCenter(CC.project.location.transform(CC.projection.WGS84, CC.projection.OSM), 14);
 	
@@ -106,7 +164,9 @@ CC.section.project_detail = function () {
 
 CC.section.project_locate = function () {
 
-	CC.layer.project = new OpenLayers.Layer.Vector("New Project Location");
+	CC.layer.project = new OpenLayers.Layer.Vector("New Project Location", {
+		styleMap: CC.styles.addproject
+	});
 	
 	CC.project.locationLonLat.transform(CC.projection.WGS84, CC.projection.OSM);
 	
@@ -114,7 +174,7 @@ CC.section.project_locate = function () {
 	CC.project.locationFeature = new OpenLayers.Feature.Vector(CC.project.locationPoint);
 	
 	CC.layer.project.addFeatures([CC.project.locationFeature]);
-	CC.map.addLayers([CC.layer.project]);
+	CC.map.addLayer(CC.layer.project);
 	
 	CC.map.setCenter(CC.project.locationLonLat, 14);
 	

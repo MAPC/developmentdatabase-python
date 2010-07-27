@@ -119,19 +119,16 @@ $(document).ready(function() {
 	CC.featurecollection.projects = {
 	"type": "FeatureCollection", 
   		"features": [
-    		{"geometry": {
-        		"type": "GeometryCollection", 
-        		"geometries": [
-					{% for project in project_list %}
-					{{ project.location.geojson|safe }},
-					{% endfor %}
-        		]}
-			}
+			{% for project in project_list %}
+    		{"type": "Feature",
+			"properties": { "Name": "{{ project.name }}" },
+			"geometry": {{ project.location.geojson|safe }}	},
+			{% endfor %}
   		]
-	};
-		
+	}; 
+	
 	init("index");
-
+	
 {% else %}
 
 	init();
