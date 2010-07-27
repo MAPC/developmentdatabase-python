@@ -33,10 +33,23 @@
 		<div id="main" class="container">
 			<div class="span-24 last" id="head">
 				<a href="http://www.mapc.org" title="Metropolitan Area Planning Council"><img src="{{ MEDIA_URL }}img/mapc-logo.png" alt="Metropolitan Area Planning Council" width="200" height="100"></a>
+				
 				<h1><a href="/projections">Boston Regional Transportation Plan</a></h1>
 				<h2>MAPC Projections Update - New Developments</h2>
 				
+				<span class="loginfo small">
+					
+					{% if user.is_authenticated %}
+						logged in as {{ user.username }}, <a href="{{ base_url }}/accounts/logout">logout</a>
+					{% else %}
+						<a href="{{ base_url }}/accounts/login">login</a>	
+					{% endif %}
+					
+				</span>
+				
 				{% block header %}{% endblock %}
+				
+				
 				
   			</div>
 			

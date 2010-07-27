@@ -145,7 +145,15 @@ CC.section.project_list = function () {
 	
 	CC.map.addLayer(CC.layer.projects);
 	
-	CC.map.zoomToExtent(CC.layer.projects.getDataExtent());
+	if (CC.layer.projects.getDataExtent()) {
+		CC.map.zoomToExtent(CC.layer.projects.getDataExtent());
+	} else {
+		// zoom to town center
+		CC.project.locationLonLat.transform(CC.projection.WGS84, CC.projection.OSM);
+		CC.map.setCenter(CC.project.locationLonLat, 12);
+	}
+	
+	
 
 }
 

@@ -29,6 +29,10 @@ h1 a {
 	padding-bottom: 80px;
 }
 
+.loginfo {
+	float: right;
+}
+
 #map {
 	height: 300px;
 }

@@ -87,6 +87,8 @@
 	</p>
 
 	<p>If you responded to our request in 2007, we have provided your previous comments and you can simply update that information.</p>
+	
+	<p>We anticipate projections to be completed in Fall 2010.</p>
 
 	<p>If you have questions, please contact Christian Spanring, GIS Analyst at (617) 451- 2770 ext. 2028 or cspanring@mapc.org.</p>
 	
@@ -134,6 +136,9 @@ $(document).ready(function() {
 	});
 	
 	CC.town = "{{ town }}";
+	
+	// zoom to town centroid
+	CC.project.locationLonLat = new OpenLayers.LonLat({{ map_center.x }}, {{ map_center.y }});
 	
 	CC.featurecollection.projects = {{ project_list_geojson|safe }}
 

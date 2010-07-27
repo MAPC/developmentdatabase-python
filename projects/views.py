@@ -2,7 +2,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.forms import ModelForm
-from communitycomments.projects.models import Project, ProjectForm, Taz
+from communitycomments.projects.models import Project, ProjectForm, Taz, Town
 
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -15,17 +15,24 @@ from vectorformats.Formats import Django, GeoJSON
 def index(request):
     if request.user.is_authenticated():
         user_town = request.user.profile.town.town_name
-        project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=user_town)
+        
+        project_list = Project.objects.filter(taz__town_name__iexact=user_town)
+        
+        project_list_located = Project.objects.transform(900913).filter(taz__town_name__iexact=user_town, located=True)
         
         djf = Django.Django(geodjango='location', properties=['name'])
         geoj = GeoJSON.GeoJSON()
-        project_list_geojson = geoj.encode(djf.decode(project_list))
+        project_list_geojson = geoj.encode(djf.decode(project_list_located))
         
+        town = Town.objects.get(town_name=user_town)
+        town.geometry.transform(4326)
+        map_center = town.geometry.centroid
         
         return render_to_response('projects/index.html', 
                                   {'project_list': project_list,
                                    'town': user_town,
                                    'project_list_geojson': project_list_geojson,
+                                   'map_center': map_center,
                                    'base_url': settings.BASE_URL,}, 
                                   context_instance=RequestContext(request))
     else:
@@ -78,9 +85,9 @@ def add(request):
                                       context_instance=RequestContext(request))
     else:
 		form = ProjectForm()
-		town = Taz.objects.filter(town_name=user_town).collect()
-		town.transform(4326)
-		map_center = town.centroid
+		town = Town.objects.get(town_name=user_town)
+		town.geometry.transform(4326)
+		map_center = town.geometry.centroid
 		return render_to_response('projects/add.html', 
 						{'form': form,
 						'map_center': map_center,
