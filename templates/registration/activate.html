@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block content %}
+{% block title %}Account Activation | {% endblock %}
+
+{% block header %}
 
 {% if account %}
 
-<p>{% trans "Account successfully activated" %}</p>
+<h3>{% trans "Account successfully activated" %}</h3>
 
 <p><a href="{% url auth_login %}">{% trans "Log in" %}</a></p>
 
 {% else %}
 
-<p>{% trans "Account activation failed" %}</p>
+<h3>{% trans "Account activation failed" %}<h3>
 
 {% endif %}
 
 {% endblock %}
+
+{% block map %}{% endblock %}
