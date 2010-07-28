@@ -54,9 +54,9 @@
 				<span class="loginfo small">
 					
 					{% if user.is_authenticated %}
-						logged in as {{ user.username }}, <a href="{{ base_url }}/accounts/logout">logout</a>
+						logged in as {{ user.username }}, <a href="/projections/accounts/logout">logout</a>
 					{% else %}
-						<a href="{{ base_url }}/accounts/login">login</a>	
+						<a href="/projections/accounts/login">login</a>	
 					{% endif %}
 					
 				</span>

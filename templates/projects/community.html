@@ -3,50 +3,50 @@
 
 {% block title %}
 
-{{ project_list.0.taz.town_name }} | 
+Projects in {{ town }} | 
 
 {% endblock %}
 
 {% block header %}
 
-{% if project_list %}
-	<h2>{{ project_list.0.taz.town_name }}</h2>
-{% endif %}
+	<h3>Projects in {{ town }}</h3>
 
 {% endblock %}
 
 
 {% block projectlist %}
-
-	<p><button>Add New Project</button></p>
 	
 	{% if project_list %}
-	
-	<table>
+
+	<table id="summarytable">
 		<tr>
 			<th>TAZ</th>
 			<th>Name</th>
 			<th>Status</th>
+			<th class="projectproperty">Confirmed</th>
+			<th class="projectproperty">Located</th>
 			<th>&nbsp;</th>
 		</tr>
-			
+		
 		{% for project in project_list %}
-	
+
 		<tr>
-			<td>{{ project.taz }}</td>
+			<td>{{ project.taz.taz_id }}</td>
 			<td><a href="{{ base_url }}/project/{{ project.id }}/">{{ project.name }}</a></td>
 			<td>{{ project.get_status_display }}</td>
-			<td><a href="{{ base_url }}/project/{{ project.id }}/edit/">edit</a></td>
+			<td class="projectproperty">{{ project.confirmed }}</td>
+			<td class="projectproperty">{{ project.located }}</td>
+			<td><a href="{{ base_url }}/project/{{ project.id }}/edit/">Edit Project</a></td>
 		</tr>
-	
+
 		{% endfor %}
-			
+		
 	</table>
 
 	{% else %}
-    
+   
 	<p>No projects found.</p>
-	
+
 	{% endif %}
 	
 {% endblock %}
@@ -56,21 +56,23 @@
 
 $(document).ready(function() {
 	
-	CC.featurecollection.projects = {
-		"type": "FeatureCollection", 
-	  		"features": [
-	    		{"geometry": {
-	        		"type": "GeometryCollection", 
-	        		"geometries": [
-						{% for project in project_list %}
-						{{ project.location.geojson|safe }},
-						{% endfor %}
-	        		]}
-				}
-	  		]
-	};
+	$(".projectproperty").each(function(index) {
+		
+		if ($(this).text() === "True") {
+			$(this).html("<img src='{{ MEDIA_URL }}/img/icon-yes.gif'>");
+		} else if ($(this).text() === "False") {
+			$(this).html("<img src='{{ MEDIA_URL }}/img/icon-no.gif'>");
+		}
+		
+	});
 	
-	init("project_list");
+	CC.town = "{{ town }}";
+	
+	// zoom to town centroid
+	CC.project.locationLonLat = new OpenLayers.LonLat({{ map_center.x }}, {{ map_center.y }});
+	CC.featurecollection.projects = {{ project_list_geojson|safe }}
+	
+	init("town");
 	
 });
 

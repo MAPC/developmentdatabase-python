@@ -39,10 +39,24 @@ def index(request):
 		return render_to_response('projects/index.html', {'base_url': settings.BASE_URL,}, context_instance=RequestContext(request))
 
 @login_required
-def community(request, community_name):
-	project_list = Project.objects.transform(900913).filter(taz__town_name__iexact=community_name)
-	return render_to_response('projects/community.html', 
+def community(request, town_name):
+    project_list = Project.objects.filter(taz__town_name__iexact=town_name)
+    
+    project_list_located = Project.objects.transform(900913).filter(taz__town_name__iexact=town_name, located=True)
+    
+    djf = Django.Django(geodjango='location', properties=['name'])
+    geoj = GeoJSON.GeoJSON()
+    project_list_geojson = geoj.encode(djf.decode(project_list_located))
+    
+    town = Town.objects.get(town_name__iexact=town_name)
+    town.geometry.transform(4326)
+    map_center = town.geometry.centroid
+    
+    return render_to_response('projects/community.html', 
                           {'project_list': project_list,
+                           'town': town.town_name,
+                           'project_list_geojson': project_list_geojson,
+                           'map_center': map_center,
                            'base_url': settings.BASE_URL,}, 
                           	context_instance=RequestContext(request))
         
@@ -129,8 +143,8 @@ def edit(request, project_id):
 							context_instance=RequestContext(request))
 
 @login_required								
-def town_taz_geojson(request, community_name):
-	taz_list = Taz.objects.transform(900913).filter(town_name__iexact=community_name) 
+def town_taz_geojson(request, town_name):
+	taz_list = Taz.objects.transform(900913).filter(town_name__iexact=town_name) 
 	# http://stackoverflow.com/questions/3034482/rendering-spatial-data-of-geoqueryset-in-a-custom-view-on-geodjango
 	djf = Django.Django(geodjango='geometry', properties=['taz_id'])
 	geoj = GeoJSON.GeoJSON()

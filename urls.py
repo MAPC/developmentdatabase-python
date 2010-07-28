@@ -34,8 +34,8 @@ urlpatterns = patterns('',
     (r'^accounts/', include('communitycomments.accounts.urls')),
     
     # Filter by community name
-    (r'^(?P<community_name>\w+)/taz/geojson/$', 'communitycomments.projects.views.town_taz_geojson'),
-    (r'^(?P<community_name>\w+)/$', 'communitycomments.projects.views.community'),
+    (r'^(?P<town_name>\w+)/taz/geojson/$', 'communitycomments.projects.views.town_taz_geojson'),
+    (r'^(?P<town_name>\w+)/$', 'communitycomments.projects.views.community'),
     # (r'^(?P<community_name>\w+)/$', 'communitycomments.projects.views.community')
 	# (r'^game', direct_to_template,
     #        { 'template': 'game.html' }, 'game'	),

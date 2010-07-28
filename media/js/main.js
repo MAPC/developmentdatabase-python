@@ -127,6 +127,10 @@ function init(section) {
 			CC.section.town_taz();
 			CC.section.project_locate();
 		  	break;
+		case "town":
+			CC.section.town_taz();
+			CC.section.project_list();
+		  	break;
 		default:
 			CC.map.setCenter(new OpenLayers.LonLat(-71.1, 42.4).transform(CC.projection.WGS84, CC.projection.OSM), 9);
 	}
