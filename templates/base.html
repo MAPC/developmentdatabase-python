@@ -88,9 +88,9 @@
 	</div>
 	
 	<div id="footer" class="container small">
-		
+		{% if user.is_authenticated %}
 		Questions? Please contact <a href="http://www.mapc.org/about-mapc/staff/christian-spanring">Christian Spanring</a> for support.
-		
+		{% endif %}
 	</div>
 	
 	<!-- Google Maps API for "localhost" -->
