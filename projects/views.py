@@ -28,15 +28,15 @@ def index(request):
         town.geometry.transform(4326)
         map_center = town.geometry.centroid
         
-        return render_to_response('projects/index.html', 
+        return render_to_response('projects/index.html',
                                   {'project_list': project_list,
                                    'town': user_town,
                                    'project_list_geojson': project_list_geojson,
                                    'map_center': map_center,
-                                   'base_url': settings.BASE_URL,}, 
+                                   'base_url': settings.BASE_URL, },
                                   context_instance=RequestContext(request))
     else:
-		return render_to_response('projects/index.html', {'base_url': settings.BASE_URL,}, context_instance=RequestContext(request))
+		return render_to_response('projects/index.html', {'base_url': settings.BASE_URL, }, context_instance=RequestContext(request))
 
 @login_required
 def community(request, town_name):
@@ -52,61 +52,61 @@ def community(request, town_name):
     town.geometry.transform(4326)
     map_center = town.geometry.centroid
     
-    return render_to_response('projects/community.html', 
+    return render_to_response('projects/community.html',
                           {'project_list': project_list,
                            'town': town.town_name,
                            'project_list_geojson': project_list_geojson,
                            'map_center': map_center,
-                           'base_url': settings.BASE_URL,}, 
+                           'base_url': settings.BASE_URL, },
                           	context_instance=RequestContext(request))
         
 @login_required
 def detail(request, project_id):
-	project = Project.objects.transform(4326).get(pk = project_id)
-	return render_to_response('projects/detail.html', 
+	project = Project.objects.transform(4326).get(pk=project_id)
+	return render_to_response('projects/detail.html',
 							{'project': project,
-                             'base_url': settings.BASE_URL,}, 
+                             'base_url': settings.BASE_URL, },
 							context_instance=RequestContext(request))
 	
 @login_required
 def project_geojson(request, project_id):
-	project = Project.objects.transform(4326).get(pk = project_id)
-	return render_to_response('projects/project.geojson', 
+	project = Project.objects.transform(4326).get(pk=project_id)
+	return render_to_response('projects/project.geojson',
 							{'project': project,
-                             'base_url': settings.BASE_URL,}, 
+                             'base_url': settings.BASE_URL, },
 							context_instance=RequestContext(request))
 
 @login_required
 def add(request):
-        
+
     user_town = request.user.profile.town.town_name
 	
     if request.method == 'POST':
         form = ProjectForm(request.POST)
         if form.is_valid():
             entry = form.save(commit=False)
-            pnt =  GEOSGeometry(entry.location)
+            pnt = GEOSGeometry(entry.location)
             pnt.srid = 4326
             pnt.transform(26986)
             entry.location = pnt
             entry.save()
             # needed for map display
             entry.location.transform(4326)
-            return render_to_response('projects/detail.html', 
-                                      {'project': entry, 
+            return render_to_response('projects/detail.html',
+                                      {'project': entry,
                                        'task': 'added',
-                                       'base_url': settings.BASE_URL,},
+                                       'base_url': settings.BASE_URL, },
                                       context_instance=RequestContext(request))
     else:
 		form = ProjectForm()
 		town = Town.objects.get(town_name=user_town)
 		town.geometry.transform(4326)
 		map_center = town.geometry.centroid
-		return render_to_response('projects/add.html', 
+		return render_to_response('projects/add.html',
 						{'form': form,
 						'map_center': map_center,
 						'town': user_town,
-                        'base_url': settings.BASE_URL,}, 
+                        'base_url': settings.BASE_URL, },
 						context_instance=RequestContext(request))
  
 @login_required    
@@ -114,33 +114,32 @@ def edit(request, project_id):
     
     # ProjectForm = forms.form_for_model(Project)
     
-    project = Project.objects.transform(4326).get(pk = project_id)
+    project = Project.objects.transform(4326).get(pk=project_id)
 
     if request.method == 'POST': # If the form has been submitted...
         form = ProjectForm(request.POST, instance=project) # A form bound to the POST data        
         if form.is_valid(): # All validation rules pass
             # TODO: send notification email
             entry = form.save(commit=False)
-            pnt =  GEOSGeometry(entry.location)
+            pnt = GEOSGeometry(entry.location)
             pnt.srid = 4326
             pnt.transform(26986)
             entry.location = pnt
             entry.save()
             # needed for map display
             entry.location.transform(4326)           
-            return render_to_response('projects/detail.html', 
-                                      {'project': entry, 
+            return render_to_response('projects/detail.html',
+                                      {'project': entry,
                                        'task': 'edited',
-                                       'base_url': settings.BASE_URL,},
+                                       'base_url': settings.BASE_URL, },
                                       context_instance=RequestContext(request))
     else:
         form = ProjectForm(instance=project)
-		
-    return render_to_response('projects/edit.html', 
-							{'project': project,
-							'form': form,
-                            'base_url': settings.BASE_URL,}, 
-							context_instance=RequestContext(request))
+        return render_to_response('projects/edit.html',
+								{'project': project,
+								'form': form,
+								'base_url': settings.BASE_URL, },
+								context_instance=RequestContext(request))
 
 @login_required								
 def town_taz_geojson(request, town_name):
@@ -150,8 +149,8 @@ def town_taz_geojson(request, town_name):
 	geoj = GeoJSON.GeoJSON()
 	taz_geojson = geoj.encode(djf.decode(taz_list))
 
-	return render_to_response('projects/taz.geojson', 
+	return render_to_response('projects/taz.geojson',
 							{'taz_list': taz_list,
 							'taz_geojson': taz_geojson,
-                            'base_url': settings.BASE_URL,}, 
+                            'base_url': settings.BASE_URL, },
 							context_instance=RequestContext(request))
