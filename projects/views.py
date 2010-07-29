@@ -98,11 +98,12 @@ def add(request):
                                        'base_url': settings.BASE_URL,},
                                       context_instance=RequestContext(request))
     else:
-		form = ProjectForm()
-		town = Town.objects.get(town_name=user_town)
-		town.geometry.transform(4326)
-		map_center = town.geometry.centroid
-		return render_to_response('projects/add.html', 
+        form = ProjectForm()
+        town = Town.objects.get(town_name=user_town)
+        town.geometry.transform(4326)
+        map_center = town.geometry.centroid
+	
+    return render_to_response('projects/add.html', 
 						{'form': form,
 						'map_center': map_center,
 						'town': user_town,
