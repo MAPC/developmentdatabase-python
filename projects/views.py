@@ -33,10 +33,14 @@ def index(request):
                                    'town': user_town,
                                    'project_list_geojson': project_list_geojson,
                                    'map_center': map_center,
-                                   'base_url': settings.BASE_URL, },
+                                   'base_url': settings.BASE_URL,
+                                   'google_maps_key': settings.GOOGLE_MAPS_KEY, },
                                   context_instance=RequestContext(request))
     else:
-		return render_to_response('projects/index.html', {'base_url': settings.BASE_URL, }, context_instance=RequestContext(request))
+		return render_to_response('projects/index.html', 
+                                  {'base_url': settings.BASE_URL,
+                                   'google_maps_key': settings.GOOGLE_MAPS_KEY, }, 
+                                   context_instance=RequestContext(request))
 
 @login_required
 def community(request, town_name):
@@ -57,7 +61,8 @@ def community(request, town_name):
                            'town': town.town_name,
                            'project_list_geojson': project_list_geojson,
                            'map_center': map_center,
-                           'base_url': settings.BASE_URL, },
+                           'base_url': settings.BASE_URL,
+                           'google_maps_key': settings.GOOGLE_MAPS_KEY,},
                           	context_instance=RequestContext(request))
         
 @login_required
@@ -65,7 +70,8 @@ def detail(request, project_id):
 	project = Project.objects.transform(4326).get(pk=project_id)
 	return render_to_response('projects/detail.html',
 							{'project': project,
-                             'base_url': settings.BASE_URL, },
+                             'base_url': settings.BASE_URL,
+                             'google_maps_key': settings.GOOGLE_MAPS_KEY,},
 							context_instance=RequestContext(request))
 	
 @login_required
@@ -73,7 +79,8 @@ def project_geojson(request, project_id):
 	project = Project.objects.transform(4326).get(pk=project_id)
 	return render_to_response('projects/project.geojson',
 							{'project': project,
-                             'base_url': settings.BASE_URL, },
+                             'base_url': settings.BASE_URL,
+                             'google_maps_key': settings.GOOGLE_MAPS_KEY,},
 							context_instance=RequestContext(request))
 
 @login_required
@@ -95,7 +102,8 @@ def add(request):
             return render_to_response('projects/detail.html',
                                       {'project': entry,
                                        'task': 'added',
-                                       'base_url': settings.BASE_URL, },
+                                       'base_url': settings.BASE_URL,
+                                       'google_maps_key': settings.GOOGLE_MAPS_KEY,},
                                       context_instance=RequestContext(request))
     else:
 		form = ProjectForm()
@@ -106,7 +114,8 @@ def add(request):
 						{'form': form,
 						'map_center': map_center,
 						'town': user_town,
-                        'base_url': settings.BASE_URL, },
+                        'base_url': settings.BASE_URL,
+                        'google_maps_key': settings.GOOGLE_MAPS_KEY,},
 						context_instance=RequestContext(request))
  
 @login_required    
@@ -131,14 +140,16 @@ def edit(request, project_id):
             return render_to_response('projects/detail.html',
                                       {'project': entry,
                                        'task': 'edited',
-                                       'base_url': settings.BASE_URL, },
+                                       'base_url': settings.BASE_URL,
+                                       'google_maps_key': settings.GOOGLE_MAPS_KEY,},
                                       context_instance=RequestContext(request))
     else:
         form = ProjectForm(instance=project)
         return render_to_response('projects/edit.html',
 								{'project': project,
 								'form': form,
-								'base_url': settings.BASE_URL, },
+								'base_url': settings.BASE_URL,
+                                'google_maps_key': settings.GOOGLE_MAPS_KEY,},
 								context_instance=RequestContext(request))
 
 @login_required								
@@ -152,5 +163,6 @@ def town_taz_geojson(request, town_name):
 	return render_to_response('projects/taz.geojson',
 							{'taz_list': taz_list,
 							'taz_geojson': taz_geojson,
-                            'base_url': settings.BASE_URL, },
+                            'base_url': settings.BASE_URL,
+                            'google_maps_key': settings.GOOGLE_MAPS_KEY,},
 							context_instance=RequestContext(request))
