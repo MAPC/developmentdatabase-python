@@ -111,17 +111,18 @@ td.projectproperty, th.projectproperty {
 	padding: 0 6px;
 }
 
+h3.errorlist {
+	color: red;
+}
+
 ul.errorlist {
 	padding-left: 0;
 	margin-bottom: 0;
 }
 
 ul.errorlist li {
-	color: red;
 	list-style: none;
-	
+	color: red;
 }
-
-
 
 /* @end */

@@ -10,7 +10,15 @@ Add a New Project in {{ town }} |
 
 {% block header %}
 
+	{% if correct %}
+	
+	<h3 class="errorlist">Please correct your entries below.</h3>
+	
+	{% else %}
+
 	<h3>Add a New Project in {{ town }}</h3>
+	
+	{% endif %}
 
 {% endblock %}
 
@@ -18,7 +26,7 @@ Add a New Project in {{ town }} |
 {% block editform %}
 
 
-<form action="{{ base_url }}/project/add/" method="post">
+<form action="." method="post">
 
 {% csrf_token %}
 

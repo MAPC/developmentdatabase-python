@@ -105,18 +105,25 @@ def add(request):
                                        'base_url': settings.BASE_URL,
                                        'google_maps_key': settings.GOOGLE_MAPS_KEY,},
                                       context_instance=RequestContext(request))
+        else:
+            map_center = GEOSGeometry(request.POST['location'])
+            correct = True
+            
     else:
-		form = ProjectForm()
-		town = Town.objects.get(town_name=user_town)
-		town.geometry.transform(4326)
-		map_center = town.geometry.centroid
-		return render_to_response('projects/add.html',
-						{'form': form,
-						'map_center': map_center,
-						'town': user_town,
-                        'base_url': settings.BASE_URL,
-                        'google_maps_key': settings.GOOGLE_MAPS_KEY,},
-						context_instance=RequestContext(request))
+        form = ProjectForm()
+        town = Town.objects.get(town_name=user_town)
+        town.geometry.transform(4326)
+        map_center = town.geometry.centroid
+        correct = False
+        
+    return render_to_response('projects/add.html', 
+                              {'form': form, 
+                               'map_center': map_center, 
+                               'town': user_town, 
+                               'correct': correct,
+                               'base_url': settings.BASE_URL,
+                               'google_maps_key': settings.GOOGLE_MAPS_KEY}, 
+                               context_instance=RequestContext(request))
  
 @login_required    
 def edit(request, project_id):
@@ -143,14 +150,21 @@ def edit(request, project_id):
                                        'base_url': settings.BASE_URL,
                                        'google_maps_key': settings.GOOGLE_MAPS_KEY,},
                                       context_instance=RequestContext(request))
+        else:
+            # get location from form in WGS84
+            project.location = GEOSGeometry(request.POST['location'])
+            correct = True
     else:
         form = ProjectForm(instance=project)
-        return render_to_response('projects/edit.html',
-								{'project': project,
-								'form': form,
-								'base_url': settings.BASE_URL,
-                                'google_maps_key': settings.GOOGLE_MAPS_KEY,},
-								context_instance=RequestContext(request))
+        correct = False
+        
+    return render_to_response('projects/edit.html',
+							{'project': project,
+							'form': form,
+                            'correct': correct,
+							'base_url': settings.BASE_URL,
+                            'google_maps_key': settings.GOOGLE_MAPS_KEY,},
+							context_instance=RequestContext(request))
 
 @login_required								
 def town_taz_geojson(request, town_name):
