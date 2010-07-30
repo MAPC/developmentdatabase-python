@@ -45,23 +45,6 @@ h1 a {
 	padding: 0 6px;
 }
 
-#content table tbody tr th {
-	width: 140px;	
-}
-
-td, th {
-	vertical-align: top;
-}
-
-td.projectproperty, th.projectproperty {
-	text-align: center;
-}
-
-#summarytable tbody tr th {
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-}
-
 #footer	{
     background: #ffffff;
 
@@ -76,8 +59,51 @@ td.projectproperty, th.projectproperty {
 	margin-right: 20px;
 }
 
-#content form table tbody tr th {
+/* @group tables */
+
+table.projectdetail tbody tr th {
 	width: 140px;	
+}
+
+td, th {
+	vertical-align: middle;
+}
+
+th.taz {
+	width: 30px;
+}
+
+th.edit, th.projectproperty {
+	width: 70px;
+}
+
+th.status {
+	width: 200px;
+}
+
+td.projectproperty, th.projectproperty {
+	text-align: center;
+}
+
+#summarytable tbody tr th {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+#summarytable tbody tr td {
+	border-bottom-width: 1px;
+	border-bottom-style: dashed;
+	border-bottom-color: silver;
+}
+
+
+/* @end */
+
+/* @group form */
+
+#content form table tbody tr th {
+	width: 140px;
+	vertical-align: middle;
 }
 
 #content form {
@@ -95,3 +121,7 @@ ul.errorlist li {
 	list-style: none;
 	
 }
+
+
+
+/* @end */

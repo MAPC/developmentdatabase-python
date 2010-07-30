@@ -94,7 +94,8 @@ function init(section) {
 	CC.layer.googsat = new OpenLayers.Layer.Google(
 		"Google Satellite",
 		{
-			type: G_SATELLITE_MAP, 
+			type: G_SATELLITE_MAP,
+			numZoomLevels: 22, 
 			sphericalMercator: true
 		}
 	);
@@ -102,6 +103,7 @@ function init(section) {
 		"Google Streetmap",
 		{
 			type: G_NORMAL_MAP, 
+			numZoomLevels: 20,
 			sphericalMercator: true
 		}
 	);
