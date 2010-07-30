@@ -93,11 +93,15 @@
 		{% endif %}
 	</div>
 	
-	<!-- Google Maps API for "localhost" -->
+	{% if google_maps_key %}
+	
+	<!-- Google Maps API for Google Layers -->
 	<script type="text/javascript" src='http://maps.google.com/maps?file=api&amp;v=2&amp;key={{ google_maps_key }}'></script> 
 	
 	<!-- OpenLayers -->
 	<script type="text/javascript" src="{{ MEDIA_URL }}js/OpenLayers/OpenLayers.js"></script>
+	
+	{% endif %}
 	
 	<!-- Add jQuery From the Google AJAX Libraries and local plugins --> 
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>	
