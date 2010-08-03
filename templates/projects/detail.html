@@ -31,7 +31,7 @@
 {% block content %}
 
 <table class="projectdetail">
-
+	<tr><th>TAZ:</th><td><span class="projectproperty">{{ project.taz.taz_id }}</span></td></tr>
 {% for f in project.get_all_fields %}
     <tr><th>{{f.label|capfirst}}:</th><td><span class="projectproperty">{{ f.value|escape|urlize }}</span></td></tr>	
 {% endfor %}

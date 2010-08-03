@@ -30,6 +30,7 @@
 
 {% csrf_token %}
 <table>
+<tr><th>TAZ:</th><td><span class="projectproperty">{{ project.taz.taz_id }}</span></td></tr>
 {{ form.as_table }}
 </table>
 <input type="submit" value="Submit" />
