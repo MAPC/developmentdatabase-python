@@ -36,15 +36,24 @@ function init(section) {
 			strokeWidth: 0.5,
 			fillColor: "rgb(192,192,192)",
 			fillOpacity: 0.4
-			// FIXME add label depending on zoomlevel
-			// label: "${taz_id}",
-			// fontColor: "rgb(64,64,64)",
-			// fontSize: "6pt",
-			// fontFamily: "Arial",
-			// fontWeight: "normal",
-			// labelAlign: "cm",
-			// labelXOffset: "0",
-			// labelYOffset: "0"
+		}
+	});
+	
+	CC.styles.taz_label = new OpenLayers.StyleMap({
+		"default": {
+			strokeColor: "rgb(64,64,64)",
+			strokeOpacity: 1,
+			strokeWidth: 0.5,
+			fillColor: "rgb(192,192,192)",
+			fillOpacity: 0.4,
+			label: "${taz_id}",
+			fontColor: "rgb(64,64,64)",
+			fontSize: "8pt",
+			fontFamily: "Arial",
+			fontWeight: "normal",
+			labelAlign: "cm",
+			labelXOffset: "0",
+			labelYOffset: "0"
 		}
 	});
 	
@@ -115,22 +124,22 @@ function init(section) {
 	
 	switch (section) {
 		case "index":
-			CC.section.town_taz();
+			CC.section.town_taz(CC.styles.taz);
 			CC.section.project_list();
 	  		break;
 		case "project_detail":
-			CC.section.town_taz();
+			CC.section.town_taz(CC.styles.taz_label);
 			CC.section.project_detail();
 			break;
 		case "project_list":
 			CC.section.project_list();
 	  		break;	
 		case "project_locate":
-			CC.section.town_taz();
+			CC.section.town_taz(CC.styles.taz_label);
 			CC.section.project_locate();
 		  	break;
 		case "town":
-			CC.section.town_taz();
+			CC.section.town_taz(CC.styles.taz);
 			CC.section.project_list();
 		  	break;
 		default:
@@ -138,11 +147,11 @@ function init(section) {
 	}
 }
 
-CC.section.town_taz = function () {
+CC.section.town_taz = function (stylemap) {
 		
 	CC.layer.taz = new OpenLayers.Layer.Vector("TAZ", {
 		format: OpenLayers.Format.GeoJSON,
-		styleMap: CC.styles.taz
+		styleMap: stylemap
 	});
 	
 	// FIXME: ajax loading with OL (loadend event)
