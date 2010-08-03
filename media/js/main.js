@@ -26,7 +26,7 @@ function init(section) {
 			new OpenLayers.Control.LayerSwitcher(),
 			new OpenLayers.Control.Attribution()],
 		projection: CC.projection.OSM,
-		displayProjection: CC.projection.WGS84,
+		displayProjection: CC.projection.WGS84
 	});
 	
 	CC.styles.taz = new OpenLayers.StyleMap({
