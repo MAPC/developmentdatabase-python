@@ -59,6 +59,24 @@
 	{% endif %}
 	
 {% else %}
+	
+	<h3>Login to view, edit or add projects in your municipality or <a href="{{ base_url }}/accounts/register/">register a new account</a></h3>
+	
+	<p>
+	<form method="post" action="{{ base_url }}/accounts/login/">
+	  
+	  	{% csrf_token %}
+	  	
+		<table>
+			<tr><th><label for="id_username">Username:</label></th><td><input id="id_username" type="text" name="username" maxlength="30" /></td></tr>
+			<tr><th><label for="id_password">Password:</label></th><td><input type="password" name="password" id="id_password" /></td></tr>
+		</table>
+		
+		<input type="submit" value="log in" />
+		<input type="hidden" name="next" value="{{ request.get_full_path }}" />
+	</form>
+	</p>
+	<p>Forgot password? <a href="{{ base_url }}/accounts/password/reset/">Reset it</a>!</p>
 
 	<p>
 		The Metropolitan Area Planning Council (MAPC) is seeking your assistance to update the 25-year population and employment projections for the 
@@ -91,29 +109,6 @@
 
 	<p>If you have questions, please contact <a href="http://www.mapc.org/about-mapc/staff/christian-spanring">Christian Spanring</a> at (617) 451- 2770 ext. 2028 or cspanring@mapc.org.</p>
 	
-	<h3>Login to view, edit or add projects in your municipality:</h3>
-	
-	<p>
-	<form method="post" action="{{ base_url }}/accounts/login/">
-	  
-	  	{% csrf_token %}
-	  	
-		<table>
-			<tr><th><label for="id_username">Username:</label></th><td><input id="id_username" type="text" name="username" maxlength="30" /></td></tr>
-			<tr><th><label for="id_password">Password:</label></th><td><input type="password" name="password" id="id_password" /></td></tr>
-		</table>
-		
-		<input type="submit" value="log in" />
-		<input type="hidden" name="next" value="{{ request.get_full_path }}" />
-	</form>
-	
-	<p>Forgot password? <a href="{{ base_url }}/accounts/password/reset/">Reset it</a>!</p>
-	<p>Not a member? <a href="{{ base_url }}/accounts/register/">Register</a>!</p>
-
-</p>
-
-
-
 {% endif %}
 	
 {% endblock %}
