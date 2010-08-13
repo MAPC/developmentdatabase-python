@@ -25,6 +25,9 @@ function init(section) {
 			new OpenLayers.Control.PanZoom(),
 			new OpenLayers.Control.LayerSwitcher(),
 			new OpenLayers.Control.Attribution()],
+		maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+		maxResolution: 156543.0399,
+		units: 'm',
 		projection: CC.projection.OSM,
 		displayProjection: CC.projection.WGS84
 	});
