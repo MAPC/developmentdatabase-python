@@ -62,14 +62,15 @@
 				</span>
 				
 				{% block header %}{% endblock %}
-				
-				
-				
+
   			</div>
 			
 			{% block map %}
-			
-			<div id="map" class="span-24 last"></div>
+
+			<div class="span-24 last">
+				<div class="small mapmeta"><a href="{{ base_url }}/{% firstof project.taz.town_name town %}" title="Project List for {% firstof project.taz.town_name town %}">Project List for {% firstof project.taz.town_name town %}</a></div>
+				<div id="map"></div>			
+			</div>
 			
 			{% endblock %}
 			
