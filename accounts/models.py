@@ -15,7 +15,7 @@ class UserProfile(models.Model):
 
 	def __str__(self):  
 		# return "%s's profile" % self.user
-		return '%s (%s %s)' % (self.user.username, self.user.first_name, self.user.last_name)  
+		return '%s %s (%s)' % (self.user.first_name, self.user.last_name, self.town)  
 
 	# def create_user_profile(sender, instance, created, **kwargs):  
 	#	if created:  

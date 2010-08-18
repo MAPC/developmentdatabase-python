@@ -15,7 +15,7 @@ class Note(models.Model):
                     ('todo', 'ToDo'),
                     )
     type = models.CharField(max_length=10, blank=True, null=True, choices=type_choices)
-    action = models.BooleanField('Requires action?')
+    action = models.BooleanField('Requires action')
     attachment = models.FileField(upload_to='attachments', max_length=100, blank=True, null=True)
     # modified_by = models.ForeignKey(User)
     contact = models.ForeignKey(UserProfile, blank=True, null=True)
