@@ -4,15 +4,15 @@ from django.contrib.gis import admin
 
 class ProjectAdmin(admin.GeoModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'status', 'compl_date', 'area', 'redevelopment', 'location']}),
+        (None, {'fields': ['name', 'status', 'removed', 'compl_date', 'area', 'redevelopment', 'location']}),
         ('Housing Developments', {'fields': ['hd_singlefam_units', 'hd_attached_units', 'hd_apt_units', 'hd_cluster', 'hd_over55', 'hd_mixeduse', 'zoning_tool']}),
         ('Economic Development', {'fields': ['ed_jobs', 'ed_sqft', 'ed_type']}),
         ('Review', {'fields': ['comments', 'confirmed', 'confirmed_by', 'located', 'located_by']}),   
     ]
-    list_display = ('name', 'town_name', 'located', 'confirmed')
-    list_filter = ['status']
+    list_display = ('name', 'town_name', 'located', 'confirmed','removed','last_modified')
+    list_filter = ['status', 'removed']
     date_hierarchy = 'last_modified'
-    search_fields = ['comments']
+    search_fields = ['taz__town_name','name','comments',]
     
 class TazAdmin(admin.GeoModelAdmin):
 	list_display = ('taz_id','town_name')

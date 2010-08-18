@@ -16,9 +16,9 @@ def index(request):
     if request.user.is_authenticated():
         user_town = request.user.profile.town.town_name
         
-        project_list = Project.objects.filter(taz__town_name__iexact=user_town)
+        project_list = Project.objects.filter(taz__town_name__iexact=user_town, removed=False)
         
-        project_list_located = Project.objects.transform(900913).filter(taz__town_name__iexact=user_town, located=True)
+        project_list_located = Project.objects.transform(900913).filter(taz__town_name__iexact=user_town, located=True, removed=False)
         
         djf = Django.Django(geodjango='location', properties=['name'])
         geoj = GeoJSON.GeoJSON()
@@ -44,9 +44,9 @@ def index(request):
 
 @login_required
 def community(request, town_name):
-    project_list = Project.objects.filter(taz__town_name__iexact=town_name)
+    project_list = Project.objects.filter(taz__town_name__iexact=town_name, removed=False)
     
-    project_list_located = Project.objects.transform(900913).filter(taz__town_name__iexact=town_name, located=True)
+    project_list_located = Project.objects.transform(900913).filter(taz__town_name__iexact=town_name, located=True, removed=False)
     
     djf = Django.Django(geodjango='location', properties=['name'])
     geoj = GeoJSON.GeoJSON()
@@ -67,7 +67,7 @@ def community(request, town_name):
         
 @login_required
 def detail(request, project_id):
-	project = Project.objects.transform(4326).get(pk=project_id)
+	project = Project.objects.transform(4326).get(pk=project_id, removed=False)
 	return render_to_response('projects/detail.html',
 							{'project': project,
                              'base_url': settings.BASE_URL,
@@ -76,7 +76,7 @@ def detail(request, project_id):
 	
 @login_required
 def project_geojson(request, project_id):
-	project = Project.objects.transform(4326).get(pk=project_id)
+	project = Project.objects.transform(4326).get(pk=project_id, removed=False)
 	return render_to_response('projects/project.geojson',
 							{'project': project,
                              'base_url': settings.BASE_URL,
@@ -130,7 +130,7 @@ def edit(request, project_id):
     
     # ProjectForm = forms.form_for_model(Project)
     
-    project = Project.objects.transform(4326).get(pk=project_id)
+    project = Project.objects.transform(4326).get(pk=project_id, removed=False)
 
     if request.method == 'POST': # If the form has been submitted...
         form = ProjectForm(request.POST, instance=project) # A form bound to the POST data        

@@ -44,6 +44,7 @@ class Project(models.Model):
     confirmed_by = models.CharField(max_length=30, blank=True)
     located = models.BooleanField('Located, project location is correct.')
     located_by = models.CharField(max_length=30, blank=True)
+    removed = models.BooleanField('Removed project')
     
     # user = models.ForeignKey(User, editable=False)
     
@@ -127,7 +128,7 @@ class ProjectForm(ModelForm):
     class Meta:
         model = Project
         # fields = ['name', 'status', 'comments', 'location']
-        exclude = ['taz']
+        exclude = ['taz', 'removed']
         widgets = {
            'comments': Textarea(attrs={'cols': 80, 'rows': 20}),
            'location': HiddenInput(),
