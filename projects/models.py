@@ -169,7 +169,8 @@ class Town(models.Model):
     
     # So the model is pluralized correctly in the admin.
     class Meta:
-        verbose_name_plural = "Towns"
+        verbose_name_plural = 'Towns'
+        ordering = ['town_name']
     
     # Returns the string representation of the model.
     def __unicode__(self):
