@@ -10,8 +10,8 @@ from communitycomments.projects.models import Taz, Town
 attrs_dict = { 'class': 'required' }
 
 class ExtendedRegistrationForm(RegistrationForm):
-    first_name = forms.CharField(label='First name', max_length=30, widget=forms.TextInput())
-    last_name = forms.CharField(label='Last name', max_length=30, widget=forms.TextInput())
+    first_name = forms.CharField(label='First name', max_length=30, required=False, widget=forms.TextInput())
+    last_name = forms.CharField(label='Last name', max_length=30, required=False, widget=forms.TextInput())
     town = forms.ModelChoiceField(label='Municipality', queryset=Town.objects.filter(geometry__bboverlaps=Taz.objects.all().collect()).order_by('town_name'), empty_label='No Municipality selected')
     position = forms.CharField(label='Position in Municipality', max_length=100, widget=forms.TextInput(attrs=attrs_dict))
     
