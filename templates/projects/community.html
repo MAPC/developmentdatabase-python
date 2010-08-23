@@ -9,7 +9,7 @@ Projects in {{ town }} |
 
 {% block header %}
 
-	<h3>Projects in {{ town }}</h3>
+	<h3>Projects in {{ town }} {% if town == user.profile.town.town_name %}(<span class="small"><a href='{{ base_url }}/project/add/'>Add New Project</a></span>){% endif %}</h3>
 
 {% endblock %}
 
