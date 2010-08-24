@@ -98,9 +98,9 @@ function init(section) {
 			labelYOffset: "10"
 		}
 	});
-	
 	CC.layer.osm = new OpenLayers.Layer.OSM(
-		"OpenStreetMap"
+		"OpenStreetMap/MapQuest",
+		"http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png"
 	);
 	
 	CC.layer.googsat = new OpenLayers.Layer.Google(
