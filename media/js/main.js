@@ -120,7 +120,7 @@ function init(section) {
 		}
 	);
 	
-	CC.map.addLayers([CC.layer.osm, CC.layer.googstreet, CC.layer.googsat]);
+	CC.map.addLayers([CC.layer.googstreet, CC.layer.googsat, CC.layer.osm]);
 	
 	// default center
 	// CC.map.setCenter(new OpenLayers.LonLat(-71.08, 42.34).transform(CC.projection.WGS84, CC.projection.OSM), 9);
