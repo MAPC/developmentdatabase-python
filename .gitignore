@@ -20,6 +20,4 @@
 
 notes.txt
 projects_bak.json
-apache/communitycomments.wsgi
-apache/communitycomments.conf
 settings_local.py
