@@ -3,7 +3,7 @@ from django.views.generic.simple import direct_to_template
 from django.contrib.auth import views as auth_views
 from registration.views import activate
 from registration.views import register
-from communitycomments.accounts.newform import ExtendedRegistrationForm
+from projections.accounts.newform import ExtendedRegistrationForm
 
 urlpatterns = patterns('',
     # Activation keys get matched by w+ instead of the more specific

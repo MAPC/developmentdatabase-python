@@ -2,7 +2,7 @@ from django.conf import settings
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.forms import ModelForm
-from communitycomments.projects.models import Project, ProjectForm, Taz, Town
+from projections.projects.models import Project, ProjectForm, Taz, Town
 
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required

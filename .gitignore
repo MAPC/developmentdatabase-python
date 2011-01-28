@@ -1,0 +1,25 @@
+# excluded files
+.project
+.tmp*
+*.sqlite
+*.pyc
+.pydevproject
+
+
+# static map tiles folder
+/tiles*
+
+# shapefile folder
+/shp*
+
+# data folder
+/data*
+
+*initial_data.json
+*initial_data.zip
+
+notes.txt
+projects_bak.json
+apache/communitycomments.wsgi
+apache/communitycomments.conf
+settings_local.py

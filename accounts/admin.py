@@ -1,4 +1,4 @@
-from communitycomments.accounts.models import UserProfile
+from projections.accounts.models import UserProfile
 from django.contrib import admin
 
 class UserProfileAdmin(admin.ModelAdmin):

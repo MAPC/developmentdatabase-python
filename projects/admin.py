@@ -1,4 +1,4 @@
-from communitycomments.projects.models import Project, Taz
+from projections.projects.models import Project, Taz
 # from django.contrib import admin
 from django.contrib.gis import admin
 

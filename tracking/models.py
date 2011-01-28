@@ -1,8 +1,8 @@
 from django.db import models
 import datetime
 
-from communitycomments.projects.models import Town
-from communitycomments.accounts.models import UserProfile
+from projections.projects.models import Town
+from projections.accounts.models import UserProfile
 from django.contrib.auth.models import User
 # Create your models here.
 
