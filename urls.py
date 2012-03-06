@@ -1,4 +1,5 @@
-from django.conf.urls.defaults import *
+from django.conf import settings
+from django.conf.urls.defaults import patterns, include, url
 
 # from django.views.generic.simple import direct_to_template
 
@@ -10,14 +11,13 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Example:
-	url(r'^$', 'communitycomments.projects.views.index', name='home'),
+	url(r'^$', 'projects.views.index', name='home'),
     
-    (r'^project/(?P<project_id>\d+)/$', 'communitycomments.projects.views.detail'),
-    (r'^project/(?P<project_id>\d+)/edit/$', 'communitycomments.projects.views.edit'),
-	(r'^project/add/$', 'communitycomments.projects.views.add'),
+    (r'^project/(?P<project_id>\d+)/$', 'projects.views.detail'),
+    (r'^project/(?P<project_id>\d+)/edit/$', 'projects.views.edit'),
+	(r'^project/add/$', 'projects.views.add'),
     # (r'^project/(?P<project_id>\d+)/save/$', 'communitycomments.projects.views.save'),
-    (r'^project/(?P<project_id>\d+)/geojson/$', 'communitycomments.projects.views.project_geojson'),
-    
+    (r'^project/(?P<project_id>\d+)/geojson/$', 'projects.views.project_geojson'),
     
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
@@ -28,15 +28,18 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     
     
-    
-    
-    
-    (r'^accounts/', include('communitycomments.accounts.urls')),
+    (r'^accounts/', include('accounts.urls')),
     
     # Filter by community name
-    (r'^(?P<town_name>\w+)/taz/geojson/$', 'communitycomments.projects.views.town_taz_geojson'),
-    (r'^(?P<town_name>\w+)/$', 'communitycomments.projects.views.community'),
+    (r'^(?P<town_name>\w+)/taz/geojson/$', 'projects.views.town_taz_geojson'),
+    (r'^(?P<town_name>\w+)/$', 'projects.views.community'),
     # (r'^(?P<community_name>\w+)/$', 'communitycomments.projects.views.community')
 	# (r'^game', direct_to_template,
     #        { 'template': 'game.html' }, 'game'	),
 )
+
+if settings.DEBUG:
+    # static files (images, css, javascript, etc.)
+    urlpatterns += patterns('',
+        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.MEDIA_ROOT}))

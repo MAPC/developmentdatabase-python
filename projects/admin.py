@@ -1,4 +1,4 @@
-from projections.projects.models import Project, Taz
+from projects.models import Project, Taz
 # from django.contrib import admin
 from django.contrib.gis import admin
 

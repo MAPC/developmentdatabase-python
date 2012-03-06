@@ -1,13 +1,13 @@
 from django.db import models
 import datetime
 
-from projections.projects.models import Town
-from projections.accounts.models import UserProfile
+from projects.models import Town
+from accounts.models import UserProfile
 from django.contrib.auth.models import User
 # Create your models here.
 
 class Note(models.Model):
-    town = models.ForeignKey('projects.Town')
+    town = models.ForeignKey(Town)
     desc = models.TextField('Text')
     type_choices = (
                     ('email', 'Email'),

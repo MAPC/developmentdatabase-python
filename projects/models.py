@@ -11,9 +11,53 @@ from django.template import RequestContext
 
 # Create your models here.
 
+    
+class Town(models.Model):
+    town_id = models.IntegerField('Municipality ID', unique=True)
+    town_name = models.CharField('Municipality Name', max_length=50, unique=True)
+    type = models.CharField(max_length=10)
+    
+    # GeoDjango-specific: a geometry field and overriding 
+    # the default manager with a GeoManager instance.
+    geometry = models.MultiPolygonField(srid=26986)
+    objects = models.GeoManager()
+    
+    # So the model is pluralized correctly in the admin.
+    class Meta:
+        verbose_name_plural = 'Towns'
+        ordering = ['town_name']
+    
+    # Returns the string representation of the model.
+    def __unicode__(self):
+        return self.town_name
+
+
+class Taz(models.Model):
+    """ taz, town_id, town_name, x, y """
+    taz_id = models.CharField('TAZ ID', max_length=10, unique=True)
+    town_id = models.IntegerField('Municipality ID')
+    town_name = models.CharField(max_length=50)
+    x = models.FloatField()
+    y = models.FloatField()
+    
+    
+    # GeoDjango-specific: a geometry field and overriding 
+    # the default manager with a GeoManager instance.
+    geometry = models.MultiPolygonField(srid=26986)
+    objects = models.GeoManager()
+    
+    # So the model is pluralized correctly in the admin.
+    class Meta:
+        verbose_name_plural = "TAZs"
+    
+    # Returns the string representation of the model.
+    def __unicode__(self):
+        return self.taz_id
+    
+
 class Project(models.Model):
     # taz = models.IntegerField('TAZ')
-    taz = models.ForeignKey('projects.Taz', to_field='taz_id', editable=False)
+    taz = models.ForeignKey(Taz, to_field='taz_id', editable=False)
     name = models.CharField(max_length=200)
     status_choices = (
                       ('completed', 'Completed'),
@@ -124,6 +168,7 @@ class Project(models.Model):
                 )
         return fields
 
+
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
@@ -135,45 +180,3 @@ class ProjectForm(ModelForm):
            'confirmed_by': HiddenInput(), 
            'located_by': HiddenInput(),
         }
-    
-class Taz(models.Model):
-    """ taz, town_id, town_name, x, y """
-    taz_id = models.CharField('TAZ ID', max_length=10, unique=True)
-    town_id = models.IntegerField('Municipality ID')
-    town_name = models.CharField(max_length=50)
-    x = models.FloatField()
-    y = models.FloatField()
-    
-    
-    # GeoDjango-specific: a geometry field and overriding 
-    # the default manager with a GeoManager instance.
-    geometry = models.MultiPolygonField(srid=26986)
-    objects = models.GeoManager()
-    
-    # So the model is pluralized correctly in the admin.
-    class Meta:
-        verbose_name_plural = "TAZs"
-    
-    # Returns the string representation of the model.
-    def __unicode__(self):
-        return self.taz_id
-    
-class Town(models.Model):
-    town_id = models.IntegerField('Municipality ID', unique=True)
-    town_name = models.CharField('Municipality Name', max_length=50, unique=True)
-    type = models.CharField(max_length=10)
-    
-    # GeoDjango-specific: a geometry field and overriding 
-    # the default manager with a GeoManager instance.
-    geometry = models.MultiPolygonField(srid=26986)
-    objects = models.GeoManager()
-    
-    # So the model is pluralized correctly in the admin.
-    class Meta:
-        verbose_name_plural = 'Towns'
-        ordering = ['town_name']
-    
-    # Returns the string representation of the model.
-    def __unicode__(self):
-        return self.town_name
-    

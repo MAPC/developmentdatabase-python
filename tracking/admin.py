@@ -1,5 +1,5 @@
 from django.contrib import admin
-from projections.tracking.models import Note
+from tracking.models import Note
 
 class NoteAdmin(admin.ModelAdmin):
     list_display = ('town_name', 'type', 'excerpt', 'action', 'attachment_name', 'last_modified')
