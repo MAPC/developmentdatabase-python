@@ -58,11 +58,11 @@ class StatusChoice(models.Model):
     status = models.CharField(max_length=50, blank=False, null=False)
     
 class ZoningChoice(models.Model):
-    type = models.CharField(20, blank=False, null=False)
-    description = models.CharField(255, blank=False, null=False)
+    type = models.CharField(max_length=20, blank=False, null=False)
+    description = models.CharField(max_length=255, blank=False, null=False)
 
 class TypeChoice(models.Model):
-    type = models.CharField(50, blank=False, null=False)
+    type = models.CharField(max_length=50, blank=False, null=False)
     
 class Project(models.Model):
     # taz = models.IntegerField('TAZ')
@@ -80,7 +80,7 @@ class Project(models.Model):
     hd_over55 = models.BooleanField('Over 55?')
     hd_mixeduse = models.BooleanField('Mixed use project?')
     zoning_tool = models.CharField(max_length=10, blank=True, null=True, choices=(""))
-    zoning_tool_new = models.ForeignKey(ZoningChoice, null=True)
+    zoning_tool_new = models.ForeignKey(ZoningChoice, blank=True, null=True)
     ed_jobs = models.IntegerField('Jobs or Job losses', blank=True, null=True)
     ed_sqft = models.FloatField('Square footage', blank=True, null=True)
     ed_type = models.CharField('Type of development', max_length=200, blank=True)
@@ -99,7 +99,7 @@ class Project(models.Model):
     location = models.PointField(srid=26986) # SRS mass state plane
     objects = models.GeoManager()
     
-    type = models.ForeignKey(TypeChoice)
+    type = models.ForeignKey(TypeChoice, blank=True, null=True)
 
     # find taz for project
     def save(self, *args, **kwargs):

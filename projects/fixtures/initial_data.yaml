@@ -1,97 +1,93 @@
---- # ProjectStatus
-- model: projects.projectstatus
-	pk: 1
-  	fields:
-    	status: Projected
+- model: projects.statuschoice
+  pk: 1
+  fields:
+    status: Projected
 
-- model: projects.projectstatus
-	pk: 2
-  	fields:
-    	status: Planning/Permitting
+- model: projects.statuschoice
+  pk: 2
+  fields:
+    status: Planning/Permitting
 
-- model: projects.projectstatus
-	pk: 3
-  	fields:
-    	status: Construction
+- model: projects.statuschoice
+  pk: 3
+  fields:
+    status: Construction
 
-- model: projects.projectstatus
-	pk: 4
-  	fields:
-    	status: Completed
+- model: projects.statuschoice
+  pk: 4
+  fields:
+    status: Completed
 
-- model: projects.projectstatus
-	pk: 5
-  	fields:
-    	status: Cancelled
+- model: projects.statuschoice
+  pk: 5
+  fields:
+    status: Cancelled
 
-- model: projects.projectstatus
-	pk: 6
-  	fields:
-    	status: Stalled
-
-
---- # ZoningChoice
-- model: projects.zoningchoice
-	pk: 1
-	fields:
-		type: 40B
-		description: Comprehensive Permit 
+- model: projects.statuschoice
+  pk: 6
+  fields:
+    status: Stalled
 
 - model: projects.zoningchoice
-	pk: 2
-	fields:
-		type: 40R
-		description: Smart Growth Zoning
+  pk: 1
+  fields:
+    type: 40B
+    description: Comprehensive Permit 
 
 - model: projects.zoningchoice
-	pk: 3
-	fields:
-		type: 40R
-		description: Expedited Permitting
+  pk: 2
+  fields:
+    type: 40R
+    description: Smart Growth Zoning
+
+- model: projects.zoningchoice
+  pk: 3
+  fields:
+    type: 40R
+    description: Expedited Permitting
 
 
---- # TypeChoice	
 - model: projects.typechoice
-	pk: 1
-	fields:
-		type: Residential
+  pk: 1
+  fields:
+    type: Residential
 
 - model: projects.typechoice
-	pk: 2
-	fields:
-		type: Commercial: Retail / Restaurant
+  pk: 2
+  fields:
+    type: "Commercial: Retail / Restaurant"
 
 - model: projects.typechoice
-	pk: 3
-	fields:
-		type: Commercial: Office 
-		
+  pk: 3
+  fields:
+    type: "Commercial: Office" 
+        
 - model: projects.typechoice
-	pk: 4
-	fields:
-		type: Commercial: Industrial or Other (single use)
-		
+  pk: 4
+  fields:
+    type: "Commercial: Industrial or Other (single use)"
+       
 - model: projects.typechoice
-	pk: 5
-	fields:
-		type: Mixed Commercial or Industrial
-		
+  pk: 5
+  fields:
+    type: Mixed Commercial or Industrial
+        
 - model: projects.typechoice
-	pk: 6
-	fields:
-		type: Mixed Commercial/Residential
-		
+  pk: 6
+  fields:
+    type: Mixed Commercial/Residential
+       
 - model: projects.typechoice
-	pk: 7
-	fields:
-		type: Institutional / Academic / Hospital
-		
+  pk: 7
+  fields:
+    type: Institutional / Academic / Hospital
+        
 - model: projects.typechoice
-	pk: 8
-	fields:
-		type: Senior Housing / Assisted Living
-		
+  pk: 8
+  fields:
+    type: Senior Housing / Assisted Living
+        
 - model: projects.typechoice
-	pk: 9
-	fields:
-		type: Senior Housing / Assisted Living
+  pk: 9
+  fields:
+    type: Senior Housing / Assisted Living
