@@ -172,6 +172,10 @@ EMAIL_PORT = 25
 BASE_URL = '/projections'
 GOOGLE_API_KEY = ''
 
+#This requires the pyyaml module to be installed
+#pyyaml is one of the best markup languages for fixtures.
+SERIALIZATION_MODULES = { 'yml': "django.core.serializers.pyyaml" } 
+
 # import local settings
 try:
     from local_settings import *
