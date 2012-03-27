@@ -99,7 +99,7 @@ class Project(models.Model):
     location = models.PointField(srid=26986) # SRS mass state plane
     objects = models.GeoManager()
     
-    type = models.ForeignKey(TypeChoices)
+    type = models.ForeignKey(TypeChoice)
 
     # find taz for project
     def save(self, *args, **kwargs):
