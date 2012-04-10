@@ -68,7 +68,7 @@ class TypeChoice(models.Model):
     
 class Project(models.Model):
     # taz = models.IntegerField('TAZ')
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=1000)
     description = models.TextField(blank=True, null=True)
     type_id = models.ForeignKey(TypeChoice, blank=True, null=True)
     type_detail = models.TextField(blank=True, null=True)
@@ -78,8 +78,8 @@ class Project(models.Model):
     completion = models.IntegerField(blank=True, null=True)
     area = models.FloatField('Project area [acres]', blank=True, null=True)
     dev_name = models.TextField(blank=True, null=True)
-    website = models.URLField(blank=True, null=True)
-    website_add = models.URLField(blank=True, null=True)
+    website = models.URLField(max_length=1000, blank=True, null=True)
+    website_add = models.URLField(max_length=1000, blank=True, null=True)
     created_by = models.ForeignKey(User, editable=False, related_name="project_created_by", blank=True, null=True)
     create_date = models.DateTimeField(editable=False, auto_now=True)
     last_updated_by = models.ForeignKey(User, related_name="project_last_updated_by", blank=True, null=True)
@@ -129,7 +129,7 @@ class Project(models.Model):
     location = models.PointField(srid=26986) # SRS mass state plane
     objects = models.GeoManager()
 
-    taz_id = models.ForeignKey(Taz, to_field='taz_id', editable=False, blank=True, null=True)
+    taz_id = models.ForeignKey(Taz, to_field='taz_id', editable=True, blank=True, null=True)
     
     # find taz for project
     def save(self, *args, **kwargs):
@@ -139,8 +139,10 @@ class Project(models.Model):
 #        self.taz = t
          # dummy until we figure another solution out
         # if not self.id:
-        # try
-        self.taz = Taz.objects.get(geometry__contains=self.location)
+        try:
+            self.taz = Taz.objects.get(geometry__contains=self.location)
+        except:
+            self.taz = None
             # geometry__contains=self.location
         #    self.last_modified = datetime.date.today()
         # self.comments = self.location
