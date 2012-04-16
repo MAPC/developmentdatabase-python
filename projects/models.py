@@ -81,7 +81,7 @@ class Project(models.Model):
     website = models.URLField(max_length=1000, blank=True, null=True)
     website_add = models.URLField(max_length=1000, blank=True, null=True)
     created_by = models.ForeignKey(User, editable=False, related_name="project_created_by", blank=True, null=True)
-    create_date = models.DateTimeField(editable=False, auto_now=True)
+    create_date = models.DateTimeField(editable=False, auto_now_add=True)
     last_updated_by = models.ForeignKey(User, related_name="project_last_updated_by", blank=True, null=True)
     last_modified = models.DateTimeField(editable=False, auto_now=True)
     
@@ -129,16 +129,13 @@ class Project(models.Model):
     location = models.PointField(srid=26986) # SRS mass state plane
     objects = models.GeoManager()
     
-    # find taz for project
+    # custom save
     def save(self, *args, **kwargs):
         try:
             # find TAZ for project location
             self.taz = Taz.objects.get(geometry__contains=self.location)
         except:
-            self.taz = None
-        
-        self.last_modified = datetime.datetime.today()
-        
+            self.taz = None        
         super(Project, self).save(*args, **kwargs)
         
 # topology rule
