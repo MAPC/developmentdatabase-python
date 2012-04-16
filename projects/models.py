@@ -123,6 +123,9 @@ class Project(models.Model):
     total_cost_allocated_pct = models.FloatField(blank=True, null=True)
     comment = models.TextField('Comment', blank=True, null=True)
     mapc_comment = models.TextField('Comment', blank=True, null=True)
+    draft = models.BooleanField(help_text='Required project information is incomplete.')
+    removed = models.BooleanField(help_text='Deleted project, will not be shown on public page')
+
     
     # GeoDjango-specific: a geometry field and overriding 
     # the default manager with a GeoManager instance.
@@ -137,12 +140,6 @@ class Project(models.Model):
         except:
             self.taz = None        
         super(Project, self).save(*args, **kwargs)
-        
-# topology rule
-#    def clean(self): 
-#        tv = Taz.objects.filter(geometry__contains=self.location)
-#        if len(tv) <= 1:
-#            raise ValidationError(len('Location is not within a TAZ. Please re-locate project.'))
            
     # So the model is pluralized correctly in the admin.
     class Meta:
@@ -154,6 +151,10 @@ class Project(models.Model):
     
     def town_name(self):
         return self.taz.town_name
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('projects.views.detail', None, { 'project_id': self.id, })
 
 #    the short elegant version
 #    def get_fields(self):
