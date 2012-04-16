@@ -67,7 +67,7 @@ class TypeChoice(models.Model):
     type = models.CharField(max_length=50, blank=False, null=False)
     
 class Project(models.Model):
-    taz = models.IntegerField('TAZ')
+    taz = models.ForeignKey(Taz, blank=True, null=True)
     name = models.CharField(max_length=1000)
     description = models.TextField(blank=True, null=True)
     type_id = models.ForeignKey(TypeChoice, blank=True, null=True)
@@ -128,28 +128,16 @@ class Project(models.Model):
     # the default manager with a GeoManager instance.
     location = models.PointField(srid=26986) # SRS mass state plane
     objects = models.GeoManager()
-
-    taz_id = models.ForeignKey(Taz, to_field='taz_id', editable=True, blank=True, null=True)
     
     # find taz for project
     def save(self, *args, **kwargs):
-#        # try find taz, otherwise don't validate form! ...probably move to form_save
-        # l = 'POINT (243617.8433000145596452 901646.1310999535489827)'
-#        t = Taz.objects.get(geometry__contains=l)
-#        self.taz = t
-         # dummy until we figure another solution out
-        # if not self.id:
         try:
+            # find TAZ for project location
             self.taz = Taz.objects.get(geometry__contains=self.location)
         except:
             self.taz = None
-            # geometry__contains=self.location
-        #    self.last_modified = datetime.date.today()
-        # self.comments = self.location
         
         self.last_modified = datetime.datetime.today()
-        # return super(Entry, self).save()
-        
         
         super(Project, self).save(*args, **kwargs)
         
