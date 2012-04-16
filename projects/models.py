@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.contrib.gis.db import models
 # from django import forms
 from django.forms import ModelForm, Textarea, HiddenInput
@@ -8,6 +9,7 @@ from django.core.exceptions import ValidationError
 # from django.contrib.gis.geos import *
 
 from django.template import RequestContext
+#from django.core.management.validation import max_length
 
 # Create your models here.
 
@@ -53,50 +55,82 @@ class Taz(models.Model):
     # Returns the string representation of the model.
     def __unicode__(self):
         return self.taz_id
-    
 
-class Project(models.Model):
-    # taz = models.IntegerField('TAZ')
-    taz = models.ForeignKey(Taz, to_field='taz_id', editable=False)
-    name = models.CharField(max_length=200)
-    status_choices = (
-                      ('completed', 'Completed'),
-                      ('construction', 'Under construction'),
-                      ('planning', 'Advanced planning/permitting'),
-                      )
-    status = models.CharField(max_length=20, blank=True, null=True, choices=status_choices)
-    compl_date = models.DateField('Estimated date of completion', blank=True, null=True)
-    area = models.FloatField('Project area [acres]', blank=True, null=True)
-    redevelopment = models.BooleanField('Redevelopment of developed land?')
-    hd_singlefam_units = models.IntegerField('Single family homes', blank=True, null=True)
-    hd_attached_units = models.IntegerField('Attached single family homes', blank=True, null=True)
-    hd_apt_units = models.IntegerField('Apartments and condos', blank=True, null=True)
-    hd_cluster = models.BooleanField('Cluster subdivision?')
-    hd_over55 = models.BooleanField('Over 55?')
-    hd_mixeduse = models.BooleanField('Mixed use project?')
-    zoning_tools = (
-                    ('40B', 'Chapter 40B Comprehensive Permit Law'),
-                    ('40R', 'Chapter 40R Smart Growth Zoning and Housing Production Law')
-                    )
-    zoning_tool = models.CharField(max_length=10, blank=True, null=True, choices=zoning_tools)
-    ed_jobs = models.IntegerField('Jobs or Job losses', blank=True, null=True)
-    ed_sqft = models.FloatField('Square footage', blank=True, null=True)
-    ed_type = models.CharField('Type of development', max_length=200, blank=True)
-    comments = models.TextField('Comments', blank=True, null=True)
-    last_modified = models.DateTimeField(editable=False, auto_now=True)
-    confirmed = models.BooleanField('Confirmed, project information is correct.')
-    confirmed_by = models.CharField(max_length=30, blank=True)
-    located = models.BooleanField('Located, project location is correct.')
-    located_by = models.CharField(max_length=30, blank=True)
-    removed = models.BooleanField('Removed project')
+class StatusChoice(models.Model):
+    status = models.CharField(max_length=50, blank=False, null=False)
     
-    # user = models.ForeignKey(User, editable=False)
+class ZoningChoice(models.Model):
+    type = models.CharField(max_length=20, blank=False, null=False)
+    description = models.CharField(max_length=255, blank=False, null=False)
+
+class TypeChoice(models.Model):
+    type = models.CharField(max_length=50, blank=False, null=False)
+    
+class Project(models.Model):
+    taz = models.IntegerField('TAZ')
+    name = models.CharField(max_length=1000)
+    description = models.TextField(blank=True, null=True)
+    type_id = models.ForeignKey(TypeChoice, blank=True, null=True)
+    type_detail = models.TextField(blank=True, null=True)
+    status_id = models.ForeignKey(StatusChoice, blank=True, null=True)
+    stalled = models.TextField("Project Stalled?", blank=True, null=True)
+    phase = models.TextField(blank=True, null=True)
+    completion = models.IntegerField(blank=True, null=True)
+    area = models.FloatField('Project area [acres]', blank=True, null=True)
+    dev_name = models.TextField(blank=True, null=True)
+    website = models.URLField(max_length=1000, blank=True, null=True)
+    website_add = models.URLField(max_length=1000, blank=True, null=True)
+    created_by = models.ForeignKey(User, editable=False, related_name="project_created_by", blank=True, null=True)
+    create_date = models.DateTimeField(editable=False, auto_now=True)
+    last_updated_by = models.ForeignKey(User, related_name="project_last_updated_by", blank=True, null=True)
+    last_modified = models.DateTimeField(editable=False, auto_now=True)
+    
+    #housing
+    total_housing_units = models.IntegerField(blank=True, null=True)
+    detached_single_fam= models.IntegerField(blank=True, null=True)
+    townhouse_small_multi_fam = models.IntegerField(blank=True, null=True)
+    med_large_multi_fam = models.IntegerField(blank=True, null=True)
+    age_restricted_pct = models.FloatField(blank=True, null=True)
+    affordable_pct = models.FloatField(blank=True, null=True)
+    affordable_comment = models.TextField(blank=True, null=True)
+    group_quarters = models.IntegerField(blank=True, null=True)
+    nonres_dev = models.IntegerField(blank=True, null=True)
+    hotel_rooms = models.IntegerField(blank=True, null=True)
+    retail_restaurant_pct = models.FloatField(blank=True, null=True)
+    office_medical_pct = models.FloatField(blank=True, null=True)
+    manufacturing_industrial_pct = models.FloatField(blank=True, null=True)
+    warehouse_trucking_pct = models.FloatField(blank=True, null=True)
+    lab_RandD_pct = models.FloatField(blank=True, null=True)
+    edu_institution_pct = models.FloatField(blank=True, null=True)
+    other_pct = models.FloatField(blank=True, null=True)
+    
+    #jobs
+    jobs = models.IntegerField(blank=True, null=True)
+    est_emp = models.FloatField(blank=True, null=True)
+    est_emp_loss = models.IntegerField(blank=True, null=True)
+    jobs_per_1000 = models.IntegerField(blank=True, null=True) # jobs per 1000 sq. ft.
+    metero_future_discount_pct = models.FloatField(blank=True, null=True)
+    current_trends_discount_pct = models.FloatField(blank=True, null=True)
+    
+    #project specific
+    parking_spaces = models.IntegerField(blank=True, null=True)
+    redevelopment = models.CharField('Redevelopment of developed land?', max_length=50, blank=True, null=True) # FIXME: make choice options
+    cluster_subdivision = models.FloatField(blank=True, null=True)
+    zoning_tool_id = models.ForeignKey(ZoningChoice, blank=True, null=True)
+    as_of_right = models.TextField(blank=True, null=True)
+    mixed_use = models.FloatField(blank=True, null=True)
+    total_cost = models.IntegerField(blank=True, null=True)
+    total_cost_allocated_pct = models.FloatField(blank=True, null=True)
+    comment = models.TextField('Comment', blank=True, null=True)
+    mapc_comment = models.TextField('Comment', blank=True, null=True)
     
     # GeoDjango-specific: a geometry field and overriding 
     # the default manager with a GeoManager instance.
     location = models.PointField(srid=26986) # SRS mass state plane
     objects = models.GeoManager()
 
+    taz_id = models.ForeignKey(Taz, to_field='taz_id', editable=True, blank=True, null=True)
+    
     # find taz for project
     def save(self, *args, **kwargs):
 #        # try find taz, otherwise don't validate form! ...probably move to form_save
@@ -105,8 +139,10 @@ class Project(models.Model):
 #        self.taz = t
          # dummy until we figure another solution out
         # if not self.id:
-        # try
-        self.taz = Taz.objects.get(geometry__contains=self.location)
+        try:
+            self.taz = Taz.objects.get(geometry__contains=self.location)
+        except:
+            self.taz = None
             # geometry__contains=self.location
         #    self.last_modified = datetime.date.today()
         # self.comments = self.location
