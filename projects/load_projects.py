@@ -3,7 +3,8 @@ from django.contrib.gis.utils import LayerMapping
 #from models import Project
 from projects.models import *
 
-project_mapping = {"name" : "DDname",
+project_mapping = {"dd_id": "DD_ID",
+                   "name" : "DDname",
                    "completion" : "ComplYr",
                    "area" : "PrjAcrs",
                    "website" : "DD_URL",
@@ -35,7 +36,7 @@ project_mapping = {"name" : "DDname",
 
 #project_shp = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/MAPC_DevtDatabase_V1_03_19_12.shp"))
 
-project_shp = "/vagrant/git/data/MAPC_DevtDatabase_V1_03_19_12.shp"
+project_shp = "/vagrant/git/data/MAPC_DevtDatabase_V1_04_17_12.shp"
 def run(verbose=True):
     lm = LayerMapping(Project, project_shp, project_mapping, transform=False, encoding='iso-8859-1')
     lm.save(strict=True, verbose=verbose)

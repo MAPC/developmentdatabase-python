@@ -68,6 +68,7 @@ class TypeChoice(models.Model):
     
 class Project(models.Model):
     # taz = models.IntegerField('TAZ')
+    dd_id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=1000)
     description = models.TextField(blank=True, null=True)
     type_id = models.ForeignKey(TypeChoice, blank=True, null=True)
@@ -90,7 +91,7 @@ class Project(models.Model):
     detached_single_fam= models.IntegerField(blank=True, null=True)
     townhouse_small_multi_fam = models.IntegerField(blank=True, null=True)
     med_large_multi_fam = models.IntegerField(blank=True, null=True)
-    age_restricted_pct = models.FloatField(blank=True, null=True)
+    age_restricted_pct = models.CharField(max_length=20, blank=True, null=True, choices=(("0", "Unknown"), ("YES", "Yes"), ("NO", "No")))
     affordable_pct = models.FloatField(blank=True, null=True)
     affordable_comment = models.TextField(blank=True, null=True)
     group_quarters = models.IntegerField(blank=True, null=True)
@@ -114,11 +115,11 @@ class Project(models.Model):
     
     #project specific
     parking_spaces = models.IntegerField(blank=True, null=True)
-    redevelopment = models.FloatField('Redevelopment of developed land?', blank=True, null=True)
-    cluster_subdivision = models.FloatField(blank=True, null=True)
+    redevelopment = models.CharField(max_length=20, blank=True, null=True, choices=(("0", "Unknown"), ("YES", "Yes"), ("NO", "No")))
+    cluster_subdivision = models.CharField(max_length=20, blank=True, null=True, choices=(("0", "Unknown"), ("YES", "Yes"), ("NO", "No")))
     zoning_tool_id = models.ForeignKey(ZoningChoice, blank=True, null=True)
     as_of_right = models.TextField(blank=True, null=True)
-    mixed_use = models.FloatField(blank=True, null=True)
+    mixed_use = models.CharField(max_length=20, blank=True, null=True, choices=(("0", "Unknown"), ("YES", "Yes"), ("NO", "No")))
     total_cost = models.IntegerField(blank=True, null=True)
     total_cost_allocated_pct = models.FloatField(blank=True, null=True)
     comment = models.TextField('Comment', blank=True, null=True)
