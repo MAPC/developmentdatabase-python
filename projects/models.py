@@ -131,7 +131,6 @@ class Project(models.Model):
     # the default manager with a GeoManager instance.
     location = models.PointField(srid=26986) # SRS mass state plane
     objects = models.GeoManager()
-
     taz_id = models.ForeignKey(Taz, to_field='taz_id', editable=True, blank=True, null=True)
     
     # find taz for project
@@ -152,8 +151,6 @@ class Project(models.Model):
         
         self.last_modified = datetime.datetime.today()
         # return super(Entry, self).save()
-        
-        
         super(Project, self).save(*args, **kwargs)
         
 # topology rule
