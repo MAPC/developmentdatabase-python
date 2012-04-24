@@ -28,7 +28,7 @@ def index(request):
         town.geometry.transform(4326)
         map_center = town.geometry.centroid
         
-        return render_to_response('index.html',
+        return render_to_response('projects/index.html',
                                   {'project_list': project_list,
                                    'town': user_town,
                                    'project_list_geojson': project_list_geojson,
@@ -37,7 +37,7 @@ def index(request):
                                    'google_maps_key': settings.GOOGLE_MAPS_KEY, },
                                   context_instance=RequestContext(request))
     else:
-		return render_to_response('index.html', 
+		return render_to_response('projects/index.html', 
                                   {'base_url': settings.BASE_URL,
                                    'google_maps_key': settings.GOOGLE_MAPS_KEY, }, 
                                    context_instance=RequestContext(request))
@@ -180,11 +180,3 @@ def town_taz_geojson(request, town_name):
                             'base_url': settings.BASE_URL,
                             'google_maps_key': settings.GOOGLE_MAPS_KEY,},
 							context_instance=RequestContext(request))
-
-
-def filter(request):
-  if request.user.is_authenticated():
-        user_town_id = request.user.profile.town.town_id
-        user_town_name = request.user.profile.town.town_name
-
-  return render_to_response('projects/filter.html', locals(), context_instance=RequestContext(request))

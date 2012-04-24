@@ -1,66 +1,119 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <title>{% block title %}{% endblock %} | MAPC Development Database</title>
-    <meta name="description" content="MAPC Developments Database">
-    <meta name="keywords" content="Boston, Metro, Planning, Housing, Commercial, Economic, Development, Real Estate">
-    <meta name="author" content="MAPC">
+{% load i18n %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>{% block title %}{% endblock %}MAPC Projections Update</title>
+		<meta name="description" content="Community Comments">
+		<meta name="keywords" content="Boston, Metro, Planning, Projections">
+		<meta name="author" content="MAPC">
+		
+		<!-- geotags -->
+		<meta name="DC.title" content="Community Comments"> 
+		<meta name="geo.placename" content="Boston">
+		<meta name="geo.position" content="42.34;-71.08">
+		<meta name="geo.region" content="US-MA">
+		<meta name="ICBM" content="42.34;-71.08">
+		
+		<link rel="stylesheet" href="{{ MEDIA_URL }}css/blueprint/screen.css" type="text/css" media="screen, projection">
+		<link rel="stylesheet" href="{{ MEDIA_URL }}css/blueprint/print.css" type="text/css" media="print">
+		<!--[if lt IE 8]>
+		<link rel="stylesheet" href="{{ MEDIA_URL }}css/blueprint/ie.css" type="text/css" media="screen, projection">
+		<![endif]-->
+		
+		<!-- Stickyfooter http://www.cssstickyfooter.com -->
+		<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/sticky-footer.css" media="screen">	
+		
+		<link rel="stylesheet" href="{{ MEDIA_URL }}css/main.css" type="text/css" media="screen">
+		
+		<script type="text/javascript">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
-    <!-- geotags -->
-    <meta name="DC.title" content="Development Database"> 
-    <meta name="geo.placename" content="Boston">
-    <meta name="geo.position" content="42.34;-71.08">
-    <meta name="geo.region" content="US-MA">
-    <meta name="ICBM" content="42.34;-71.08">
-    
-    {% block style %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/base.css">
-    {% endblock %}
-    
-</head>
-<body>
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-5547782-7']);
+		  _gaq.push(['_trackPageview']);
+		
+		  (function() {
+		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+		
+		</script>
+		
+    </head>
+    <body>
+	<div id="wrap">
+		<div id="main" class="container">
+			<div class="span-24 last" id="head">
+				<a href="http://www.mapc.org" title="Metropolitan Area Planning Council"><img src="{{ MEDIA_URL }}img/mapc-logo.png" alt="Metropolitan Area Planning Council" width="200" height="100"></a>
+				
+				<h1><a href="/projections">Boston Regional Transportation Plan</a></h1>
+				<h2>MAPC Projections Update - New Developments</h2>
+				
+				<span class="loginfo small">
+					
+					{% if user.is_authenticated %}
+						logged in as {{ user.username }}, <a href="/projections/accounts/logout">logout</a>
+					{% else %}
+						<a href="/projections/accounts/login">login</a>	
+					{% endif %}
+					
+				</span>
+				
+				{% block header %}{% endblock %}
 
-    <div class="navbar navbar-fixed-top">
-        <div class="masthead">
-            <div class="container">
-                <a href="{# url home #}" title="MAPC Developments Database">
-                    <img id="mapc-logo" src="{{ STATIC_URL }}img/mapc-logo.png" alt="Metropolitan Area Planning Council" width="124" height="64" /><h1>Development Database</h1>
-                </a>
-            </div>
-            
-        </div>
-    </div>
+  			</div>
+			
+			{% block map %}
 
-    <div class="main container">
-
-        <header class="page-header">
-            <div class="row">
-              <div class="span12">
-                {% block pageheader %}{% endblock pageheader %}
-              </div>
-            </div>
-        </header>
-
-
-        {% block body %}{% endblock %}
-
-        <footer class="footer">
-            <p>
-                &copy; <a href="http://www.mapc.org" title="Metropolitan Area Planning Council">MAPC</a> 2012
-            </p>    
-        </footer>
-    
-    </div>
-
-    <!-- JavaScripts -->
-    <script src="{{ STATIC_URL }}libs/jquery-1.7.1.min.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}libs/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-
-    {% block javascript %}{% endblock %}
-    
-</body>
+			<div class="span-24 last">
+				<div class="small mapmeta"><a href="{{ base_url }}/{% firstof project.taz.town_name town %}" title="Project List for {% firstof project.taz.town_name town %}">Project List for {% firstof project.taz.town_name town %}</a></div>
+				<div id="map"></div>			
+			</div>
+			
+			{% endblock %}
+			
+			<div id="content" class="span-24 last">
+			
+			{% block content %}{% endblock %}
+			
+			{% block projectlist %}{% endblock %}	
+			
+			{% block editform %}{% endblock %}
+			
+			</div>
+			
+		</div>
+	
+	</div>
+	
+	<div id="footer" class="container small">
+		{% if user.is_authenticated %}
+		Questions? Please contact <a href="http://www.mapc.org/about-mapc/staff/christian-spanring">Christian Spanring</a> for support.
+		{% endif %}
+	</div>
+	
+	{% if google_maps_key %}
+	
+	<!-- Google Maps API for Google Layers -->
+	<script type="text/javascript" src='http://maps.google.com/maps?file=api&amp;v=2&amp;key={{ google_maps_key }}'></script> 
+	
+	<!-- OpenLayers -->
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/OpenLayers/OpenLayers.js"></script>
+	
+	{% endif %}
+	
+	<!-- Add jQuery From the Google AJAX Libraries and local plugins --> 
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>	
+	
+	<script type="text/javascript" src="{{ MEDIA_URL }}js/main.js"></script>
+	
+	<script type="text/javascript">
+		
+		{% block inlinejs %}{% endblock %}
+		
+	</script>
+		
+    </body>
 </html>
