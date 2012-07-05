@@ -1,0 +1,121 @@
+{% extends "_map_inc.html" %}
+
+{% block title %}Explore Projects{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}lib/jquery/jquery.url.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function() {
+
+    // check url for parameters
+    var url_param = $.url().param();
+
+    // default filter
+    var filter = $.extend({}, url_param);
+
+    // load projects
+    dd.load_projects(filter);
+
+    $("select.page_projectnr").on("change", function(e) {
+        // get current query
+        filter = dd.build_filter($("form.projectfilters"));
+        // update limit
+        filter["limit"] = $(this).val();
+        // load projects
+        dd.load_projects(filter);
+    });
+
+    // add field operators
+    $.each($("form.projectfilters input, form.projectfilters select"), function(key, element) {
+        $element = $(element);
+        var number_field = ($.inArray($element.attr("name"), dd.number_fields) > -1) ? true : false;
+        if (number_field) {
+            var $field_operator = dd.number_operators()
+                .clone()
+                .val("__exact"); // default lookup method
+            // fix styling
+            $element.addClass("span2");
+            $element.before($field_operator);
+        } else {
+            if ($element.attr("id") === "id_municipality") {
+                $element.attr("name", "taz__town");
+            } else {
+                $element.attr("name", $element.attr("name") + "__icontains");
+            }
+        }
+        
+    });
+
+    // search
+    $("form.projectfilters .btn[type='submit']").on("click", function(event) {
+        event.preventDefault();
+        filter = dd.build_filter($("form.projectfilters"));
+        // add limit
+        filter["limit"] = $("select.page_projectnr").val();
+        dd.load_projects(filter);
+    });
+
+    // reset form
+    $("form.projectfilters button.reset").on("click", function(event) {
+        event.preventDefault();
+        $("form.projectfilters").find("input:text, select").val("");
+        $("form.projectfilters select.operator").val("__exact");
+        // reset filter
+        filter = {
+            "format": "json"
+        }
+        dd.load_projects(filter);
+    });
+    
+
+
+});
+</script>
+{% endblock %}
+
+
+{% block pageheader %}
+<h1 class="front-page">Explore Projects</h1>
+<p class="lead">Do we need text here?</p>
+{% endblock pageheader %}
+
+
+{% block body %}
+    <section>
+        <div class="row">
+            <div class="span5">
+                <form class="form-horizontal projectfilters">
+                    {{ projectfilterform }}
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                        <button class="btn reset">Reset</button>
+                    </div>
+                </form>
+            </div>
+            <div class="span7">
+                <div class="well" id="map_canvas"></div>
+
+                <div class="countinfo">
+                    <div><a href="javascript:void(0)" class="permalink">Projects <span class="range">0-20</span> of <span class="totalcount">1671</span></a></div>
+                    <div>
+                        Number of projects shown on map: 
+                        <select class="span1 page_projectnr">
+                            <option>10</option>
+                            <option selected>20</option>
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                    </div>
+                    <a href="{% url add %}" class="btn btn-primary">Add New Project</a>
+                </div>
+                <div class="pagination pull-right">
+                    <ul>
+                      <li><a class="previous" href="#">« Previous</a></li>
+                      <li><a class="next" href="#">Next »</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block style %}
+{{ block.super }}
+    <!-- leaflet -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet.ie.css" /><![endif]-->
+    <style type="text/css">
+        #map_canvas {
+            height: 400px;
+            margin-bottom: 0px;
+        }
+        .leaflet-control-layers-base input, .leaflet-control-layers-overlays input {
+            float: left;
+            margin-right: 6px;
+        }
+    </style>
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+    <script src="{{ STATIC_URL }}lib/leaflet/leaflet.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}lib/leaflet/TileLayer.Bing.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}lib/mapc/layers.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        // background layers
+        dd.basemap = new L.MAPCTileLayer("basemap");
+        dd.bing = new L.TileLayer.Bing("An8pfp-PjegjSInpD2JyXw5gMufAZBvZ_q3cbJb-kWiZ1H55gpJbxndbFHPsO_HN", "Aerial"); 
+        dd.osm = new L.TileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 18, 
+            attribution: "Map data &copy; OpenStreetMap contributors"
+        });
+        
+        
+        // map
+        dd.boston = new L.LatLng(42.357778, -71.061667);
+        dd.map = new L.Map("map_canvas",{
+            minZoom: 9,
+            maxZoom: 17,
+            zoom: 10,
+            center: dd.boston,
+            layers: [dd.basemap]
+        });
+        
+
+        //initialize project layer 
+        dd.projecticon = new L.Icon({
+            iconUrl: '/static/development/img/project-icon.png',
+            shadowUrl: null,
+            iconSize: new L.Point(32, 37),
+            shadowSize: null,
+            iconAnchor: new L.Point(16, 37),
+            popupAnchor: new L.Point(2, -32)
+        });
+        dd.projects = new L.GeoJSON(null, {
+            pointToLayer: function(latlng) {
+                return new L.Marker(latlng, {
+                    icon: dd.projecticon
+                });
+            }
+        });
+        dd.projects.on("featureparse", function (e) {  
+            if (e.properties && e.properties.popupContent) {
+                e.layer.bindPopup(e.properties.popupContent);
+            }
+        });
+        dd.map.addLayer(dd.projects);
+
+
+        // layer control
+        dd.overlays = {
+            "Development Projects": dd.projects
+        }
+        dd.baseLayers = {
+            "MAPC Basemap": dd.basemap,
+            "OpenStreetMap": dd.osm,
+            "Bing Aerial": dd.bing
+        };
+        dd.layersControl = new L.Control.Layers(dd.baseLayers, dd.overlays);
+        dd.map.addControl(dd.layersControl);
+    </script>
+{% endblock %}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %} | MAPC Development Database</title>
+    <meta name="description" content="MAPC Developments Database">
+    <meta name="keywords" content="Boston, Metro, Planning, Housing, Commercial, Economic, Development, Real Estate">
+    <meta name="author" content="MAPC">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+    <!-- geotags -->
+    <meta name="DC.title" content="Development Database"> 
+    <meta name="geo.placename" content="Boston">
+    <meta name="geo.position" content="42.34;-71.08">
+    <meta name="geo.region" content="US-MA">
+    <meta name="ICBM" content="42.34;-71.08">
+    
+    {% block style %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/base.css">
+    {% endblock %}
+    
+</head>
+<body>
+
+    <div class="navbar navbar-fixed-top">
+        <div class="masthead">
+            <div class="container">
+                <a href="{% url home %}" title="MAPC Developments Database">
+                    <img id="mapc-logo" src="{{ STATIC_URL }}img/mapc-logo.png" alt="Metropolitan Area Planning Council" width="124" height="64" /><h1>Development Database</h1>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="main container">
+
+        <header class="page-header">
+            <div class="row">
+              <div class="span12">
+                {% block pageheader %}{% endblock pageheader %}
+              </div>
+            </div>
+        </header>
+
+
+        {% block body %}{% endblock %}
+
+        <footer class="footer">
+            <p>
+                &copy; <a href="http://www.mapc.org" title="Metropolitan Area Planning Council">MAPC</a> 2012
+            </p>    
+        </footer>
+    
+    </div>
+
+    <!-- JavaScripts -->
+    {% block javascript %}
+    <script src="{{ STATIC_URL }}lib/jquery/jquery-1.7.2.min.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/dd.js" type="text/javascript"></script>
+    {% endblock %}
+    
+</body>
+</html>

@@ -1,0 +1,162 @@
+a, a:hover {
+  color: #044388;
+}
+
+/* Topnav header
+-------------------------------------------------- */
+
+.navbar {
+  border-bottom: 1px solid #8f939c;
+  background-color: #8C96A0;
+  background-image: -moz-linear-gradient(top, #fafdff, #8C96A0); /* FF3.6+ */
+  background-image: -ms-linear-gradient(top, #fafdff, #8C96A0); /* IE10+ */
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafdff), to(#8C96A0)); /* Chrome,Safari4+ */
+  background-image: -webkit-linear-gradient(top, #fafdff, #8C96A0); /* Chrome10+,Safari5.1+ */
+  background-image: -o-linear-gradient(top, #fafdff, #8C96A0); /* Opera 11.10+ */
+  background-image: linear-gradient(top, #fafdff, #8C96A0); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafdff', endColorstr='#8C96A0', GradientType=0); /* IE6-9 */
+  background-repeat: repeat-x;
+}
+
+.navbar .masthead {
+  border-radius: 0 0 0 0;
+  padding-left: 0;
+  padding-right: 0;
+  height: 80px;
+  overflow: hidden;
+}
+
+.masthead .container {
+  padding-top: 8px;
+
+}
+
+.masthead img {
+  float: left;
+  margin-right: 30px;
+}
+
+.masthead h1 {
+  margin-top: 12px;
+  font-weight: 500;
+  font-size: 48px;
+}
+
+.masthead a:hover {
+  text-decoration: none;
+}
+
+
+
+/* Page header
+-------------------------------------------------- */
+.page-header {
+  position: relative;
+  padding-top: 80px;
+  padding-bottom: 0px;
+  margin-bottom: 20px;
+  border-bottom: none;
+}
+.page-header h1 {
+  margin-bottom: 9px;
+  font-size: 44px;
+  letter-spacing: -1px;
+}
+
+
+/* Front Page
+-------------------------------------------------- */
+
+.lead {
+  font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+
+/* Content
+-------------------------------------------------- */
+
+h3 {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+/* Footer
+-------------------------------------------------- */
+
+.footer {
+  margin-top: 40px;
+  padding: 35px 0 36px;
+  text-align: center;
+  border-top: 1px solid #E5E5E5;
+}
+
+/* mapc
+-------------------------------------------------- */
+
+#map {
+  height: 400px;
+  margin-bottom: 20px;
+}
+
+.map-caption {
+  margin-top: 10px;
+}
+
+/* Filter form
+-------------------------------------------------- */
+
+.countinfo {
+  display: none;
+  float: left;
+  margin: 18px 0;
+  padding: 8px;
+  margin-top: 0px;
+}
+
+select.operator {
+  margin-right: 20px;
+}
+
+/* Detail page
+-------------------------------------------------- */
+
+.fieldcontainer {
+  margin-bottom: 10px;
+  display: block;
+  clear: both;
+}
+
+.fieldlabel {
+  float: left;
+  width: 300px;
+  display: block;
+}
+
+.fieldvalue {
+  display: block;
+/*  font-weight: 700;*/
+}
+
+/* Edit page
+-------------------------------------------------- */
+
+.required {
+  color: #B94A48;
+}
+
+.more-info {
+  margin-left: 160px;
+  margin-bottom: 20px;
+}
+
+.error {
+  color: #B94A48;
+}
+
+span.error {
+  display: block;
+  margin-bottom: 0;
+  margin-top: 9px;
+}
