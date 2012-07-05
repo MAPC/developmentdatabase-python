@@ -1,5 +1,7 @@
 ## custom
 
+local_settings.py
+
 data/*
 */migrations/*
 *.sublime-*
