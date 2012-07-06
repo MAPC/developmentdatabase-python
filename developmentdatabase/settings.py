@@ -72,9 +72,6 @@ STATICFILES_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
-# Grappelli
-ADMIN_MEDIA_PREFIX = STATIC_URL + 'grappelli/'
-
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
