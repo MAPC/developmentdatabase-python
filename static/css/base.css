@@ -132,6 +132,8 @@ select.operator {
   float: left;
   width: 300px;
   display: block;
+  color: #666;
+  font-style: italic;
 }
 
 .fieldvalue {

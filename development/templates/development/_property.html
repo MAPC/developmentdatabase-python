@@ -1,6 +1,6 @@
 {# if property #}
 <div class="fieldcontainer">
     {# TODO: add verbose field name #}
-    <div class="fieldlabel">{% firstof label %}</div> <div class="fieldvalue">{{ property }}</div>
+    <div class="fieldlabel">{% firstof label %}</div> <div class="fieldvalue">{{ property|default:"-" }}</div>
 </div>
 {# endif #}
