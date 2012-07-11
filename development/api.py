@@ -50,19 +50,21 @@ class ProjectResource(GeoResource):
     class Meta:
         queryset = Project.objects.transform(4326).all()
         allowed_methods = ['get', 'post']
-        fields = ['location', 'name', 'p_type', 'status', 'completion', 'total_housing_units', 'age_restricted_pct', 'affordable_pct', 'jobs', ]
+        fields = ['location', 'ddname', 'projecttype', 'status', 'complyr', 'tothu', 'ovr55', 'pctaffall', 'totemp', ]
         include_absolute_url = True
         include_resource_uri = False
         authorization = Authorization()
         filtering = {
             'dd_id': ALL,
-            'name': ALL,
-            'completion': ALL,
-            'age_restricted_pct': ALL,
-            'p_type': ALL, 
+            'ddname': ALL,
+            'complyr': ALL,
+            'ovr55': ALL,
+            'projecttype': ALL, 
             'status': ALL,
-            'total_housing_units': ALL,  
-            'affordable_pct': ALL, 
-            'jobs': ALL,
+            'tothu': ALL,  
+            'pctaffall': ALL, 
+            'totemp': ALL,
             'taz': ALL_WITH_RELATIONS, 
         }
+
+        

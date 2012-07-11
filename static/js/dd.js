@@ -3,14 +3,17 @@
 var dd = {
 
     // number fields in filter form that require number operator
-    number_fields: ["completion", "total_housing_units", "affordable_pct", "jobs"],
+    number_fields: ["complyr", "tothu", "pctaffall", "totemp"],
 
     // percent fields, strip % char and divide by 100 before used in query
-    pct_fields: ["affordable_pct"],
+    pct_fields: ["pctaffall"],
+
+    // nullboolean fields
+    nullboolean_fields: ["ovr55"],
 
     // operators used to filter integer, float, etc. fields
     // default lookup method for string fields is 'icontains'
-    number_operators: function() {
+    number_operators: function(number_field) {
         // TODO: can be done better with an change event that appends the 
         // correct lookup method to the following DOM (form) element
         var number_operators = {
@@ -19,7 +22,7 @@ var dd = {
             "gt": ">"
         }
 
-        var $operators = $("<select />").addClass("operator span1");
+        var $operators = $("<select />").addClass("operator span1 " + number_field);
         
         $.each(number_operators, function(key, value) {
             var option = $("<option />", {
@@ -74,7 +77,7 @@ var dd = {
                             dd.map_project(
                                 project["location"], 
                                 {
-                                    "popupContent": "<a href=\"" + project["absolute_url"] + "\">" + project["name"] + "</a>"
+                                    "popupContent": "<a href=\"" + project["absolute_url"] + "\">" + project["ddname"] + "</a>"
                                 }
                             );
                         });
@@ -121,8 +124,9 @@ var dd = {
             "format": "json"
         }
 
-        // ammend filter with lookup methods
+        // amend filter with lookup methods
         $.each(form, function(key, value) {
+            // see if we have an operator for that field
             var lookup_method = $form.find(".operator." + key).val() || "";
             if (value) {
                 if ($.inArray(key, dd.pct_fields) > -1) value = parseFloat(value) / 100;

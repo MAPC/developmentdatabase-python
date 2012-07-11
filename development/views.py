@@ -4,9 +4,9 @@ from django.template import RequestContext
 from development.models import Project
 from development.forms import ProjectfilterForm, ProjectForm
 
-def filter(request):
+def search(request):
     projectfilterform = ProjectfilterForm()
-    return render_to_response('development/filter.html', locals(), context_instance=RequestContext(request))
+    return render_to_response('development/search.html', locals(), context_instance=RequestContext(request))
 
 
 def detail(request, dd_id):

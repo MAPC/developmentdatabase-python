@@ -10,7 +10,7 @@ class ProjectfilterForm(BootstrapMixin, forms.ModelForm):
     Form used to query projects with Tastypie
     """
 
-    municipality = forms.ModelChoiceField(queryset=Municipality.objects.filter(taz__project__isnull=False).distinct('muni_id'))
+    municipality = forms.ModelChoiceField(queryset=Municipality.objects.filter(taz__project__isnull=False).order_by('muni_id').distinct('muni_id'))
 
     class Meta:
         model = Project
