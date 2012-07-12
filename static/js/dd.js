@@ -11,6 +11,9 @@ var dd = {
     // nullboolean fields
     nullboolean_fields: ["ovr55"],
 
+    // related fields
+    related_fields: ["status", "projecttype"],
+
     // operators used to filter integer, float, etc. fields
     // default lookup method for string fields is 'icontains'
     number_operators: function(number_field) {

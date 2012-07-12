@@ -24,8 +24,8 @@
                 {% include "development/_property.html" with property=project.status label="Status" %}
                 {% include "development/_property.html" with property=project.complyr label="Year of Completion (estimated or actual)" %}
                 {% include "development/_property.html" with property=project.prjacrs|intcomma label="Project Site Area (acres)" %}
-                {% include "development/_property.html" with property=project.url|url|safe label="Project Website" %}
-                {% include "development/_property.html" with property=project.url_add|url|safe label="Additional Website" %}
+                {% include "development/_property.html" with property=project.url|url|default:"-"|safe label="Project Website" %}
+                {% include "development/_property.html" with property=project.url_add|url|default:"-"|safe label="Additional Website" %}
                 {% include "development/_property.html" with property=project.last_modified|naturalday label="Last Updated" %}
                 {% include "development/_property.html" with property=project.stalled|yesno:"Yes,No" label="Stalled" %}
                 {% include "development/_property.html" with property=project.phased|yesno:"Yes,No" label="Phased" %}

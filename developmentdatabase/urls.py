@@ -8,11 +8,12 @@ admin.autodiscover()
 
 # API
 from tastypie.api import Api
-from development.api import ProjectResource, MuniResource
+from development.api import ProjectResource, MuniResource, ProjectStatusResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(ProjectResource())
 v1_api.register(MuniResource())
+v1_api.register(ProjectStatusResource())
 
 
 urlpatterns = patterns('',

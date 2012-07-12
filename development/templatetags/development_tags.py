@@ -9,7 +9,7 @@ def percentage(value):
 
 @register.filter
 def currency(value):
-    if value != None:
+    if value != 'None':
         return '$ %s' % (value)
 
 @register.filter

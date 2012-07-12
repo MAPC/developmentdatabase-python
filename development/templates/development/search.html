@@ -29,8 +29,10 @@ $(function() {
     // add field operators
     $.each($("form.projectfilters input, form.projectfilters select"), function(key, element) {
         $element = $(element);
+        // field type tests; TODO: merge in one method
         var number_field = ($.inArray($element.attr("name"), dd.number_fields) > -1) ? true : false;
         var nullboolean_field = ($.inArray($element.attr("name"), dd.nullboolean_fields) > -1) ? true : false;
+        var related_field = ($.inArray($element.attr("name"), dd.related_fields) > -1) ? true : false;
         if (number_field) {
             var $field_operator = dd.number_operators($element.attr("name"))
                 .clone()
@@ -66,7 +68,7 @@ $(function() {
 
                 }
             });
-        } else {
+        } else if (!related_field) {
             if ($element.attr("id") === "id_municipality") {
                 $element.attr("name", "taz__municipality");
             } else {
