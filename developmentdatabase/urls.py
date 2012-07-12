@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
+from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -28,6 +29,9 @@ urlpatterns = patterns('',
     # API
     (r'^api/', include(v1_api.urls)),
 
+    # Userena
+    (r'^accounts/', include('userena.urls')),
+
     # grappelli admin interface
     (r'^grappelli/', include('grappelli.urls')),
 
@@ -36,4 +40,11 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+)
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        (r'^media/(?P<path>.*)$',
+         'django.views.static.serve',
+         {'document_root': settings.MEDIA_ROOT, 'show_indexes': True, }),
 )

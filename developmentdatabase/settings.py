@@ -1,3 +1,9 @@
+import os, sys
+
+abspath = lambda *p: os.path.abspath(os.path.join(*p))
+
+PROJECT_ROOT = abspath(os.path.dirname(__file__), '..')
+
 # Django settings for developmentdatabase project.
 
 DEBUG = True
@@ -48,12 +54,12 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = abspath(PROJECT_ROOT, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -121,6 +127,10 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+    'userena', 
+    'guardian',
+    'easy_thumbnails',
+    'profiles',
     'bootstrap',
     'development',
 )
@@ -156,6 +166,21 @@ LOGGING = {
 
 # tastypie
 API_LIMIT_PER_PAGE = 20
+
+# Userena
+AUTHENTICATION_BACKENDS = (
+    'userena.backends.UserenaAuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+AUTH_PROFILE_MODULE = 'profiles.Profile'
+LOGIN_REDIRECT_URL = '/accounts/%(username)s/'
+LOGIN_URL = '/accounts/signin/'
+LOGOUT_URL = '/accounts/signout/'
+USERENA_MUGSHOT_DEFAULT = STATIC_URL + 'img/mugshot.png'
+
+# Guardian
+ANONYMOUS_USER_ID = -1
 
 # import local settings
 try:
