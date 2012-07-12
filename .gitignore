@@ -6,6 +6,8 @@ data/*
 */migrations/*
 *.sublime-*
 
+media/*
+
 #################
 ## Eclipse
 #################
