@@ -62,6 +62,9 @@ a, a:hover {
   font-size: 44px;
   letter-spacing: -1px;
 }
+.search-btn {
+  text-align: center;
+}
 
 
 /* Front Page
