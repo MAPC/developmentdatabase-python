@@ -120,7 +120,7 @@
 $(function() {
 
     dd.map_project({{ project.location.geojson|safe }}, {
-        "popupContent": "<a href=\"{{ project.get_absolute_url }}\">{{ project.name }}</a>"
+        "popupContent": "<a href=\"{{ project.get_absolute_url }}\">{{ project.ddname }}</a>"
     });
     dd.map.fitBounds(dd.projects.getBounds());
 
