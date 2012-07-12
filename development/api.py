@@ -2,7 +2,7 @@ from tastypie import fields
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.authorization import Authorization
 
-from development.models import Project, Taz, Municipality
+from development.models import Project, Taz, Municipality, ProjectStatus
 from development.tastyhacks import GeoResource
 
 
@@ -39,6 +39,15 @@ class TazResource(ModelResource):
             'municipality': ALL,
         }
 
+class ProjectStatusResource(ModelResource):
+    class Meta:
+        queryset = ProjectStatus.objects.all()
+        allowed_methods = ['get']
+        include_resource_uri = False
+        filtering = {
+            'name': ALL
+        }
+
 
 class ProjectResource(GeoResource):
     """
@@ -46,10 +55,11 @@ class ProjectResource(GeoResource):
     """
 
     taz = fields.ToOneField('development.api.TazResource', 'taz', full=True)
+    status = fields.ToOneField('development.api.ProjectStatusResource', 'status')
 
     class Meta:
         queryset = Project.objects.transform(4326).all()
-        allowed_methods = ['get', 'post']
+        allowed_methods = ['get']
         fields = ['location', 'ddname', 'projecttype', 'status', 'complyr', 'tothu', 'ovr55', 'pctaffall', 'totemp', ]
         include_absolute_url = True
         include_resource_uri = False

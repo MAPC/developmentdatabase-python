@@ -1,0 +1,313 @@
+{% extends "_map_inc.html" %}
+
+{% block title %}Explore Projects{% endblock %}
+
+{% block pageheader %}
+<h1 class="front-page">{% if project.ddname.value %}<span class="update-title">Updating Project</span> {{ project.ddname.value }}{% else %}Add a new development project{% endif %}</h1>
+{% endblock pageheader %}
+
+
+{% block body %}
+    <section>
+
+        <form class="projectdata form-horizontal" method="POST">
+        {% csrf_token %}
+        <div class="row">
+                <div class="span6">
+
+                        {% include "development/_property_form.html" with property=project.ddname label="Project Name" required="True" %}
+                        {% include "development/_property_form.html" with property=project.projecttype label="Project Type" %}
+                        {% include "development/_property_form.html" with property=project.projecttype_detail label="Project Type Details" %}
+                        {% include "development/_property_form.html" with property=project.status label="Status" %}
+                        {% include "development/_property_form.html" with property=project.complyr label="Year of Completion" %}
+                        {% include "development/_property_form.html" with property=project.prjacrs label="Project Site Area" %}
+                        {% include "development/_property_form.html" with property=project.stalled label="Stalled" %}
+                        {% include "development/_property_form.html" with property=project.phased label="Phased" %}
+                        {% include "development/_property_form.html" with property=project.url label="Project Website" %}
+                        {% include "development/_property_form.html" with property=project.url_add label="Additional Website" %}
+                </div>
+                <div class="span6">
+                        <div class="well" id="map_canvas"></div>
+                        <div class="map-caption">
+                                <p>Drag and drop the project marker to the project location on the map.</p>
+                                <button class="btn btn-mini centermarker">Center project marker on map</button>
+                        </div>
+                        {{ project.location }}
+                </div>
+        </div>
+
+        <div class="row">
+                <div class="span12">
+
+                        <h3>Housing</h3>
+
+                        {% include "development/_property_form.html" with property=project.tothu label="Total Housing Units" %}
+
+                        <div class="housing collapse">
+
+                        {% include "development/_property_form.html" with property=project.singfamhu label="Detached Single Family" %}
+                        {% include "development/_property_form.html" with property=project.twnhsmmult label="Townhouse and Small Multifamily" %}
+                        {% include "development/_property_form.html" with property=project.lgmultifam label="Large Multifamily" %}
+                        {% include "development/_property_form.html" with property=project.ovr55 label="Age Restricted" %}
+                        {% include "development/_property_form.html" with property=project.pctaffall label="Affordable Units" %}
+                        {% include "development/_property_form.html" with property=project.affordable_comment label="Affordability Comments" %}
+                        {% include "development/_property_form.html" with property=project.gqpop label="Group Quarters" %}
+
+                        </div>
+
+                        <div class="more-info"><a href="javascript:void(0)" data-toggle="collapse" data-target="div.housing">Show more Housing information...</a></div>
+
+
+                        <h3>Nonresidential Development</h3>
+
+                        {% include "development/_property_form.html" with property=project.commsf label="Total Nonresidential Development" %}
+
+                        <div class="non-res collapse">
+
+                        {% include "development/_property_form.html" with property=project.retpct label="Retail or Restaurant" %}
+                        {% include "development/_property_form.html" with property=project.ofcmdpct label="Office or Medical" %}
+                        {% include "development/_property_form.html" with property=project.indmfpct label="Manufacturing or Industrial" %}
+                        {% include "development/_property_form.html" with property=project.whspct label="Warehouse or Trucking" %}
+                        {% include "development/_property_form.html" with property=project.rndpct label="Lab or R&D" %}
+                        {% include "development/_property_form.html" with property=project.edinstpct label="Educational or Institution" %}
+                        {% include "development/_property_form.html" with property=project.othpct label="Other" %}
+                        {% include "development/_property_form.html" with property=project.hotelrms label="Hotel rooms" %}
+                        {% include "development/_property_form.html" with property=project.rptdemp label="Reported Employment" %}
+                        {% include "development/_property_form.html" with property=project.totemp label="MAPC Estimated Employment" %}
+
+                        </div>
+
+                        <div class="more-info"><a href="javascript:void(0)" data-toggle="collapse" data-target="div.non-res">Show more Nonresidential Development information...</a></div>
+
+
+                        <div class="project-attr collapse">
+
+                        <h3>Project Attributes</h3>
+
+                        {% include "development/_property_form.html" with property=project.parking_spaces label="Parking Spaces" %}
+                        {% include "development/_property_form.html" with property=project.rdv label="Redevelopment" %}
+                        {% include "development/_property_form.html" with property=project.mxduse label="Mixed use project" %}
+                        {% include "development/_property_form.html" with property=project.as_of_right label="As-of-Right" %}
+                        {% include "development/_property_form.html" with property=project.ch40 label="Zoning Tool" %}
+                        {% include "development/_property_form.html" with property=project.clustosrd label="Cluster Subdivision" %}
+                        {% include "development/_property_form.html" with property=project.total_cost label="Total project cost" %}
+
+                        </div>
+
+                        <div class="more-info"><a href="javascript:void(0)" data-toggle="collapse" data-target="div.project-attr">Show Project Attributes...</a></div>
+
+
+                        <div class="dev-team collapse">
+
+                        <h3>Development Team</h3>
+
+                        {% include "development/_property_form.html" with property=project.dev_name label="Lead Developer" %}
+                        {# include "development/_property_form.html" with property=project.[NEW TXT] label="Lead Architect" #}
+                        {# include "development/_property_form.html" with property=project.[NEW TXT] label="Other Development Team" #}
+                        {# include "development/_property_form.html" with property=project.[NEW TXT] label="Other Development Team" #}
+                        {# include "development/_property_form.html" with property=project.[NEW TXT] label="Leasing/Sales Agent" #}
+
+                        </div>
+
+                        <div class="more-info"><a href="javascript:void(0)" data-toggle="collapse" data-target="div.dev-team">Show Development Team...</a></div>
+                </div>
+        </div>
+
+        <div class="row">
+                <div class="span12">
+                        <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button class="btn reset">Reset</button>
+                        </div>
+                </div>
+
+        </div>
+
+
+        </form>
+
+    </section>
+{% endblock %}
+
+{% block style %}
+{{ block.super }}
+<style type="text/css">
+        #map_canvas {
+            height: 300px;
+        }
+</style>
+{% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}lib/jquery/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(function() {
+
+        // adjust textarea heights (tweaks built-in Django Template)
+        $("textarea").attr("rows", "2");
+
+        // the form data
+        var projectdata = {
+                "location": { 
+                        "coordinates": [], 
+                        "type": "Point" 
+                }
+        };
+
+        // set project marker
+        var newproject_pt = new L.Marker(dd.map.getCenter(), { 
+          icon: dd.projecticon,
+          draggable: true
+        });
+        // see if we have a existing location
+        if ($("#id_location").val() !== "") {
+            // parse geometry "POINT (lng lat)"
+            var coords = $("#id_location").val().split(" ");
+            var lng = coords[1].substring(1,coords[1].length);
+            var lat = coords[2].substring(0,coords[2].length - 1);
+            projectdata["location"]["coordinates"] = [lng, lat];
+            newproject_pt.setLatLng(new L.LatLng(lat, lng));
+        }
+        dd.projects.addLayer(newproject_pt);
+        // set GeoJSON location coord in form data
+        newproject_pt.on("dragend", function(e) {
+                projectdata["location"]["coordinates"] = [e.target.getLatLng().lng, e.target.getLatLng().lat];
+                $("#id_location").val("POINT (" + e.target.getLatLng().lng + " " +  e.target.getLatLng().lat + ")");
+        });
+
+        // helps to find the project marker again
+        $("button.centermarker").on("click", function(event) {
+            event.preventDefault();
+            newproject_pt.setLatLng(dd.map.getCenter());
+            newproject_pt.fire("dragend");
+        });
+
+        // collapse form and switch "Show"/"Hide" link text
+        $(".collapse")
+            .on("shown", function() {
+                var $collapselink = $(this).next().find("a");
+                var content = $collapselink.html();
+                $collapselink.html(content.replace("Show", "Hide"));
+            })
+            .on("hidden", function() {
+                var $collapselink = $(this).next().find("a");
+                var content = $collapselink.html();
+                $collapselink.html(content.replace("Hide", "Show"));
+            });
+
+        // upate projectdata
+        $("form.projectdata").find("input, select, textarea").on("change", function() {
+                var key = $(this).attr("name") || "";
+                var value = $(this).val() || "";
+                var is_layerselector = $(this).parentsUntil("form").is(".leaflet-control-layers-base, .leaflet-control-layers-overlays");
+
+                if (value !== "" && !is_layerselector) {
+                        projectdata[key] = value;
+                } else {
+                        delete projectdata[key];
+                }
+        });
+
+        // check for location before submit
+        $("form.projectdata").on("submit", function(event) {
+            if (projectdata["location"]["coordinates"].length === 0) {
+                $(".map-caption p").first().addClass("error");
+                return false;
+            }
+        });
+
+        // validate form on keyup and submit
+        var validator = $("form.projectdata").validate({
+                rules: {
+                        ddname: {
+                            required: true,
+                            maxlength: 100
+                        },
+                        status: "required",
+                        complyr: {
+                                required: true,
+                                number: true,
+                                rangelength: [4, 4],
+                                min: 1900,
+                                max: 2100
+                        },
+                        tothu: {
+                                required: true,
+                                number: true
+                        },
+                        commsf: {
+                                required: true,
+                                number: true
+                        },
+                        prjacrs: "number",
+                        url: { 
+                            url: true,
+                            maxlength: 200 
+                        },
+                        url_add: { 
+                            url: true,
+                            maxlength: 200 
+                        },
+                        singfamhu: "digits",
+                        twnhsmmult: "digits",
+                        lgmultifam: "digits",
+                        pctaffall: "number",
+                        gqpop: "digits",
+                        retpct: "number",
+                        ofcmdpct: "number",
+                        indmfpct: "number",
+                        whspct: "number",
+                        rndpct: "number",
+                        edinstpct: "number",
+                        othpct: "number",
+                        hotelrms: "number",
+                        rptdemp: "number",
+                        totemp: "number",
+                        parking_spaces: "digits",
+                        total_cost: "digits",
+                        dev_name: { maxlength: 100 }
+                },
+                messages: {
+                        complyr: "Please enter a valid year, like \"2012\"."
+                },
+                errorElement: "span",
+                errorPlacement: function(error, element) {
+                        element.after(error);
+                }
+                // TODO: POST through api, solve nested resources first.
+                // submitHandler: function() {
+                //         // post
+                //         // $.ajax({
+                //         //     type: "POST",
+                //         //     url: "/api/v1/project/",
+                //         //     data: JSON.stringify(projectdata),
+                //         //     contentType:'application/json',
+                //         //     dataType: 'json',
+                //         //     processData: false
+                //         //   }).done(function(msg) {
+                //         //     console.log("posted!");
+                //         //   });
+                // }
+        });
+        
+        // reset form
+        $("form.projectdata button.reset").on("click", function(event) {
+                event.preventDefault();
+                validator.resetForm();
+                $(".map-caption p").first().removeClass("error");
+                $("form.projectdata").find("input, select, textarea").each(function(key, value) {
+                        $(this).val("");
+                });
+                projectdata = {
+                        "location": { 
+                                "coordinates": [], 
+                                "type": "Point" 
+                        }
+                };
+                newproject_pt.setLatLng(dd.map.getCenter());
+        }); d
+});
+</script>
+{% endblock %}

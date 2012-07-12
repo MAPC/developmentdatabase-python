@@ -117,7 +117,7 @@ class Project(models.Model):
     projecttype_detail = models.TextField('Project Type Detail', blank=True, null=True)
     
     description = models.TextField('description', blank=True, null=True)
-    url = models.URLField('Project Website', blank=True, null=True)
+    url = models.URLField('Project Website', blank=True, null=True, verify_exists=False)
     mapcintrnl = models.TextField('MAPC Internal Comments', blank=True, null=True)
     otheremprat2 = models.FloatField(blank=True, null=True)
 
@@ -126,7 +126,7 @@ class Project(models.Model):
     stalled = models.BooleanField('Stalled')
     phased = models.BooleanField('Phased')
     dev_name = models.CharField('Developer Name', blank=True, null=True, max_length=100)
-    url_add = models.URLField('Additional Website', blank=True, null=True)
+    url_add = models.URLField('Additional Website', blank=True, null=True, verify_exists=False)
     affordable_comment = models.TextField('Affordability Comment', blank=True, null=True)
     parking_spaces = models.IntegerField('Parking Spaces', blank=True, null=True)
     as_of_right = models.NullBooleanField('As Of Right', blank=True, null=True)

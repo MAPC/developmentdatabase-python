@@ -23,9 +23,9 @@
                 {% include "development/_property.html" with property=project.projecttype_detail label="Project Type Detail" %}
                 {% include "development/_property.html" with property=project.status label="Status" %}
                 {% include "development/_property.html" with property=project.complyr label="Year of Completion (estimated or actual)" %}
-                {% include "development/_property.html" with property=project.area label="Project Site Area (Acres)" %}
-                {% include "development/_property.html" with property=project.url label="Project Website" %}
-                {% include "development/_property.html" with property=project.website_add label="Additional Website" %}
+                {% include "development/_property.html" with property=project.prjacrs|intcomma label="Project Site Area (acres)" %}
+                {% include "development/_property.html" with property=project.url|url|safe label="Project Website" %}
+                {% include "development/_property.html" with property=project.url_add|url|safe label="Additional Website" %}
                 {% include "development/_property.html" with property=project.last_modified|naturalday label="Last Updated" %}
                 {% include "development/_property.html" with property=project.stalled|yesno:"Yes,No" label="Stalled" %}
                 {% include "development/_property.html" with property=project.phased|yesno:"Yes,No" label="Phased" %}
@@ -39,14 +39,14 @@
 
                         <h3>Housing</h3>
 
-                        {% include "development/_property.html" with property=project.tothu label="Total Housing Units" %}
-                        {% include "development/_property.html" with property=project.singfamhu label="Detached Single Family" %}
-                        {% include "development/_property.html" with property=project.twnhsmmult label="Townhouse and Small Multifamily" %}
-                        {% include "development/_property.html" with property=project.lgmultifam label="Large Multifamily" %}
+                        {% include "development/_property.html" with property=project.tothu|floatformat:0 label="Total Housing Units" %}
+                        {% include "development/_property.html" with property=project.singfamhu|floatformat:0 label="Detached Single Family" %}
+                        {% include "development/_property.html" with property=project.twnhsmmult|floatformat:0 label="Townhouse and Small Multifamily" %}
+                        {% include "development/_property.html" with property=project.lgmultifam|floatformat:0 label="Large Multifamily" %}
                         {% include "development/_property.html" with property=project.ovr55|yesno:"Yes,No" label="Age Restricted (any part)" %}
                         {% include "development/_property.html" with property=project.pctaffall|percentage label="Affordable Units" %}
                         {% include "development/_property.html" with property=project.affordable_comment label="Affordability Comments" %}
-                        {% include "development/_property.html" with property=project.gqpop label="Group Quarters (beds)" %}
+                        {% include "development/_property.html" with property=project.gqpop|floatformat:0 label="Group Quarters (beds)" %}
 
                 </div>
                 <div class="span6">
@@ -54,13 +54,13 @@
                         <h3>Nonresidential Development</h3>
 
                         {% include "development/_property.html" with property=project.commsf|floatformat:0|intcomma label="Total Nonresidential Development (square feet)" %}
-                        {% include "development/_property.html" with property=project.retpct|floatformat:0 label="Retail or Restaurant (percent)" %}
-                        {% include "development/_property.html" with property=project.ofcmdpct|percentage label="Office or Medical (percent)" %}
-                        {% include "development/_property.html" with property=project.indmfpct|percentage label="Manufacturing or Industrial (percent)" %}
-                        {% include "development/_property.html" with property=project.whspct|percentage label="Warehouse or Trucking (percent)" %}
-                        {% include "development/_property.html" with property=project.rndpct|percentage label="Lab or R&D (percent)" %}
-                        {% include "development/_property.html" with property=project.edinstpct|percentage label="Educational or Institution (percent)" %}
-                        {% include "development/_property.html" with property=project.othpct|percentage label="Other (percent)" %}
+                        {% include "development/_property.html" with property=project.retpct|floatformat:0 label="Retail or Restaurant" %}
+                        {% include "development/_property.html" with property=project.ofcmdpct|percentage label="Office or Medical" %}
+                        {% include "development/_property.html" with property=project.indmfpct|percentage label="Manufacturing or Industrial" %}
+                        {% include "development/_property.html" with property=project.whspct|percentage label="Warehouse or Trucking" %}
+                        {% include "development/_property.html" with property=project.rndpct|percentage label="Lab or R&D" %}
+                        {% include "development/_property.html" with property=project.edinstpct|percentage label="Educational or Institution" %}
+                        {% include "development/_property.html" with property=project.othpct|percentage label="Other" %}
                         {% include "development/_property.html" with property=project.hotelrms|floatformat:0 label="Hotel rooms" %}
                         {% include "development/_property.html" with property=project.rptdemp|floatformat:0|intcomma label="Reported Employment" %}
                         {% include "development/_property.html" with property=project.totemp|floatformat:0|intcomma label="MAPC Estimated Employment" %}
@@ -71,13 +71,13 @@
                 <div class="span6">
                         <h3>Project Attributes</h3>
 
-                        {% include "development/_property.html" with property=project.parking_spaces label="Parking Spaces" %}
-                        {% include "development/_property.html" with property=project.rdv label="Redevelopment" %}
-                        {% include "development/_property.html" with property=project.mxduse label="Mixed use project" %}
-                        {% include "development/_property.html" with property=project.as_of_right label="As-of-Right" %}
+                        {% include "development/_property.html" with property=project.parking_spaces|floatformat:0 label="Parking Spaces" %}
+                        {% include "development/_property.html" with property=project.rdv|yesno:"Yes,No" label="Redevelopment" %}
+                        {% include "development/_property.html" with property=project.mxduse|yesno:"Yes,No" label="Mixed use project" %}
+                        {% include "development/_property.html" with property=project.as_of_right|yesno:"Yes,No" label="As-of-Right" %}
                         {% include "development/_property.html" with property=project.ch40 label="Zoning Tool" %}
-                        {% include "development/_property.html" with property=project.clustosrd label="Cluster Subdivision" %}
-                        {% include "development/_property.html" with property=project.total_cost label="Total project cost" %}
+                        {% include "development/_property.html" with property=project.clustosrd|yesno:"Yes,No" label="Cluster Subdivision" %}
+                        {% include "development/_property.html" with property=project.total_cost|intcomma|currency label="Total project cost" %}
 
                 </div>
                 <div class="span6">
@@ -89,6 +89,14 @@
                         {# include "development/_property.html" with property=project.[NEW TXT] label="Other Development Team" #}
                         {# include "development/_property.html" with property=project.[NEW TXT] label="Leasing/Sales Agent" #}
                 </div>
+        </div>
+        <div class="row">
+                <div class="span12">
+                        <div class="form-actions">
+                                <a href="{% url update project.dd_id %}" class="btn btn-primary">Update Project</a>
+                        </div>
+                </div>
+
         </div>
     </section>
 {% endblock %}
