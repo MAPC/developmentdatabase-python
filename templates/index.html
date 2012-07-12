@@ -4,10 +4,40 @@
 
 {% block pageheader %}
 <h1 class="front-page">Welcome to MAPC's Development Database!</h1>
+<div class="search-btn form-inline">
+    <input type="text" class="input-xlarge" id="ddname" placeholder="Projectname">
+    <button class="btn btn-primary">Search</button>
+    <div class="advanced-search"><a href="{% url search %}">Advanced Search</a></div>
+</div>
 <p class="lead">
 In order to better track the region's growth and forecast its future, MAPC Data Services has initiated a Development Database for the 101 cities and towns of Metro Boston.  As of March, 2011, this database includes information on nearly 1,700 development projects recently completed, in construction, or planned. Much of the data comes municipal planning staff, augmented by MAPC research.</p>
 <p class="lead">This database provides a unique insight into development patterns in the region over the past ten years, and can also be used to support population and employment projections for the region.  The database was a key input into the MetroFuture 2035 Projections Update prepared by MAPC to support the Regional Transportation Plan currently under development by the Boston MPO. MAPC will also be using the development database to create growth projections for the I-495 Development Compact project and other local and regional planning efforts.</p>
-<div class="search-btn"><a href="{% url search %}" class="btn btn-primary btn-large">Search Projects</a></div>
 {% endblock pageheader %}
+
+{% block javascript %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}lib/jquery/jquery.url.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function() {
+        var search = function(ddname) {
+            if (ddname !== "") {
+                ddname.replace(" ", "+");
+                window.location = "{% url search %}?format=json&limit=20&ddname__icontains=" + ddname;
+            } else {
+                window.location = "{% url search %}";
+            }
+        }
+        $(".search-btn .btn").on("click", function(event) {
+            event.preventDefault();
+            search($("#ddname").val());
+        });
+        $("#ddname").keyup(function(event) {
+            if(event.which == 13) { // key = 'enter'
+                search($(this).val());
+            }
+        });
+    });
+</script>
+{% endblock %}
 
 
