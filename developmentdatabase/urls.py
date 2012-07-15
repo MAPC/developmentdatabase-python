@@ -7,6 +7,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 
+from profiles.forms import SignupFormExtra
+
+
 # API
 from tastypie.api import Api
 from development.api import ProjectResource, MuniResource, ProjectStatusResource
@@ -30,6 +33,8 @@ urlpatterns = patterns('',
     (r'^api/', include(v1_api.urls)),
 
     # Userena
+    # Override the signup form
+    (r'^accounts/signup/$', 'userena.views.signup', {'signup_form': SignupFormExtra}),
     (r'^accounts/', include('userena.urls')),
 
     # grappelli admin interface

@@ -177,7 +177,10 @@ AUTH_PROFILE_MODULE = 'profiles.Profile'
 LOGIN_REDIRECT_URL = '/accounts/%(username)s/'
 LOGIN_URL = '/accounts/signin/'
 LOGOUT_URL = '/accounts/signout/'
+USERENA_MUGSHOT_GRAVATAR = False
 USERENA_MUGSHOT_DEFAULT = STATIC_URL + 'img/mugshot.png'
+USERENA_DISABLE_PROFILE_LIST = True
+USERENA_HIDE_EMAIL = True
 
 # Guardian
 ANONYMOUS_USER_ID = -1

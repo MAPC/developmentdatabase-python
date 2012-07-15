@@ -211,3 +211,13 @@ span.error {
 .userena .signin-help {
   padding-left: 160px;
 }
+
+ul.errorlist {
+  list-style-type: none;
+  color: #B94A48;
+  padding-left: 5px;
+}
+
+img.mughshot {
+  margin-right: 6px;
+}

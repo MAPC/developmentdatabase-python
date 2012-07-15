@@ -11,5 +11,5 @@ class Profile(UserenaBaseProfile):
                                 unique=True,
                                 verbose_name=_('user'),
                                 related_name='profile')
-    municipality = models.ForeignKey(Municipality)
-    position = models.CharField(max_length=100)
+    municipality = models.ForeignKey(Municipality, null=True, help_text='The municipality you would like to add and edit projects.')
+    position = models.CharField(max_length=100, null=True, help_text='Your postion in that municipality.')

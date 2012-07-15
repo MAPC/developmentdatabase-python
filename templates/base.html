@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,11 +55,12 @@
                 {% if user.is_authenticated %}
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
+                    <li><a href='{% url userena_profile_detail user.username %}'>{% trans "View profile" %}</a></li>
+                    <li><a href='{% url userena_profile_edit user.username %}'>{% trans "Edit details" %}</a></li>
+                    <li><a href='{% url userena_password_change user.username %}'>{% trans "Change password" %}</a></li>
+                    <li><a href='{% url userena_email_change user.username %}'>{% trans "Change email" %}</a></li>
                     <li class="divider"></li>
-                    <li><a href="#">Separated link</a></li>
+                    <li><a href="{% url userena_signout %}">Logout</a></li>
                 </ul>
                 {% else %}
                 <a href="{% url userena_signin %}">Login</b></a>
