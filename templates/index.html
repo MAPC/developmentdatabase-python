@@ -7,7 +7,7 @@
 <div class="search-btn form-inline">
     <input type="text" class="input-xlarge" id="ddname" placeholder="Projectname">
     <button class="btn btn-primary">Search</button>
-    <div class="advanced-search"><a href="{% url search %}">Advanced Search</a></div>
+    <div class="advanced-search"><a href="{% url search %}">Browse Projects</a></div>
 </div>
 <p class="lead">
 In order to better track the region's growth and forecast its future, MAPC Data Services has initiated a Development Database for the 101 cities and towns of Metro Boston.  As of March, 2011, this database includes information on nearly 1,700 development projects recently completed, in construction, or planned. Much of the data comes municipal planning staff, augmented by MAPC research.</p>
@@ -16,7 +16,6 @@ In order to better track the region's growth and forecast its future, MAPC Data 
 
 {% block javascript %}
 {{ block.super }}
-<script src="{{ STATIC_URL }}lib/jquery/jquery.url.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(function() {
         var search = function(ddname) {

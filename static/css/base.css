@@ -5,7 +5,7 @@ a, a:hover {
 /* Topnav header
 -------------------------------------------------- */
 
-.navbar {
+.navbar-inner {
   border-bottom: 1px solid #8f939c;
   background-color: #8C96A0;
   background-image: -moz-linear-gradient(top, #fafdff, #8C96A0); /* FF3.6+ */
@@ -16,43 +16,57 @@ a, a:hover {
   background-image: linear-gradient(top, #fafdff, #8C96A0); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafdff', endColorstr='#8C96A0', GradientType=0); /* IE6-9 */
   background-repeat: repeat-x;
+  color: #044388;
 }
 
-.navbar .masthead {
-  border-radius: 0 0 0 0;
-  padding-left: 0;
-  padding-right: 0;
-  height: 80px;
-  overflow: hidden;
-}
-
-.masthead .container {
-  padding-top: 8px;
-
-}
-
-.masthead img {
-  float: left;
-  margin-right: 30px;
-}
-
-.masthead h1 {
-  margin-top: 12px;
+.navbar .brand {
+  background: url("../img/mapc-logo.png") 4px center no-repeat;
+  padding-left: 80px;
   font-weight: 500;
-  font-size: 48px;
 }
 
-.masthead a:hover {
-  text-decoration: none;
+.navbar .brand, .navbar .nav > li > a {
+  color: #333;
 }
 
+.navbar .brand, .navbar .nav > li > a:hover {
+  color: #044388;
+}
 
+.navbar .nav > li > a {
+  text-shadow: none;
+}
+
+.dropdown-menu li > a:hover, .dropdown-menu .active > a, .dropdown-menu .active > a:hover {
+  background-color: #044388;
+}
+
+.navbar .divider-vertical {
+  background-color: transparent;
+  border-right: 1px solid #8C96A0;
+}
+
+.navbar-search .search-query:-moz-placeholder {
+  color: #fafdff;
+}
+
+.navbar-search .search-query {
+  background-color: #8C96A0;
+  border: 1px solid #8f939c;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset, 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.navbar-search .search-query:focus, .navbar-search .search-query.focused {
+  background-color: #fafdff;
+  color: #666;
+  text-shadow: none;
+}
 
 /* Page header
 -------------------------------------------------- */
 .page-header {
   position: relative;
-  padding-top: 80px;
+  padding-top: 60px;
   padding-bottom: 0px;
   margin-bottom: 20px;
   border-bottom: none;
@@ -180,4 +194,20 @@ span.error {
 
 .update-title {
   color: #999;
+}
+
+/* Userena
+-------------------------------------------------- */
+
+.userena .control-label {
+  font-style: normal;
+  color: #333;
+}
+
+.userena input.required {
+  color: #555;
+}
+
+.userena .signin-help {
+  padding-left: 160px;
 }
