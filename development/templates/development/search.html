@@ -8,7 +8,9 @@
 <script type="text/javascript">
 $(function() {
 
-
+    // add baselayer
+    dd.map.addLayer(dd.basemap);
+    // TODO: check layer in layercontrol, better usability
 
     // check url for parameters
     var url_param = $.url().param();
