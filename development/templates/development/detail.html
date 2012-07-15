@@ -6,9 +6,8 @@
 {% block title %}Explore Projects{% endblock %}
 
 {% block pageheader %}
-<h1 class="front-page">{{ project.ddname }}</h1>
-<h2>{{ project.town_name }}</h2>
-{% if project.description %}<p class="lead">{{ project.descripton }}</p>{% endif %}
+<h1 class="front-page">{{ project.ddname }} <span class="update-title">in {{ project.municipality }}</span></h1>
+{% if project.description %}<p class="lead">{{ project.description }}</p>{% endif %}
 {% endblock pageheader %}
 
 
@@ -39,14 +38,14 @@
 
                         <h3>Housing</h3>
 
-                        {% include "development/_property.html" with property=project.tothu|floatformat:0 label="Total Housing Units" %}
+                        {% include "development/_property.html" with property=project.tothu|floatformat:0|intcomma label="Total Housing Units" %}
                         {% include "development/_property.html" with property=project.singfamhu|floatformat:0 label="Detached Single Family" %}
                         {% include "development/_property.html" with property=project.twnhsmmult|floatformat:0 label="Townhouse and Small Multifamily" %}
                         {% include "development/_property.html" with property=project.lgmultifam|floatformat:0 label="Large Multifamily" %}
                         {% include "development/_property.html" with property=project.ovr55|yesno:"Yes,No" label="Age Restricted (any part)" %}
                         {% include "development/_property.html" with property=project.pctaffall|percentage label="Affordable Units" %}
                         {% include "development/_property.html" with property=project.affordable_comment label="Affordability Comments" %}
-                        {% include "development/_property.html" with property=project.gqpop|floatformat:0 label="Group Quarters (beds)" %}
+                        {% include "development/_property.html" with property=project.gqpop|floatformat:0|intcomma label="Group Quarters (beds)" %}
 
                 </div>
                 <div class="span6">
@@ -54,7 +53,7 @@
                         <h3>Nonresidential Development</h3>
 
                         {% include "development/_property.html" with property=project.commsf|floatformat:0|intcomma label="Total Nonresidential Development (square feet)" %}
-                        {% include "development/_property.html" with property=project.retpct|floatformat:0 label="Retail or Restaurant" %}
+                        {% include "development/_property.html" with property=project.retpct|percentage label="Retail or Restaurant" %}
                         {% include "development/_property.html" with property=project.ofcmdpct|percentage label="Office or Medical" %}
                         {% include "development/_property.html" with property=project.indmfpct|percentage label="Manufacturing or Industrial" %}
                         {% include "development/_property.html" with property=project.whspct|percentage label="Warehouse or Trucking" %}
@@ -94,9 +93,9 @@
                 <div class="span12">
                         <div class="form-actions">
                             {% if user.is_authenticated %}
-                            <a href="{% url update project.dd_id %}" class="btn btn-primary">Update Project</a>
+                            <a href="{% url update project.dd_id %}" class="btn btn-primary">Edit Project</a>
                             {% else %}
-                            <a href="javascript:void(0)" class="btn btn-primary disabled" title="Login to update project">Update Project</a>
+                            <a href="javascript:void(0)" class="btn btn-primary disabled" title="Login to update project">Edit Project</a>
                             {% endif %}
                         </div>
                 </div>

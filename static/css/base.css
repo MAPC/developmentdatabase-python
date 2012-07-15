@@ -159,6 +159,7 @@ label.control-label, .fieldlabel {
 
 .fieldvalue {
   display: block;
+  padding-left: 300px;
 /*  font-weight: 700;*/
 }
 
@@ -173,6 +174,12 @@ label.control-label, .fieldlabel {
   margin-left: 160px;
   margin-bottom: 20px;
 }
+
+.form-info {
+  margin-left: 160px;
+  margin-top: 20px;
+}
+
 
 .error {
   color: #B94A48;

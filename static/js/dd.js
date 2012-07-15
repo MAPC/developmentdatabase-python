@@ -6,7 +6,7 @@ var dd = {
     number_fields: ["complyr", "tothu", "pctaffall", "totemp"],
 
     // percent fields, strip % char and divide by 100 before used in query
-    pct_fields: ["pctaffall"],
+    pct_fields: ["pctaffall", "retpct", "ofcmdpct", "indmfpct", "whspct", "rndpct", "edinstpct", "othpct"],
 
     // nullboolean fields
     nullboolean_fields: ["ovr55"],

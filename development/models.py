@@ -86,7 +86,7 @@ class Project(models.Model):
     ddname = models.CharField('Project Name', max_length=100)
     status = models.ForeignKey(ProjectStatus)
     complyr = models.IntegerField('Year of Completion', null=True, help_text='Estimated or actual.')
-    prjacrs = models.FloatField('Project Area', null=True, blank=True, help_text='In acres.')
+    prjacrs = models.FloatField('Project Area', null=True, help_text='In acres.')
     rdv = models.NullBooleanField('Redevelopment', blank=True, null=True)
     
     singfamhu = models.IntegerField('Single Family Housing', blank=True, null=True, help_text='Number of units.')
@@ -122,7 +122,7 @@ class Project(models.Model):
     otheremprat2 = models.FloatField(blank=True, null=True)
 
     # new
-    projecttype = models.ForeignKey(ProjectType, blank=True, null=True)
+    projecttype = models.ForeignKey(ProjectType, null=True)
     stalled = models.BooleanField('Stalled')
     phased = models.BooleanField('Phased')
     dev_name = models.CharField('Developer Name', blank=True, null=True, max_length=100)

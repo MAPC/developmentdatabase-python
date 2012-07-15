@@ -3,7 +3,7 @@
 {% block title %}Explore Projects{% endblock %}
 
 {% block pageheader %}
-<h1 class="front-page">{% if project.ddname.value %}<span class="update-title">Updating Project</span> {{ project.ddname.value }}{% else %}Add a new development project{% endif %}</h1>
+<h1 class="front-page">{% if project.ddname.value %}<span class="update-title">Editing Project</span> {{ project.ddname.value }}{% else %}Add a new development project{% endif %}</h1>
 {% endblock pageheader %}
 
 
@@ -16,6 +16,7 @@
                 <div class="span6">
 
                         {% include "development/_property_form.html" with property=project.ddname label="Project Name" %}
+                        {% include "development/_property_form.html" with property=project.description label="Project Description" %}
                         {% include "development/_property_form.html" with property=project.projecttype label="Project Type" %}
                         {% include "development/_property_form.html" with property=project.projecttype_detail label="Project Type Details" %}
                         {% include "development/_property_form.html" with property=project.status label="Status" %}
@@ -73,7 +74,6 @@
                         {% include "development/_property_form.html" with property=project.othpct label="Other" %}
                         {% include "development/_property_form.html" with property=project.hotelrms label="Hotel rooms" %}
                         {% include "development/_property_form.html" with property=project.rptdemp label="Reported Employment" %}
-                        {% include "development/_property_form.html" with property=project.totemp label="MAPC Estimated Employment" %}
 
                         </div>
 
@@ -115,11 +115,16 @@
 
         <div class="row">
                 <div class="span12">
+                        <div class="form-info"><span class="required">*</span> indicates required fields</div>
+                </div>
+        </div>
+
+        <div class="row">
+                <div class="span12">
                         <div class="form-actions">
-                                <button type="submit" class="btn btn-primary">{% if project.ddname.value %}Update{% else %}Add{% endif %}</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                 </div>
-
         </div>
 
 
@@ -149,6 +154,15 @@ $(function() {
 
         // adjust textarea heights (tweaks built-in Django Template)
         $("textarea").attr("rows", "2");
+
+        // tweak percentage fields
+        $.each($("form.projectdata input"), function(key, value) {
+            if (value) {
+                if ($.inArray($(this).attr("name"), dd.pct_fields) > -1) {
+                    $(this).val($(this).val() * 100);
+                }
+            }
+        })
 
         // the form data
         var projectdata = {
@@ -220,6 +234,13 @@ $(function() {
                 $(".map-caption p").first().addClass("error");
                 return false;
             }
+            $.each($("form.projectdata input"), function(key, value) {
+                if (value) {
+                    if ($.inArray($(this).attr("name"), dd.pct_fields) > -1) {
+                        $(this).val($(this).val() / 100);
+                    }
+                }
+            })
         });
 
         // validate form on keyup and submit
@@ -230,6 +251,7 @@ $(function() {
                             maxlength: 100
                         },
                         status: "required",
+                        projecttype: "required",
                         complyr: {
                                 required: true,
                                 number: true,
@@ -245,7 +267,10 @@ $(function() {
                                 required: true,
                                 number: true
                         },
-                        prjacrs: "number",
+                        prjacrs: {
+                            required: true,
+                            number: true
+                        },
                         url: { 
                             url: true,
                             maxlength: 200 
