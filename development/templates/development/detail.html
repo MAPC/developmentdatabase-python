@@ -92,10 +92,10 @@
         <div class="row">
                 <div class="span12">
                         <div class="form-actions">
-                            {% if user.is_authenticated %}
+                            {% if permissions %}
                             <a href="{% url update project.dd_id %}" class="btn btn-primary">Edit Project</a>
                             {% else %}
-                            <a href="javascript:void(0)" class="btn btn-primary disabled" title="Login to update project">Edit Project</a>
+                            <a href="{% if user.is_authenticated %}javascript:void(0){% else %}{% url userena_signin %}{% endif %}" class="btn btn-primary disabled" title="{% if user.is_authenticated %}You are only allowed to edit projects in your municipality.{% else %}Login to edit this project{% endif %}">Edit Project</a>
                             {% endif %}
                         </div>
                 </div>

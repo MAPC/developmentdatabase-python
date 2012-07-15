@@ -7,6 +7,11 @@ from django.contrib.gis.geos import GEOSGeometry
 from development.models import Project
 from development.forms import ProjectfilterForm, ProjectForm
 
+def has_permissions(user, municipality):
+    if not user.is_anonymous() and (user.groups.filter(name='MAPC Staff').count() > 0 or user.get_profile().municipality == municipality):
+        return True
+    return False
+
 def search(request):
     """ Filter projects """
 
@@ -20,6 +25,7 @@ def detail(request, dd_id):
 
     try:
         project = Project.objects.transform(4326).get(pk=dd_id)
+        permissions = has_permissions(request.user, project.taz.municipality)
     except Project.DoesNotExist:
         raise Http404
 
@@ -34,6 +40,7 @@ def add(request):
     if request.method == 'POST':
         new_project = Project()
         project = ProjectForm(request.POST, instance=new_project)
+        # TODO: mixin permission check
         if project.is_valid():
             # transform location
             entry = project.save(commit=False)
@@ -59,21 +66,25 @@ def update(request, dd_id):
     except Project.DoesNotExist:
         raise Http404
 
-    # update project
-    if request.method == 'POST':
-        updated_project = ProjectForm(request.POST, instance=project)
-        if updated_project.is_valid():
-            # transform location
-            entry = updated_project.save(commit=False)
-            new_location = GEOSGeometry(entry.location)
-            new_location.srid = 4326
-            new_location.transform(26986)
-            entry.location = new_location
-            entry.save()
-            return redirect('detail', dd_id=entry.dd_id)
-    # show projectform
+    if has_permissions(request.user, project.taz.municipality):     
+        # update project
+        if request.method == 'POST':
+            updated_project = ProjectForm(request.POST, instance=project)
+            if updated_project.is_valid():
+                # transform location
+                entry = updated_project.save(commit=False)
+                new_location = GEOSGeometry(entry.location)
+                new_location.srid = 4326
+                new_location.transform(26986)
+                entry.location = new_location
+                entry.save()
+                return redirect('detail', dd_id=entry.dd_id)
+        # show projectform
+        else:
+            project = ProjectForm(instance=project)
     else:
-        project = ProjectForm(instance=project)
+        # TODO: better usability, show user a message what happened
+        return redirect('detail', dd_id=dd_id)
 
     return render_to_response('development/update.html', locals(), context_instance=RequestContext(request))
 
