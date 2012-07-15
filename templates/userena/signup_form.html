@@ -7,7 +7,7 @@
 <form action="" method="post" class="form-horizontal">
   {% csrf_token %}
   <fieldset>
-    <legend>{% trans "Signup" %}</legend>
+    <legend>{% trans "Signup to add and edit projects" %}</legend>
     {{ form.non_field_errors }}
     {% for field in form %}
     {{ field.errors }}
