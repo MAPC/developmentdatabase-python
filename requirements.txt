@@ -4,6 +4,7 @@ South==0.7.5
 -e git://github.com/earle/django-bootstrap.git@2433b7df07f04a3a7c2ca5adf2c49f882a53ffa3#egg=bootstrap-dev
 -e git://github.com/sehmaschine/django-grappelli.git@233f27746cee5cf17dc5c770e763a72c35bdc790#egg=django_grappelli-dev
 django-guardian==1.0.4
+django-reversion==1.6.1
 django-tastypie==0.9.11
 django-userena==1.1.2
 easy-thumbnails==1.0.3

@@ -2,14 +2,14 @@ from django.contrib.gis import admin
 
 from development.models import Project, Taz, Municipality, CommunityType, ProjectStatus, ZoningTool, ProjectType
 
+import reversion
 
 # default GeoAdmin overloads
 admin.GeoModelAdmin.default_lon = -7915039
 admin.GeoModelAdmin.default_lat = 5216500 
 admin.GeoModelAdmin.default_zoom = 10
 
-
-class ProjectAdmin(admin.OSMGeoAdmin):
+class ProjectAdmin(reversion.VersionAdmin):
     # fieldsets = [
     #     (None, {'fields': ['name', 'removed', 'compl_date', 'area', 'redevelopment', 'location']}),
     #     ('Housing Developments', {'fields': ['hd_singlefam_units', 'hd_attached_units', 'hd_apt_units', 'hd_cluster', 'hd_over55', 'hd_mixeduse', 'zoning_tool']}),
@@ -17,6 +17,7 @@ class ProjectAdmin(admin.OSMGeoAdmin):
     #     ('Review', {'fields': ['comments', 'confirmed', 'confirmed_by', 'located', 'located_by']}),   
     # ]
     # list_filter = ('complyr',)
+    exclude = ('location',)
     list_display = ('ddname', 'municipality', 'last_modified', 'projecttype', 'status', 'complyr', 'prjacrs', )
     search_fields = ['ddname','description',]
     

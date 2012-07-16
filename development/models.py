@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 from django.contrib.auth.models import User
 
+import reversion
 
 # south introspection rules
 try:
@@ -173,3 +174,5 @@ class Project(models.Model):
 
     def get_verbose_field_name(self, field):
         return self._meta.get_field_by_name(field)[0].verbose_name
+
+reversion.register(Project)
