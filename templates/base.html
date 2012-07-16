@@ -21,6 +21,9 @@
     {% block style %}
     <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/base.css">
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/ie8.css">
+    <![endif]-->
     {% endblock %}
     
     <script type="text/javascript">
@@ -102,6 +105,7 @@
     {% block javascript %}
     <script src="{{ STATIC_URL }}lib/jquery/jquery-1.7.2.min.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}lib/jquery/jquery.url.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/dd.js" type="text/javascript"></script>
 
 <script type="text/javascript">
