@@ -20,6 +20,13 @@ $(function() {
 
     // default filter
     var filter = $.extend({}, url_param);
+    {% if user.is_authenticated %}
+    if ($.isEmptyObject(url_param)) {
+        filter["taz__municipality"] = {{ user.get_profile.municipality.muni_id }};
+        // TODO: proper select option with .prop
+        $("#id_municipality").val("{{ user.get_profile.municipality.muni_id }}");
+    }
+    {% endif %}
 
     // load projects
     dd.load_projects(filter);
@@ -102,6 +109,10 @@ $(function() {
         filter = {
             "format": "json"
         }
+        {% if user.is_authenticated %}
+        filter["taz__municipality"] = {{ user.get_profile.municipality.muni_id }};
+        $("#id_municipality").val("{{ user.get_profile.municipality.muni_id }}");
+        {% endif %}
         dd.load_projects(filter);
     });
     

@@ -35,7 +35,7 @@
 
   <div class="signin-help"><a href='{% url userena_password_reset %}' title="{% trans "Forgot your password?" %}">{% trans "Forgot your password?" %}</a></div>
   <div class="signin-help"><a href='{% url userena_signup %}' title="{% trans "Don't have an account? Sign up here!" %}">{% trans "Don't have an account? Sign up here!" %}</a></div>
-  {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% endif %}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% else %}<input type="hidden" name="next" value="{% url search %}" />{% endif %}
 </form>
 {% endblock %}
 
