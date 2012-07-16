@@ -150,7 +150,11 @@
 $(function() {
 
         // set baselayer
+        {% if project.ddname.value %}
         dd.map.addLayer(dd.bing);
+        {% else %}
+        dd.map.addLayer(dd.basemap);
+        {% endif %}
 
         // adjust textarea heights (tweaks built-in Django Template)
         $("textarea").attr("rows", "2");
