@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Not found{% endblock %} 
+
+{% block pageheader %}Not found{% endblock pageheader %}
+
+{% block body %}  
+<div>We're sorry but the page:
+<h3>{{ request_path }}</h3>
+is not available here.</div>
+{% endblock %}
