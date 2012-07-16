@@ -77,8 +77,6 @@ a, a:hover {
   letter-spacing: -1px;
 }
 
-
-
 /* Front Page
 -------------------------------------------------- */
 
@@ -90,6 +88,8 @@ a, a:hover {
 }
 .browse-projects {
   text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 /* Content
