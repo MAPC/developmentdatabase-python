@@ -62,7 +62,7 @@ class ProjectResource(GeoResource):
     status = fields.ToOneField('development.api.ProjectStatusResource', 'status')
 
     class Meta:
-        queryset = Project.objects.transform(4326).all()
+        queryset = Project.objects.transform(4326).filter(removed=False, draft=False)
         allowed_methods = ['get']
         fields = ['location', 'ddname', 'projecttype', 'status', 'complyr', 'tothu', 'ovr55', 'pctaffall', 'totemp', 'last_modified', ]
         include_absolute_url = True
