@@ -1,6 +1,7 @@
 from tastypie import fields
 from tastypie.resources import ModelResource, ALL, ALL_WITH_RELATIONS
 from tastypie.authorization import Authorization
+from tastypie.cache import SimpleCache
 
 from development.models import Project, Taz, Municipality, ProjectStatus
 from development.tastyhacks import GeoResource
@@ -16,6 +17,7 @@ class MuniResource(ModelResource):
         fields = ['town_id', 'name', ]
         include_resource_uri = False
         ordering = ['name', ]
+        cache = SimpleCache()
         filtering = {
             'muni_id': ALL,
             'name': ALL,
@@ -34,6 +36,7 @@ class TazResource(ModelResource):
         allowed_methods = ['get',]
         fields = ['taz_id', 'municipality', ]
         include_resource_uri = False
+        cache = SimpleCache()
         filtering = {
             'taz_id': ALL,
             'municipality': ALL,
@@ -44,6 +47,7 @@ class ProjectStatusResource(ModelResource):
         queryset = ProjectStatus.objects.all()
         allowed_methods = ['get']
         include_resource_uri = False
+        cache = SimpleCache()
         filtering = {
             'name': ALL
         }
@@ -65,6 +69,7 @@ class ProjectResource(GeoResource):
         include_resource_uri = False
         authorization = Authorization()
         ordering = ['last_modified', ]
+        cache = SimpleCache()
         filtering = {
             'dd_id': ALL,
             'ddname': ALL,
