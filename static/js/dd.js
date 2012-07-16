@@ -63,6 +63,7 @@ var dd = {
         var filter = filter || {};
         filter["format"] = "json";
         filter["limit"] = filter["limit"] || 20;
+        filter["order_by"] = filter["order_by"] || "-last_modified";
 
         // serialize filter to url
         var url  = "/api/v1/project/?" + $.param(filter);

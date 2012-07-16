@@ -60,10 +60,11 @@ class ProjectResource(GeoResource):
     class Meta:
         queryset = Project.objects.transform(4326).all()
         allowed_methods = ['get']
-        fields = ['location', 'ddname', 'projecttype', 'status', 'complyr', 'tothu', 'ovr55', 'pctaffall', 'totemp', ]
+        fields = ['location', 'ddname', 'projecttype', 'status', 'complyr', 'tothu', 'ovr55', 'pctaffall', 'totemp', 'last_modified', ]
         include_absolute_url = True
         include_resource_uri = False
         authorization = Authorization()
+        ordering = ['last_modified', ]
         filtering = {
             'dd_id': ALL,
             'ddname': ALL,
