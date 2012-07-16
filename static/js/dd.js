@@ -62,7 +62,7 @@ var dd = {
     load_projects: function(filter) {
         var filter = filter || {};
         filter["format"] = "json";
-        filter["limit"] = filter["limit"] || 20;
+        filter["limit"] = (filter["limit"] !== undefined) ? filter["limit"] : 20;
         filter["order_by"] = filter["order_by"] || "-last_modified";
 
         // serialize filter to url
@@ -95,7 +95,9 @@ var dd = {
                     });
 
                     $(".countinfo").show();
-                    $(".countinfo .range").html(data.meta.offset + " - " + (parseInt(data.meta.offset) + parseInt(data.meta.limit)));
+                    var page_range = [data.meta.offset];
+                    page_range[1] = (data.meta.limit === 0) ? data.meta.total_count : (parseInt(data.meta.offset) + parseInt(data.meta.limit));
+                    $(".countinfo .range").html(page_range[0] + " - " +  page_range[1]);
                     $(".countinfo .totalcount").html(data.meta.total_count);
                     
                     // update permalink

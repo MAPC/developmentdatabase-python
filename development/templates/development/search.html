@@ -20,10 +20,13 @@ $(function() {
     // default filter
     var filter = $.extend({}, url_param);
     {% if user.is_authenticated %}
+    // default, non-parameter, search interface
     if ($.isEmptyObject(url_param)) {
         filter["taz__municipality"] = {{ user.get_profile.municipality.muni_id }};
         // TODO: proper select option with .prop
         $("#id_municipality").val("{{ user.get_profile.municipality.muni_id }}");
+        // show all projects for user municipality
+        filter["limit"] = 0;
     }
     {% endif %}
 
@@ -151,6 +154,7 @@ $(function() {
                             <option selected>20</option>
                             <option>50</option>
                             <option>100</option>
+                            {% if user.is_authenticated %}<option value="0">All</option>{% endif %}
                         </select>
                     </div>
                     {% if user.is_authenticated %}
