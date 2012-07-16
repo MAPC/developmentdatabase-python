@@ -160,13 +160,9 @@ $(function() {
         $("textarea").attr("rows", "2");
 
         // tweak percentage fields
-        $.each($("form.projectdata input"), function(key, value) {
-            if (value) {
-                if ($.inArray($(this).attr("name"), dd.pct_fields) > -1) {
-                    $(this).val($(this).val() * 100);
-                }
-            }
-        })
+        $.each(dd.pct_fields, function(key, field) {
+            $("form.projectdata #id_" + field).val($("form.projectdata #id_" + field).val() * 100);
+        });
 
         // the form data
         var projectdata = {
@@ -238,13 +234,12 @@ $(function() {
                 $(".map-caption p").first().addClass("error");
                 return false;
             }
-            $.each($("form.projectdata input"), function(key, value) {
-                if (value) {
-                    if ($.inArray($(this).attr("name"), dd.pct_fields) > -1) {
-                        $(this).val($(this).val() / 100);
-                    }
-                }
-            })
+            if ($("form.projectdata").valid()) {
+               $.each(dd.pct_fields, function(key, field) {
+                    $("form.projectdata #id_" + field).val($("form.projectdata #id_" + field).val() / 100);
+                });
+            }
+            
         });
 
         // validate form on keyup and submit
@@ -308,39 +303,23 @@ $(function() {
                 errorElement: "span",
                 errorPlacement: function(error, element) {
                         element.after(error);
-                }
-                // TODO: POST through api, solve nested resources first.
+                },
+                // // TODO: POST through api, solve nested resources first.
                 // submitHandler: function() {
-                //         // post
-                //         // $.ajax({
-                //         //     type: "POST",
-                //         //     url: "/api/v1/project/",
-                //         //     data: JSON.stringify(projectdata),
-                //         //     contentType:'application/json',
-                //         //     dataType: 'json',
-                //         //     processData: false
-                //         //   }).done(function(msg) {
-                //         //     console.log("posted!");
-                //         //   });
+                //     // API post
+                //     $.ajax({
+                //         type: "POST",
+                //         url: "/api/v1/project/",
+                //         data: JSON.stringify(projectdata),
+                //         contentType:'application/json',
+                //         dataType: 'json',
+                //         processData: false
+                //       }).done(function(msg) {
+                //         console.log("posted!");
+                //       });
                 // }
         });
         
-        // reset form
-        $("form.projectdata button.reset").on("click", function(event) {
-                event.preventDefault();
-                validator.resetForm();
-                $(".map-caption p").first().removeClass("error");
-                $("form.projectdata").find("input, select, textarea").each(function(key, value) {
-                        $(this).val("");
-                });
-                projectdata = {
-                        "location": { 
-                                "coordinates": [], 
-                                "type": "Point" 
-                        }
-                };
-                newproject_pt.setLatLng(dd.map.getCenter());
-        });
 });
 </script>
 {% endblock %}
