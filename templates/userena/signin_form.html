@@ -1,13 +1,13 @@
 {% extends 'userena/base_userena.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Signin" %}{% endblock %}
+{% block title %}{% trans "Log in" %}{% endblock %}
 
 {% block content %}
 <form action="" method="post" class="form-horizontal">
   {% csrf_token %}
   <fieldset>
-    <legend>{% trans "Signin to add and edit projects" %}</legend>
+    <legend>{% trans "Log in to add and edit projects" %}</legend>
     {{ form.non_field_errors }}
     {% for field in form %}
     {{ field.errors }}
@@ -29,13 +29,16 @@
     {% endfor %}
   </fieldset>
 
-  <div class="form-actions">
-    <button type="submit" class="btn btn-primary">{% trans "Signin" %}</button>
-  </div>
+  
 
   <div class="signin-help"><a href='{% url userena_password_reset %}' title="{% trans "Forgot your password?" %}">{% trans "Forgot your password?" %}</a></div>
   <div class="signin-help"><a href='{% url userena_signup %}' title="{% trans "Don't have an account? Sign up here!" %}">{% trans "Don't have an account? Sign up here!" %}</a></div>
   {% if next %}<input type="hidden" name="next" value="{{ next }}" />{% else %}<input type="hidden" name="next" value="{% url search %}" />{% endif %}
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">{% trans "Signin" %}</button>
+  </div>
+  
 </form>
 {% endblock %}
 
