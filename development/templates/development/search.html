@@ -80,7 +80,8 @@ $(function() {
                         $(this).children(":selected").val(""); 
 
                 }
-            });
+            }); 
+            $element.val(""); // default value
         } else if (!related_field) {
             if ($element.attr("id") === "id_municipality") {
                 $element.attr("name", "taz__municipality");
