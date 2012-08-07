@@ -197,6 +197,11 @@ span.error {
   color: #999;
 }
 
+.update-title a {
+  color: #999;
+  text-decoration: underline;
+}
+
 /* Userena
 -------------------------------------------------- */
 

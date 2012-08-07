@@ -166,7 +166,7 @@ class Project(models.Model):
         return self.ddname
     
     def municipality(self):
-        return self.taz.municipality.name
+        return self.taz.municipality
 
     @models.permalink
     def get_absolute_url(self):

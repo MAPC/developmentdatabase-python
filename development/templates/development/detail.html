@@ -6,7 +6,7 @@
 {% block title %}Explore Projects{% endblock %}
 
 {% block pageheader %}
-<h1 class="front-page">{{ project.ddname }} <span class="update-title">in {{ project.municipality }}</span></h1>
+<h1 class="front-page">{{ project.ddname }} <span class="update-title">in <a href="/projects/search/?taz__municipality={{ project.municipality.muni_id }}" title="View more projects in {{ project.municipality.name }}">{{ project.municipality.name }}</a></span></h1>
 {% if project.description %}<p class="lead">{{ project.description }}</p>{% endif %}
 {% endblock pageheader %}
 

@@ -16,6 +16,7 @@ $(function() {
     // if page was called with search parameter from home page
     // TODO: fill in all fields if called with parameter url
     if (url_param["ddname__icontains"]) $("#id_ddname").val(url_param["ddname__icontains"]);
+    if (url_param["taz__municipality"]) $("#id_municipality").val(url_param["taz__municipality"]);
 
     // default filter
     var filter = $.extend({}, url_param);
