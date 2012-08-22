@@ -72,9 +72,13 @@ class ZoningTool(models.Model):
 
 class ProjectType(models.Model):
     name = models.CharField('Project Type', max_length=100)
+    order = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['order']
 
     
 class Project(models.Model):
