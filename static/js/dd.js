@@ -1,3 +1,5 @@
+// var Project = Backbone.Model.extend({});
+
 // development database namespace
 
 var dd = {
@@ -117,7 +119,7 @@ var dd = {
             "properties": properties,
             "geometry": geometry
         }
-        dd.projects.addGeoJSON(project);
+        dd.projects.addData(project);
     },
 
     // serializes form to filter object
