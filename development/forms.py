@@ -15,6 +15,7 @@ class ProjectfilterForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Project
         fields = ('municipality', 'ddname', 'projecttype', 'status', 'complyr', 'tothu', 'ovr55', 'pctaffall', 'totemp', )
+        help_tooltip = True
 
 
 class ProjectForm(BootstrapMixin, forms.ModelForm):
