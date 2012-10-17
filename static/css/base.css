@@ -125,6 +125,16 @@ h3 {
 /* Filter form
 -------------------------------------------------- */
 
+.form-horizontal .control-label {
+  width: 140px;
+}
+.form-horizontal .controls {
+    margin-left: 160px;
+}
+.form-horizontal .control-group {
+    margin-bottom: 10px;
+}
+
 .countinfo {
   display: none;
   float: left;
