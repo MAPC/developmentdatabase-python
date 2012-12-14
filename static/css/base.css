@@ -237,3 +237,24 @@ ul.errorlist {
 img.mughshot {
   margin-right: 6px;
 }
+
+/* Walk Score branding
+-------------------------------------------------- */
+
+.walkscore img {
+  margin-right: 10px;
+  position: relative;
+  top: -4px;
+}
+
+.walkscore, .walkscore:hover {
+  color: #B14900;
+  font-weight: bold;
+  font-size: 15px;
+  text-decoration: none;
+  line-height: 17px;
+  position: relative;
+  top: 4px;
+  margin-right: 8px;
+}
+

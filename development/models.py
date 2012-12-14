@@ -133,7 +133,7 @@ class WalkScore(models.Model):
         verbose_name_plural = _('WalkScores')
 
     def __unicode__(self):
-        return '%i: %s' % (self.walkscore, self.description)
+        return '%i (%s)' % (self.walkscore, self.description)
 
     def save(self, *args, **kwargs):
         try:
@@ -143,7 +143,26 @@ class WalkScore(models.Model):
         super(WalkScore, self).save(*args, **kwargs)
     
 
+class TODStation(models.Model):
+    """ Adjusted buffer around transit stations """
+
+    station_id = models.IntegerField()
+    station_name = models.CharField(max_length=50)
+    subway = models.BooleanField()
+    comrail = models.BooleanField()
+    taz = models.ForeignKey(Taz)
+
+    geometry = models.MultiPolygonField(srid=26986)
+    objects = models.GeoManager()
+
+    class Meta:
+        verbose_name = _('TODStation')
+        verbose_name_plural = _('TODStations')
+
+    def __unicode__(self):
+        return self.station_name
     
+
 class Project(models.Model):
     """
     An economic or housing development project.
@@ -170,7 +189,7 @@ class Project(models.Model):
 
     rptdemp = models.FloatField('Reported Employment', blank=True, null=True)
     emploss = models.FloatField('Employment Loss', blank=True, null=True)
-    totemp = models.FloatField('Total Employment', blank=True, null=True)
+    totemp = models.FloatField('MAPC estimated employment', blank=True, null=True)
     commsf = models.FloatField('Total Non-Residential Development', null=True, help_text='In square feet.')
     retpct = models.FloatField('Retail / Restaurant Percentage', blank=True, null=True, help_text='In percent.')
     ofcmdpct = models.FloatField('Office / Medical Percentage', blank=True, null=True, help_text='In percent.')
@@ -199,6 +218,7 @@ class Project(models.Model):
     parking_spaces = models.IntegerField('Parking Spaces', blank=True, null=True)
     as_of_right = models.NullBooleanField('As Of Right', blank=True, null=True)
     walkscore = models.ForeignKey(WalkScore, null=True)
+    todstation = models.ForeignKey(TODStation, null=True)
     total_cost = models.IntegerField('Total Cost', blank=True, null=True)
     total_cost_allocated_pct = models.FloatField('Funding Allocated', blank=True, null=True, help_text='In percent.')
     draft = models.BooleanField(help_text='Required project information is incomplete.')
@@ -222,13 +242,25 @@ class Project(models.Model):
         ordering = ['dd_id', ]
 
     def save(self, *args, **kwargs):
+
+        # set TAZ
         try:
-            # find and cache TAZ for project location
             self.taz = Taz.objects.get(geometry__contains=self.location)
         except Taz.DoesNotExist:
             self.taz = None 
 
-        self.walkscore = self.get_walkscore()
+        # set TOD station
+        try:
+            self.todstation = TODStation.objects.get(geometry__contains=self.location)
+        except TODStation.DoesNotExist:
+            self.todstation = None
+
+        # the free walkscore api is limited to 1000 requests per day
+        # update walkscore only on new or moved projects
+        udate_walkscore = kwargs.pop('update_walkscore', None)
+        if udate_walkscore == True:
+            # get walkscore
+            self.walkscore = self.get_walkscore()
 
         super(Project, self).save(*args, **kwargs)
 
@@ -255,6 +287,7 @@ class Project(models.Model):
 
     def get_walkscore(self):
         """ Gets walkscore from API, limited to 1000 requests per day 
+        Example response:
         {
             "status": 1,
             "walkscore": 38,
