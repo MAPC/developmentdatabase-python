@@ -1,6 +1,12 @@
 from django.contrib.gis.db import models
+from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
+from django.conf import settings
+from django.utils.dateparse import parse_datetime
+
+import pytz
+import requests
 import reversion
 
 # south introspection rules
@@ -54,6 +60,33 @@ class Taz(models.Model):
         return "%s - %s" % (self.taz_id, self.municipality)
 
 
+class ZipCode(models.Model):
+    """
+    Massachusetts Zip Codes, used for approx. geocoding
+    """
+
+    zipcode = models.CharField(max_length=5)
+    name = models.CharField(max_length=100)
+    state = models.CharField(max_length=2)
+
+    geometry = models.MultiPolygonField(srid=26986)
+    objects = models.GeoManager()
+
+    class Meta:
+        verbose_name = _('ZipCode')
+        verbose_name_plural = _('ZipCodes')
+        ordering = ['zipcode']
+
+    def __unicode__(self):
+        return self.zipcode
+
+    @property
+    def address(self):
+        """ Returns formatting to fit in street addresses """
+        return '%s, %s %s' % (self.name, self.state, self.zipcode)
+    
+
+
 class ProjectStatus(models.Model):
     name = models.CharField(max_length=20)
 
@@ -79,6 +112,36 @@ class ProjectType(models.Model):
 
     class Meta:
         ordering = ['order']
+
+
+class WalkScore(models.Model):
+    """ Model class according to http://www.walkscore.com/professional/api.php """
+
+    status = models.IntegerField()
+    walkscore = models.IntegerField()
+    description = models.CharField(max_length=100)
+    updated = models.DateTimeField()
+    ws_link = models.URLField()
+    snapped_lat = models.FloatField()
+    snapped_lon = models.FloatField()
+
+    geometry = models.PointField(geography=True, null=True)
+    objects = models.GeoManager() 
+
+    class Meta:
+        verbose_name = _('WalkScore')
+        verbose_name_plural = _('WalkScores')
+
+    def __unicode__(self):
+        return '%i: %s' % (self.walkscore, self.description)
+
+    def save(self, *args, **kwargs):
+        try:
+            self.geometry = Point(self.snapped_lon, self.snapped_lat)
+        except:
+            self.geometry = None        
+        super(WalkScore, self).save(*args, **kwargs)
+    
 
     
 class Project(models.Model):
@@ -135,7 +198,7 @@ class Project(models.Model):
     affordable_comment = models.TextField('Affordability Comment', blank=True, null=True)
     parking_spaces = models.IntegerField('Parking Spaces', blank=True, null=True)
     as_of_right = models.NullBooleanField('As Of Right', blank=True, null=True)
-    walkscore = models.IntegerField('WalkScore', blank=True, null=True)
+    walkscore = models.ForeignKey(WalkScore, null=True)
     total_cost = models.IntegerField('Total Cost', blank=True, null=True)
     total_cost_allocated_pct = models.FloatField('Funding Allocated', blank=True, null=True, help_text='In percent.')
     draft = models.BooleanField(help_text='Required project information is incomplete.')
@@ -162,15 +225,26 @@ class Project(models.Model):
         try:
             # find and cache TAZ for project location
             self.taz = Taz.objects.get(geometry__contains=self.location)
-        except:
-            self.taz = None        
+        except Taz.DoesNotExist:
+            self.taz = None 
+
+        self.walkscore = self.get_walkscore()
+
         super(Project, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.ddname
-    
+
     def municipality(self):
         return self.taz.municipality
+
+    def get_zipcode(self):
+        try:
+            zipcode = ZipCode.objects.get(geometry__contains=self.location)
+        except ZipCode.DoesNotExist:
+            zipcode = None
+        return zipcode
+
 
     @models.permalink
     def get_absolute_url(self):
@@ -178,5 +252,53 @@ class Project(models.Model):
 
     def get_verbose_field_name(self, field):
         return self._meta.get_field_by_name(field)[0].verbose_name
+
+    def get_walkscore(self):
+        """ Gets walkscore from API, limited to 1000 requests per day 
+        {
+            "status": 1,
+            "walkscore": 38,
+            "description": "Car-Dependent",
+            "updated": "2012-08-13 19:00:20.819797",
+            "logo_url": "http://www2.walkscore.com/images/api-logo.gif",
+            "more_info_icon": "http://www2.walkscore.com/images/api-more-info.gif",
+            "more_info_link": "http://www.walkscore.com/how-it-works.shtml",
+            "ws_link": "http://www.walkscore.com/score/Boxborough-MA-01719/lat=42.480611424525264/lng=-71.516146659851088/?utm_source=mapc.org&utm_medium=ws_api&utm_campaign=ws_api",
+            "snapped_lat": 42.4800,
+            "snapped_lon": -71.5155
+        }
+        """
+
+        point = self.location
+        point.transform(4326)
+        address = ''
+        zipcode = self.get_zipcode()
+        if zipcode:
+            address = zipcode.address
+
+        ws_params = {
+            'format': 'json', 
+            'address': address, 
+            'lat': point.y, 
+            'lon': point.x, 
+            'wsapikey': settings.WSAPIKEY
+        }
+        ws_request = requests.get('http://api.walkscore.com/score', params=ws_params)
+
+        # check if we have good response
+        if ws_request.json['status'] == 1:
+            walkscore = WalkScore.objects.get_or_create(
+                status = ws_request.json['status'],
+                walkscore = ws_request.json['walkscore'],
+                description = ws_request.json['description'],
+                updated = pytz.UTC.localize(parse_datetime(ws_request.json['updated'])), # assume UTC
+                ws_link = ws_request.json['ws_link'],
+                snapped_lat = ws_request.json['snapped_lat'],
+                snapped_lon = ws_request.json['snapped_lon']
+            )
+            return walkscore[0]
+        else:
+            return None
+
 
 reversion.register(Project)

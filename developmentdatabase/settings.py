@@ -94,6 +94,15 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.Loader',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.contrib.messages.context_processors.messages',
+    'developmentdatabase.context_processors.template_settings')
+
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -193,6 +202,11 @@ USERENA_HIDE_EMAIL = True
 
 # Guardian
 ANONYMOUS_USER_ID = -1
+
+# WalkScore API
+WS_MORE_INFO_ICON = 'http://www2.walkscore.com/images/api-more-info.gif'
+WS_MORE_INFO_LINK = 'http://www.walkscore.com/how-it-works.shtml'
+WS_LOGO_URL = 'http://www2.walkscore.com/images/api-logo.gif'
 
 # import local settings
 try:

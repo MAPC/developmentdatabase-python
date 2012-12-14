@@ -78,6 +78,12 @@
                         {% include "development/_property.html" with property=project.clustosrd|yesno:"Yes,No" label="Cluster Subdivision" %}
                         {% include "development/_property.html" with property=project.total_cost|intcomma|currency label="Total project cost" %}
 
+                        {% include "development/_property.html" with property=project.todstation|title label="Nearest Transit Station" %}
+
+                        <div class="fieldcontainer">
+                            <div class="fieldlabel"><a href="{{ project.walkscore.ws_link }}" class="walkscore"><img src="{{ WS_LOGO_URL }}" alt="What's your Walk Score?" width="120" height="19" border="0">{{ project.walkscore|default:"-" }}</a><a href="{{ WS_MORE_INFO_LINK }}" target="_blank"><img src="{{ WS_MORE_INFO_ICON }}" width="13" height="13"></a></div>
+                        </div>
+
                 </div>
                 <div class="span6">
                         <h3>Development Team</h3>

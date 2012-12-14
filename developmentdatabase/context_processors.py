@@ -1,3 +1,11 @@
-def bing_api_key(request):
-    from django.conf import settings
-    return { 'bing_api_key' : settings.BING_API_KEY }
+from django.conf import settings
+
+def template_settings(request):
+    """ Global values to pass to templates """
+    return dict(
+        BING_API_KEY = settings.BING_API_KEY,
+        WS_MORE_INFO_ICON = settings.WS_MORE_INFO_ICON,
+        WS_MORE_INFO_LINK = settings.WS_MORE_INFO_LINK,
+        WS_LOGO_URL = settings.WS_LOGO_URL,
+    ) 
+        
