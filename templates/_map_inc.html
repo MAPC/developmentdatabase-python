@@ -24,9 +24,12 @@
     <script src="{{ STATIC_URL }}lib/leaflet/plugins/markercluster/leaflet.markercluster.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}lib/mapc/layers.js" type="text/javascript"></script>
     <script type="text/javascript">
+
+        // TODO: wrap in initialize method
+
         // background layers
         dd.basemap = new L.MAPCTileLayer("basemap");
-        dd.bing = new L.BingLayer("An8pfp-PjegjSInpD2JyXw5gMufAZBvZ_q3cbJb-kWiZ1H55gpJbxndbFHPsO_HN", "Aerial"); 
+        dd.bing = new L.BingLayer("{{ BING_API_KEY }}", "Aerial"); 
         dd.osm = new L.TileLayer("http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
             maxZoom: 18, 
             attribution: "Map data &copy; OpenStreetMap contributors"
