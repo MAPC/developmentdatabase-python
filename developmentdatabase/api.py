@@ -58,11 +58,11 @@ class ProjectResource(ModelResource):
     Project
     """
 
-    taz = fields.ToOneField('development.api.TazResource', 'taz', full=True)
+    taz = fields.ToOneField('development.api.TazResource', 'taz', full=True, null=True)
     status = fields.ToOneField('development.api.ProjectStatusResource', 'status')
 
     class Meta:
-        queryset = Project.objects.transform(4326).filter(removed=False, draft=False)
+        queryset = Project.objects.transform(4326).filter(removed=False, draft=False, taz__isnull=False)
         allowed_methods = ['get']
         # fields = ['ddname', 'projecttype', 'status', 'complyr', 'tothu', 'ovr55', 'pctaffall', 'totemp', 'last_modified', ]
         include_absolute_url = True
