@@ -1,12 +1,13 @@
 ## custom
 
 local_settings.py
+notes.md
 
 data/*
 */migrations/*
 *.sublime-*
 
-media/*
+developmentdatabase/media/*
 
 #################
 ## Eclipse
