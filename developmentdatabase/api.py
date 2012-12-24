@@ -29,7 +29,7 @@ class TazResource(ModelResource):
     TAZ containing at least one project
     """
 
-    municipality = fields.ToOneField('development.api.MuniResource', 'municipality', full=True)
+    municipality = fields.ToOneField(MuniResource, 'municipality', full=True)
 
     class Meta:
         queryset = Taz.objects.filter(project__isnull=False).distinct('taz_id')
@@ -39,7 +39,7 @@ class TazResource(ModelResource):
         cache = SimpleCache()
         filtering = {
             'taz_id': ALL,
-            'municipality': ALL,
+            'municipality': ALL_WITH_RELATIONS,
         }
 
 class ProjectStatusResource(ModelResource):
@@ -58,8 +58,8 @@ class ProjectResource(ModelResource):
     Project
     """
 
-    taz = fields.ToOneField('development.api.TazResource', 'taz', full=True, null=True)
-    status = fields.ToOneField('development.api.ProjectStatusResource', 'status')
+    taz = fields.ToOneField(TazResource, 'taz', full=True, null=True)
+    status = fields.ToOneField(ProjectStatusResource, 'status')
 
     class Meta:
         queryset = Project.objects.transform(4326).filter(removed=False, draft=False, taz__isnull=False)
@@ -76,7 +76,7 @@ class ProjectResource(ModelResource):
             'complyr': ALL,
             'ovr55': ALL,
             'projecttype': ALL, 
-            'status': ALL,
+            'status': ALL_WITH_RELATIONS,
             'tothu': ALL,  
             'pctaffall': ALL, 
             'totemp': ALL,
