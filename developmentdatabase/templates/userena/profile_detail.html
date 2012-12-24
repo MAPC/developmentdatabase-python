@@ -1,0 +1,41 @@
+{% extends 'userena/base_userena.html' %}
+{% load i18n %}
+
+{% block title %}{% firstof profile.user.get_full_name profile.user.username %}{{ username }}'s Profile{% endblock %}
+
+{% block pageheader %}
+<h1><img class="mugshot" src="{{ profile.get_mugshot_url }}" alt="{% trans "Your mugshot" %}" /> {% firstof profile.user.get_full_name profile.user.username %}</h1>
+{% endblock pageheader %}
+
+{% block content %}
+  <div class="white-box">
+    <div id="details">
+      {% block profile_details %}
+        <dl>
+          {% block profile_definition_list %}
+            {% if profile.user.get_full_name %}
+              <dt>{% trans "Name" %}</dt>
+              <dd>{{ profile.user.get_full_name }}</dd>
+            {% endif %}
+            {% if profile.user.email and not hide_email %}
+              <dt>{% trans "Email" %}</dt>
+              <dd>{{ profile.user.email }}</dd>
+            {% endif %}
+            {% if profile.municipality %}
+              <dt>{% trans "Municipality" %}</dt>
+              <dd>{{ profile.municipality }}</dd>
+            {% endif %}
+            {% if profile.position %}
+              <dt>{% trans "Postition" %}</dt>
+              <dd>{{ profile.position }}</dd>
+            {% endif %}
+            {% if profile.location %}
+              <dt>{% trans "Location" %}</dt>
+              <dd>{{ profile.location }}</dd>
+            {% endif %}
+          {% endblock %}
+        </dl>
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}

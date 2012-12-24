@@ -1,0 +1,7 @@
+<div class="control-group{% if property.field.required %} required{% endif %}" id="div_{{ property.auto_id }}">
+    <label for="{{ property.auto_id }}" class="control-label">{% firstof label property.field.label %}{% if property.field.required %}<span class="required">&nbsp;*</span>{% endif %}</label>
+    <div class="controls">
+        {{ property }}  
+        {% if property.field.help_text %}<span class="help-inline">{{ property.field.help_text }}</span>{% endif %}
+    </div>
+</div>
