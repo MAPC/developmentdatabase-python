@@ -23,10 +23,25 @@ class CommunityType(models.Model):
     def __unicode__(self):
         return self.name
 
+
+class Subregion(models.Model):
+    name = models.CharField(max_length=50)
+    abbr = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name = _('Subregion')
+        verbose_name_plural = _('Subregions')
+        ordering = ['abbr']
+
+    def __unicode__(self):
+        return self.abbr
+    
+
 class Municipality(models.Model):
     muni_id = models.IntegerField('Municipality ID', primary_key=True)
     name = models.CharField('Municipality Name', max_length=50, unique=True)
     communitytype = models.ForeignKey(CommunityType, blank=True, null=True)
+    subregion = models.ForeignKey(Subregion, null=True)
     
     geometry = models.MultiPolygonField(srid=26986)
     objects = models.GeoManager()
@@ -189,7 +204,7 @@ class Project(models.Model):
 
     rptdemp = models.FloatField('Reported Employment', blank=True, null=True)
     emploss = models.FloatField('Employment Loss', blank=True, null=True)
-    totemp = models.FloatField('MAPC estimated employment', blank=True, null=True)
+    totemp = models.FloatField('Est. employment', blank=True, null=True)
     commsf = models.FloatField('Total Non-Residential Development', null=True, help_text='In square feet.')
     retpct = models.FloatField('Retail / Restaurant Percentage', blank=True, null=True, help_text='In percent.')
     ofcmdpct = models.FloatField('Office / Medical Percentage', blank=True, null=True, help_text='In percent.')
