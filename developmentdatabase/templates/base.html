@@ -53,11 +53,14 @@
               <span class="icon-bar"></span>
             </a>
             <a class="brand" href="{% url home %}">Development Database</a>
-            <div class="nav-collapse">          
+            <div class="nav-collapse">
               <ul class="nav pull-right">
-                <div class="navbar-search">
+                <li class="navbar-search">
                     <input type="text" class="search-query span2" placeholder="Search Projects">
-                </div>
+                </li>
+                <li>
+                  <a href="/projects/search/">Advanced Search</a>
+                </li>
                 <li class="divider-vertical"></li>
                 <li class="dropdown">
                     {% if user.is_authenticated %}
@@ -95,7 +98,7 @@
 
         <footer class="footer">
             <p>
-                &copy; <a href="http://www.mapc.org" title="Metropolitan Area Planning Council">MAPC</a> 2012
+                &copy; <a href="http://www.mapc.org" title="Metropolitan Area Planning Council">MAPC</a> 2013
             </p>    
         </footer>
     
@@ -106,7 +109,13 @@
     <script src="{{ STATIC_URL }}lib/jquery/jquery-1.8.2.min.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}lib/jquery/jquery.url.js" type="text/javascript"></script>
-    <!-- <script src="{{ STATIC_URL }}lib/backbone-min.js" type="text/javascript"></script> -->
+    <script src="{{ STATIC_URL }}lib/lodash/lodash.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        // global dd namespace
+        window.dd = window.dd || {
+            BING_API_KEY: "{{ BING_API_KEY }}"
+        };
+    </script>
     <script src="{{ STATIC_URL }}js/dd.js" type="text/javascript"></script>
 
 <script type="text/javascript">
