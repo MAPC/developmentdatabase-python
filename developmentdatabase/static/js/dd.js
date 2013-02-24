@@ -50,7 +50,7 @@ window.dd = window.dd || {};
 
     /*** Page Setups */
 
-    // init search page with projects according to options and url params
+    // Search Page: requests projects according to options and url params
     function initSearchPage( args ) {
         /* options: 
          * + query object to be passed to searchProjects
@@ -89,8 +89,11 @@ window.dd = window.dd || {};
         );
 
         _.forEach( _.flatten( operatorFields ), function( value ) {
-            
-            var $operator = $( operatorHtml( { field: value }) );
+
+            // jQuery 1.9 being picky about whitespaces 
+            // http://stage.jquery.com/upgrade-guide/1.9/#jquery-htmlstring-versus-jquery-selectorstring
+            var html = $.trim( operatorHtml( { field: value }) );
+            var $operator = $( html );
 
             // change lookup method in fieldLookups object
             $operator.on( "change", function() {
@@ -128,7 +131,8 @@ window.dd = window.dd || {};
         $("form.projectfilters .btn[type='submit']").on("click", function( event ) {
             event.preventDefault();
             var formQueryObject = $("form.projectfilters").serializeObject();
-            cleanFormQuery( formQueryObject );
+            var query = cleanFormQuery( formQueryObject );
+            searchProjects( query );
         });
 
         // reset form
@@ -137,7 +141,8 @@ window.dd = window.dd || {};
             $("form.projectfilters").find("input:text, select").val("");
             $("form.projectfilters select.operator").val("__exact");
             var formQueryObject = $("form.projectfilters").serializeObject();
-            cleanFormQuery( formQueryObject );
+            var query = cleanFormQuery( formQueryObject );
+            searchProjects( query );
         });
 
         // open new project with map zoom and center
@@ -152,6 +157,13 @@ window.dd = window.dd || {};
         initMap();
         searchProjects( query );
 
+    }
+
+    // Update Page: drag marker on map, submit form
+
+    function initUpdatePage( args ) {
+        console.log( args );
+        initMap();
     }
 
     /*** Mapping */
@@ -281,7 +293,7 @@ window.dd = window.dd || {};
             lookupQuery[ lookups[ field ] ] = value;
         });
 
-        searchProjects( lookupQuery );
+        return lookupQuery;
     }
 
     // change string to simple plural depending on given number
@@ -299,9 +311,7 @@ window.dd = window.dd || {};
     dd.initMap = initMap;
     dd.searchProjects = searchProjects;
     dd.initSearchPage = initSearchPage;
-
-    //// Modules
-
+    dd.initUpdatePage = initUpdatePage;
 
 })();
 
