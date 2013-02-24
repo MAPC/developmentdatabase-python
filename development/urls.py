@@ -5,6 +5,7 @@ from development import views
 
 
 urlpatterns = patterns('development.views',
+    url('^$', 'get_projects'),
     url('^search/', 'search', name='search'),
     url('^detail/(?P<dd_id>\d+)/$', 'detail', name='detail'),
     url('^update/(?P<dd_id>\d+)/$', 'update', name='update'),

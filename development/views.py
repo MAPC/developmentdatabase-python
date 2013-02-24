@@ -1,8 +1,11 @@
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.gis.geos import GEOSGeometry
+from django.core.exceptions import FieldError
+
+import json
 
 from development.models import Project
 from development.forms import ProjectfilterForm, ProjectForm
@@ -31,6 +34,33 @@ def detail(request, dd_id):
 
     return render_to_response('development/detail.html', locals(), context_instance=RequestContext(request))
 
+
+def get_projects(request):
+    """ 
+        Filters projects according to GET params and 
+        returns GeoJSON object. 
+    """
+
+    querydict = request.GET
+    kwargs = querydict.dict()
+    features = []
+
+    try:
+        projects = Project.objects.transform(4326).filter(**kwargs)
+        for prop in projects:
+
+            geojson_prop = dict(
+                ddname = prop.ddname.title(), 
+                url = prop.get_absolute_url(),
+            )
+            geojson_geom = json.loads(prop.location.geojson)
+            geojson_feat = dict(type='Feature', geometry=geojson_geom, properties=geojson_prop)
+            features.append(geojson_feat)
+        response = dict( type='FeatureCollection', features=features )
+    except FieldError:
+        response = dict( type='FeatureCollection', features=features )
+
+    return HttpResponse(json.dumps(response), mimetype='application/json')
 
 @login_required
 def add(request):
