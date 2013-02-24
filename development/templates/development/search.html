@@ -4,124 +4,27 @@
 
 {% block javascript %}
 {{ block.super }}
+
+<!-- operator select template -->
+<script type="text/template" class="operator-select">
+    <select class="operator span1 <%= field %>">
+        <option value="__lt">&lt;</option>
+        <option value="__exact" selected>=</option>
+        <option value="__gt">&gt;</option>
+    </select>
+</script>
+
+
 <script type="text/javascript">
-$(function() {
+$( document ).ready(function() {
 
-    // add baselayer
-    dd.map.addLayer(dd.basemap);
-    // TODO: check layer in layercontrol, better usability
-
-    // check url for parameters
-    var url_param = $.url().param();
-    // if page was called with search parameter from home page
-    // TODO: fill in all fields if called with parameter url
-    if (url_param["ddname__icontains"]) $("#id_ddname").val(url_param["ddname__icontains"]);
-    if (url_param["taz__municipality"]) $("#id_municipality").val(url_param["taz__municipality"]);
-
-    // default filter
-    var filter = $.extend({}, url_param);
-    {% if user.is_authenticated %}
-    // default, non-parameter, search interface
-    if ($.isEmptyObject(url_param)) {
-        filter["taz__municipality"] = {{ user.get_profile.municipality.muni_id }};
-        // TODO: proper select option with .prop
-        $("#id_municipality").val("{{ user.get_profile.municipality.muni_id }}");
-        // show all projects for user municipality
-        filter["limit"] = 0;
-    }
-    {% endif %}
-
-    // load projects
-    dd.load_projects(filter);
-
-    $("select.page_projectnr").on("change", function(e) {
-        // get current query
-        filter = dd.build_filter($("form.projectfilters"));
-        // update limit
-        filter["limit"] = $(this).val();
-        // load projects
-        dd.load_projects(filter);
-    });
-
-    // add field operators
-    $.each($("form.projectfilters input, form.projectfilters select"), function(key, element) {
-        $element = $(element);
-        // field type tests; TODO: merge in one method
-        var number_field = ($.inArray($element.attr("name"), dd.number_fields) > -1) ? true : false;
-        var nullboolean_field = ($.inArray($element.attr("name"), dd.nullboolean_fields) > -1) ? true : false;
-        var related_field = ($.inArray($element.attr("name"), dd.related_fields) > -1) ? true : false;
-        if (number_field) {
-            var $field_operator = dd.number_operators($element.attr("name"))
-                .clone()
-                .val("__exact"); // default lookup method
-            // fix styling
-            $element.addClass("span2");
-            $element.before($field_operator);
-        } else if (nullboolean_field) {
-            $element
-                .children(":first")
-                .before("<option selected='selected' value=''>---------</option>");
-            $(this).on("change", function(event) {
-                // restore original name
-                if ($(this).attr("name").indexOf("__isnull") >= 0) {
-                    $(this).attr("name", $(this).attr("name").substring(0,$(this).attr("name").length - 8));
-                }
-                switch ($(this).children(":selected").text()) {  
-                    case "Unknown":  
-                        $(this).attr("name", $(this).attr("name") + "__isnull");
-                        $(this).children(":selected").val("true"); 
-                        break;
-                    case "Yes":
-                        $(this).children(":selected").val("true"); 
-                        break;
-                    case "No":  
-                        $(this).children(":selected").val("false"); 
-                        break;
-                    default:
-                        $(this).children(":selected").val(""); 
-
-                }
-            }); 
-            $element.val(""); // default value
-        } else if (!related_field) {
-            if ($element.attr("id") === "id_municipality") {
-                $element.attr("name", "taz__municipality");
-            } else {
-                $element.attr("name", $element.attr("name") + "__icontains");
-            }
+    dd.initSearchPage( {
+        {% if user.get_profile.municipality.muni_id %}
+        query: {
+            taz__municipality: {{ user.get_profile.municipality.muni_id }}
         }
-
-        
-        
-    });
-
-    // search
-    $("form.projectfilters .btn[type='submit']").on("click", function(event) {
-        event.preventDefault();
-        filter = dd.build_filter($("form.projectfilters"));
-        // add limit
-        filter["limit"] = $("select.page_projectnr").val();
-        dd.load_projects(filter);
-    });
-
-    // reset form
-    $("form.projectfilters button.reset").on("click", function(event) {
-        event.preventDefault();
-        $("form.projectfilters").find("input:text, select").val("");
-        $("form.projectfilters select.operator").val("__exact");
-        // reset filter
-        filter = {
-            "format": "json"
-        }
-        {% if user.is_authenticated %}
-        filter["taz__municipality"] = {{ user.get_profile.municipality.muni_id }};
-        $("#id_municipality").val("{{ user.get_profile.municipality.muni_id }}");
         {% endif %}
-        dd.load_projects(filter);
-    });
-    
-    $(".projectfilters .control-group").tooltip({ placement: "right" });
-    // <a href="#" rel="tooltip" data-original-title="Default tooltip">you probably</a>
+    } );
 
 });
 </script>
@@ -141,37 +44,22 @@ $(function() {
                     {{ projectfilterform }}
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Search</button>
-                        <button class="btn reset">Reset</button>
+                        <button class="btn reset">Show All</button>
                     </div>
                 </form>
             </div>
             <div class="span7">
                 <div class="well" id="map_canvas"></div>
 
-                <div class="countinfo">
-                    <div><a href="javascript:void(0)" class="permalink">Projects <span class="range">0-20</span> of <span class="totalcount">1671</span></a></div>
-                    <div>
-                        Number of projects shown on map: 
-                        <select class="span1 page_projectnr">
-                            <option>10</option>
-                            <option selected>20</option>
-                            <option>50</option>
-                            <option>100</option>
-                            {% if user.is_authenticated %}<option value="0">All</option>{% endif %}
-                        </select>
-                    </div>
-                    {% if user.is_authenticated %}
-                    <a href="{% url add %}" class="btn btn-primary">Add New Project</a>
-                    {% else %}
-                    <a href="{% url add %}" class="btn btn-primary disabled" title="Log in to add new project">Add New Project</a>
-                    {% endif %}
-                    
-                </div>
-                <div class="pagination pull-right">
-                    <ul>
-                      <li><a class="previous" href="#">« Previous</a></li>
-                      <li><a class="next" href="#">Next »</a></li>
-                    </ul>
+                <div id="resultinfo">
+                    <a id="search-permalink"></a>
+                    <div class="pull-right">
+                        {% if user.is_authenticated %}
+                        <a href="{% url add %}" id="add-project" class="btn btn-primary">Add New Project</a>
+                        {% else %}
+                        <a href="{% url add %}" class="btn btn-primary disabled" title="Log in to add new project">Add New Project</a>
+                        {% endif %}
+                    </div>  
                 </div>
             </div>
         </div>

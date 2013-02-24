@@ -51,7 +51,7 @@ a, a:hover {
 }
 
 .navbar-search .search-query {
-  background-color: #8C96A0;
+  background-color: lightgray;
   border: 1px solid #8f939c;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset, 0 1px 0 rgba(255, 255, 255, 0.15);
 }
@@ -110,6 +110,18 @@ h3 {
   border-top: 1px solid #E5E5E5;
 }
 
+/* map
+-------------------------------------------------- */
+
+#map_canvas {
+    height: 400px;
+    margin-bottom: 0px;
+}
+.leaflet-control-layers-base input, .leaflet-control-layers-overlays input {
+    float: left;
+    margin-right: 6px;
+}
+
 /* mapc
 -------------------------------------------------- */
 
@@ -135,21 +147,19 @@ h3 {
     margin-bottom: 10px;
 }
 
-.countinfo {
-  display: none;
-  float: left;
-  margin: 18px 0;
+#resultinfo {
   padding: 8px;
   margin-top: 0px;
-}
-
-select.operator {
-  margin-right: 20px;
+  margin-bottom: 18px;
 }
 
 label.control-label, .fieldlabel {
   color: #666;
   font-style: italic;
+}
+
+.form-horizontal .form-actions {
+  padding-left: 160px;
 }
 
 /* Detail page

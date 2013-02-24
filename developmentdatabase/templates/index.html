@@ -2,17 +2,11 @@
 
 {% block title %}Welcome!{% endblock %}
 
-{% block pageheader %}
-<h1 class="front-page">Welcome to MAPC's Development Database!</h1>
-{% endblock pageheader %}
-
 {% block body %}
 
-<div class="well" id="map_canvas"></div>
+<h1 class="front-page">Welcome to MAPC's Development Database!</h1>
 
-<div class="browse-projects">
-    <a href="{% url search %}" class="btn btn-primary btn-large">Browse All Projects</a>
-</div>
+<div class="well" id="map_canvas"></div>
 
 <p class="lead">
 In order to better track the region's growth and forecast its future, MAPC Data Services has initiated a Development Database for the 101 cities and towns of Metro Boston.  As of March, 2011, this database includes information on nearly 1,700 development projects recently completed, in construction, or planned. Much of the data comes municipal planning staff, augmented by MAPC research.</p>
@@ -23,11 +17,10 @@ In order to better track the region's growth and forecast its future, MAPC Data 
 {% block javascript %}
 {{ block.super }}
 <script type="text/javascript">
-$(function() {
-	// some maps
-    dd.map.addLayer(dd.basemap);
-    dd.map.removeControl(dd.layersControl);
-    dd.load_projects();
+$( document ).ready(function() {
+    // initialize map and load all projects
+    dd.initMap( { showLayerControl: false });
+    dd.searchProjects();
 });
 </script>
 {% endblock %}
