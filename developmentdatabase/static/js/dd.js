@@ -13,6 +13,7 @@ window.dd = window.dd || {};
         // Form or Page elements with percent values
         pctEl = ["pctaffall", "retpct", "ofcmdpct", "indmfpct", "whspct", "rndpct", "edinstpct", "othpct"]; 
 
+
     /*** Page Setups */
 
     // Search Page: requests projects according to options and url params
@@ -444,6 +445,23 @@ window.dd = window.dd || {};
 
             // clean percent values
             adjustPctFields( { method: "computerize" } );
+
+            // clean float and integer fields
+            // FIXME: give better error feedback to user
+            var floatFields = ["prjacrs", "tothu", "rptdemp", "emploss", "commsf", "hotelrms"];
+            var intFields = ["singfamhu", "twnhsmmult", "lgmultifam", "gqpop"];
+            _.forEach( floatFields, function( value ) {
+                var cleanVal = parseFloat( $( "#id_" + value ).val() );
+                if ( isNaN( cleanVal ) === false ) {
+                    $( "#id_" + value ).val( cleanVal );
+                }
+            });
+            _.forEach( intFields, function( value ) {
+                var cleanVal = parseInt( $( "#id_" + value ).val() );
+                if ( isNaN( cleanVal ) === false ) {
+                    $( "#id_" + value ).val( cleanVal );
+                }
+            });
 
         });
 
