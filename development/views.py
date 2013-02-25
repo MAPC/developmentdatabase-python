@@ -6,6 +6,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.core.exceptions import FieldError
 
 import json
+import csv
 
 from development.models import Project
 from development.forms import ProjectfilterForm, ProjectForm
@@ -38,29 +39,58 @@ def detail(request, dd_id):
 def get_projects(request):
     """ 
         Filters projects according to GET params and 
-        returns GeoJSON object. 
+        returns GeoJSON object,
+        unless otherwise specified.
     """
 
     querydict = request.GET
     kwargs = querydict.dict()
     features = []
 
-    try:
+    format = querydict.get('format', None)
+
+    if format == "CSV":
+        # CSV download
+
+        del kwargs['format']
+
         projects = Project.objects.transform(4326).filter(**kwargs)
-        for prop in projects:
 
-            geojson_prop = dict(
-                ddname = prop.ddname.title(), 
-                url = prop.get_absolute_url(),
-            )
-            geojson_geom = json.loads(prop.location.geojson)
-            geojson_feat = dict(type='Feature', geometry=geojson_geom, properties=geojson_prop)
-            features.append(geojson_feat)
-        response = dict( type='FeatureCollection', features=features )
-    except FieldError:
-        response = dict( type='FeatureCollection', features=features )
+        response = HttpResponse(mimetype='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=projects.csv'
+        writer = csv.writer(response)
+    
+        field_names = ['dd_id', 'ddname'] 
+        # Write a first row with header information
+        writer.writerow(field_names)
+    
+        # Write data rows
+        for project in projects:
+            try:
+                writer.writerow([getattr(project, field) for field in field_names])
+            except UnicodeEncodeError:
+                print 'Could not export data row.'
 
-    return HttpResponse(json.dumps(response), mimetype='application/json')
+        return response
+
+    else:
+        # GeoJSON default
+        try:
+            projects = Project.objects.transform(4326).filter(**kwargs)
+            for prop in projects:
+
+                geojson_prop = dict(
+                    ddname = prop.ddname.title(), 
+                    url = prop.get_absolute_url(),
+                )
+                geojson_geom = json.loads(prop.location.geojson)
+                geojson_feat = dict(type='Feature', geometry=geojson_geom, properties=geojson_prop)
+                features.append(geojson_feat)
+            response = dict( type='FeatureCollection', features=features )
+        except FieldError:
+            response = dict( type='FeatureCollection', features=features )
+
+        return HttpResponse(json.dumps(response), mimetype='application/json')
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Project Editors').count() > 0, login_url='/')
