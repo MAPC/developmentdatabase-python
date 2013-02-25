@@ -7,7 +7,7 @@
 
 {% block pageheader %}
 <h1 class="front-page">{{ project.ddname }} <span class="update-title">in <a href="/projects/search/?taz__municipality={{ project.municipality.muni_id }}" title="View more projects in {{ project.municipality.name }}">{{ project.municipality.name }}</a></span></h1>
-{% if project.description %}<p class="lead">{{ project.description }}</p>{% endif %}
+{% if project.description %}<p class="lead">{{ project.description|truncatewords:50 }}</p>{% endif %}
 {% endblock pageheader %}
 
 
@@ -19,7 +19,7 @@
                 <h3>Overview</h3>
 
                 {% include "development/_property.html" with property=project.projecttype label="Project Type" %}
-                {% include "development/_property.html" with property=project.projecttype_detail label="Project Type Detail" %}
+                {% include "development/_property.html" with property=project.projecttype_detail|truncatewords:10 label="Project Type Detail" %}
                 {% include "development/_property.html" with property=project.status label="Status" %}
                 {% include "development/_property.html" with property=project.complyr label="Year of Completion (estimated or actual)" %}
                 {% include "development/_property.html" with property=project.prjacrs|intcomma label="Project Site Area (acres)" %}

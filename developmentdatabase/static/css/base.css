@@ -73,18 +73,22 @@ a, a:hover {
 }
 .page-header h1 {
   margin-bottom: 20px;
-  font-size: 44px;
+  font-size: 32px;
   letter-spacing: -1px;
+}
+
+h3 {
+  font-size: 24px;
 }
 
 /* Front Page
 -------------------------------------------------- */
 
 .lead {
-  font-size: 18px;
+  font-size: 16px;
   margin-top: 10px;
   margin-bottom: 10px;
-  font-weight: 300;
+  line-height: 18px
 }
 .browse-projects {
   text-align: center;
@@ -156,6 +160,7 @@ h3 {
 label.control-label, .fieldlabel {
   color: #666;
   font-style: italic;
+  font-weight: 300;
 }
 
 .form-horizontal .form-actions {
