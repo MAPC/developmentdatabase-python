@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.http import Http404, HttpResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.gis.geos import GEOSGeometry
 from django.core.exceptions import FieldError
 
@@ -63,6 +63,7 @@ def get_projects(request):
     return HttpResponse(json.dumps(response), mimetype='application/json')
 
 @login_required
+@user_passes_test(lambda u: u.groups.filter(name='Project Editors').count() > 0, login_url='/')
 def add(request):
     """ Add new project """
 
@@ -88,6 +89,7 @@ def add(request):
 
 
 @login_required
+@user_passes_test(lambda u: u.groups.filter(name='Project Editors').count() > 0, login_url='/')
 def update(request, dd_id):
     """ Update existing project """
 
