@@ -1,7 +1,6 @@
 // global dd namespace
 window.dd = window.dd || {};
 
-// IIFE pattern
 (function(){
 
     /**** Private */
@@ -74,13 +73,11 @@ window.dd = window.dd || {};
         $("#id_ovr55 option:first-child").before("<option value=''>---------</option>");
         $("#id_ovr55").val("");
         
-        _.forEach( tooltipFields, function( field ) {
-                // $().tooltip(options)    
-            $( "#id_" + field.id ).tooltip( 
-                { 
-                    title: field.title,
-                    placement: "right" 
-                });
+        _.forEach( tooltipFields, function( field ) {  
+            $( "#id_" + field.id ).tooltip( { 
+                title: field.title,
+                placement: "right" 
+            } );
         });
         
         // prepand operator select to operator form fields
@@ -159,11 +156,65 @@ window.dd = window.dd || {};
 
     }
 
-    // Update Page: drag marker on map, submit form
-
+    // Update Page: drag marker on map, validate and submit form
     function initUpdatePage( args ) {
-        console.log( args );
-        initMap();
+
+        // without projectLayer
+        initMap( { showProjectLayer: false } );
+
+        // read form project location
+        var projectLocation = $( "#id_location" ).val();
+
+        // stored project location > hash
+        if ( _.isEmpty( projectLocation ) === false ) {
+
+            // center map on projet
+            var coords = projectLocation.split(" "),
+                lng = parseFloat( coords[1].substring(1) ),
+                lat = parseFloat( coords[2] ),
+                center = new L.LatLng( lat, lng );
+            map.setView( center, 16, true );
+
+        } else {
+
+            // check for and zoom to location hash
+            var hash = location.hash;
+            if ( hash.indexOf("#") === 0 ) {
+                hash = hash.substr(1);
+            }
+            var hashArr = hash.split( "/" );
+            if ( hashArr.length === 3 ) {
+                var zoom = parseInt( hashArr[0], 10 ),
+                    lat = parseFloat( hashArr[1] ),
+                    lon = parseFloat( hashArr[2] );
+                if ( !isNaN( zoom ) && !isNaN( lat ) && !isNaN( lon ) ) {
+                    var center = new L.LatLng( lat, lon );
+                    map.setView( center, zoom, true );
+                }
+            }
+
+        }
+
+        // place project marker
+        var projectMarker = new L.marker( map.getCenter(), {
+                draggable: true
+            })
+            .addTo( map )
+            .on( "dragend", function( event ) {
+                // update form values
+                var lat = event.target.getLatLng().lat.toFixed(4);
+                var lng = event.target.getLatLng().lng.toFixed(4);
+                $( "#id_location" ).val( "POINT (" + lng + " " +  lat + ")" );
+            });
+        $( "#center-marker" ).on( "click", function( event ) {
+            event.preventDefault();
+            projectMarker
+                .setLatLng( map.getCenter() ) 
+                .fireEvent( "dragend" );
+        });
+
+        // add form validation here
+
     }
 
     /*** Mapping */
@@ -175,7 +226,9 @@ window.dd = window.dd || {};
         var args = args || {},
             center = args.center || new L.LatLng(42.33, -71.13),
             zoom = args.zoom || 9,
-            showLayerControl = ( args.showLayerControl !== false ) ? true : false;
+            overlays = {},
+            showLayerControl = ( args.showLayerControl !== false ) ? true : false,
+            showProjectLayer = ( args.showProjectLayer !== false ) ? true : false;
         
         // available basemaps
         var basemaps = {
@@ -195,46 +248,50 @@ window.dd = window.dd || {};
         })
         .setView( center, zoom );
 
-        // initialize empty projectlayer
-        projectLayer = L.geoJson( null, {
-            pointToLayer: function ( feature, latlng ) {
-                return L.circleMarker(latlng, {
-                    radius: 6,
-                    fillColor: "#044388",
-                    color: "#fff",
-                    weight: 1,
-                    opacity: 0.6,
-                    fillOpacity: 0.6
-                })
-            }
-            // , onEachFeature: function( feature, layer ) {
-            //     layer.bindPopup( popup_html( feature.properties ), {
-            //         offset: new L.Point( -18, -20 ) // FIXME: positioning not ideal
-            //     } );
-            // }
-        } ).addTo( map );
+        if ( showProjectLayer === true ) {
+            // initialize empty projectlayer
+            projectLayer = L.geoJson( null, {
+                pointToLayer: function ( feature, latlng ) {
+                    return L.circleMarker(latlng, {
+                        radius: 6,
+                        fillColor: "#044388",
+                        color: "#fff",
+                        weight: 1,
+                        opacity: 0.6,
+                        fillOpacity: 0.6
+                    })
+                }
+                // , onEachFeature: function( feature, layer ) {
+                //     layer.bindPopup( popup_html( feature.properties ), {
+                //         offset: new L.Point( -18, -20 ) // FIXME: positioning not ideal
+                //     } );
+                // }
+            } ).addTo( map );
 
-        // custom project popup template and click event
-        var popupHtml = _.template(
-            $( 'script.map-popup' ).html()
-        );
-        projectLayer.on( "click", function( e ) {
-            var popup = L.popup()
-                .setLatLng( e.layer.getLatLng() )
-                .setContent( popupHtml( e.layer.feature.properties ) )
-                .openOn( this._map );
-        });
+            // custom project popup template and click event
+            var popupHtml = _.template(
+                $( 'script.map-popup' ).html()
+            );
+            projectLayer.on( "click", function( e ) {
+                var popup = L.popup()
+                    .setLatLng( e.layer.getLatLng() )
+                    .setContent( popupHtml( e.layer.feature.properties ) )
+                    .openOn( this._map );
+            });
+            overlays = {
+                "Development Projects": projectLayer
+            }
+        }
 
         // layer control
         // FIXME: order?
-        if (showLayerControl === true ) {
+        if ( showLayerControl === true ) {
             var layerControl = new L.Control.Layers( {
                     "MAPC Basemap": basemaps.mapc,
                     "OpenStreetMap": basemaps.osm,
                     "Bing Aerial": basemaps.bing
-                }, {
-                    "Development Projects": projectLayer
-                }
+                }, 
+                overlays
             );
             map.addControl( layerControl );
         }
