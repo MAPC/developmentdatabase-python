@@ -8,12 +8,24 @@ window.dd = window.dd || {};
     var map, projectLayer,
 
         // Url for AJAX calls
-        projectUrl = '/projects/', 
+        projectUrl = '/projects/',
 
-        /*** Search form field settings */
+        // Form or Page elements with percent values
+        pctEl = ["pctaffall", "retpct", "ofcmdpct", "indmfpct", "whspct", "rndpct", "edinstpct", "othpct"]; 
+
+    /*** Page Setups */
+
+    // Search Page: requests projects according to options and url params
+    function initSearchPage( args ) {
+        /* options: 
+         * + query object to be passed to searchProjects
+        */
+        
+        var args = args || {};
+        var query = args.query || {};
 
         // Object translating Django lookups (url GET params) to search form fields
-        fieldLookups = {
+        var fieldLookups = {
             taz__municipality: 'municipality',
             ddname__icontains: 'ddname',
             projecttype: 'projecttype',
@@ -23,14 +35,14 @@ window.dd = window.dd || {};
             ovr55: 'ovr55',
             pctaffall__exact: 'pctaffall',
             totempl__exact: 'totemp'
-        },
+        };
 
-        // form field with prepended operator dropdown
-        // [0]: int, [1]: float
-        operatorFields = [ ['complyr'], ['tothu', 'pctaffall', 'totemp'] ],
+        // number form fields, require prepended operator dropdown
+        // [0]: int fields, [1]: float fields
+        var numberFields = [ ['complyr'], ['tothu', 'pctaffall', 'totemp'] ];
 
         // tooltip fields
-        tooltipFields = [
+        var tooltipFields = [
             { 
                 id: "complyr",
                 title: "Estimated or actual"
@@ -46,17 +58,6 @@ window.dd = window.dd || {};
                 title: "MAPC Estimated Employment"
             } 
         ];
-
-    /*** Page Setups */
-
-    // Search Page: requests projects according to options and url params
-    function initSearchPage( args ) {
-        /* options: 
-         * + query object to be passed to searchProjects
-        */
-        
-        var args = args || {};
-        var query = args.query || {};
 
         // add url params to query
         var urlParams = $.url().param();
@@ -85,7 +86,7 @@ window.dd = window.dd || {};
             $( "script.operator-select" ).html()
         );
 
-        _.forEach( _.flatten( operatorFields ), function( value ) {
+        _.forEach( _.flatten( numberFields ), function( value ) {
 
             // jQuery 1.9 being picky about whitespaces 
             // http://stage.jquery.com/upgrade-guide/1.9/#jquery-htmlstring-versus-jquery-selectorstring
@@ -116,7 +117,7 @@ window.dd = window.dd || {};
                 var $field = $( "#id_" + field );
                 $field.val( value );
                 
-                if ( _.contains( operatorFields, field ) === true ) {
+                if ( _.contains( numberFields, field ) === true ) {
                     var lookup = key.split("__")[1]
                     $field.prev( "select" ).val( "__" + lookup );
                 }
@@ -124,7 +125,34 @@ window.dd = window.dd || {};
             });
         }
 
-        // search
+        // modify serialized form to match Django's lookup methods and trigger search
+        function cleanFormQuery( query ) {
+
+            // remove properties with empty strings
+            query =_.omit( query, function( value ) {
+                return value === '';
+            });
+
+            // inverse fieldLookups and build query with valid django lookups
+            var lookups = _.invert( fieldLookups );
+            var lookupQuery = {};
+            _.forEach( query, function(value, key) {
+                var field = key;
+                // make sure type is correct
+                if ( _.contains( numberFields[0], field ) ) {
+                    value = parseInt( value );
+                } else if ( _.contains( numberFields[1], field ) ) {
+                    value = parseFloat( value );
+                }
+                lookupQuery[ lookups[ field ] ] = value;
+            });
+
+            return lookupQuery;
+        }
+
+        /*** User Interaction Events */
+
+        // search query 
         $("form.projectfilters .btn[type='submit']").on("click", function( event ) {
             event.preventDefault();
             var formQueryObject = $("form.projectfilters").serializeObject();
@@ -150,6 +178,8 @@ window.dd = window.dd || {};
             var locationHash =  "#" + [ zoom, center.lat.toFixed(4), center.lng.toFixed(4) ].join("/");
             window.location = $( this ).attr( "href" ) + locationHash;
         });
+
+        /*** Render Map and Form */
   
         initMap();
         searchProjects( query );
@@ -159,8 +189,11 @@ window.dd = window.dd || {};
     // Update Page: drag marker on map, validate and submit form
     function initUpdatePage( args ) {
 
-        // without projectLayer
+        // Render map without projectLayer
         initMap( { showProjectLayer: false } );
+
+        // clean percent values
+        adjustPctFields( { method: "humanize" } );
 
         // read form project location
         var projectLocation = $( "#id_location" ).val();
@@ -195,7 +228,7 @@ window.dd = window.dd || {};
 
         }
 
-        // place project marker
+        // add and place project marker
         var projectMarker = new L.marker( map.getCenter(), {
                 draggable: true
             })
@@ -205,6 +238,10 @@ window.dd = window.dd || {};
                 var lat = event.target.getLatLng().lat.toFixed(4);
                 var lng = event.target.getLatLng().lng.toFixed(4);
                 $( "#id_location" ).val( "POINT (" + lng + " " +  lat + ")" );
+                // remove error
+                if ( $( "#map-caption p" ).hasClass( "error" ) === true ) {
+                    $( "#map-caption p" ).removeClass( "error" );
+                }
             });
         $( "#center-marker" ).on( "click", function( event ) {
             event.preventDefault();
@@ -213,7 +250,202 @@ window.dd = window.dd || {};
                 .fireEvent( "dragend" );
         });
 
-        // add form validation here
+        // activate collapsibles
+        $(".collapse").collapse({
+            toggle: false
+        });
+        $(".collapse").on('shown', function () {
+            $collapseLink = $( this ).next( "div" ).find( "a" );
+            $collapseLink.text( $collapseLink.text().replace("more", "less") );
+        });
+        $(".collapse").on('hidden', function () {
+            $collapseLink = $( this ).next( "div" ).find( "a" );
+            $collapseLink.text( $collapseLink.text().replace("less", "more") );
+        });
+
+        /*** From Validation */
+
+        var validator = $( "form.projectdata" ).validate({
+            rules: {
+                ddname: {
+                    required: true,
+                    maxlength: 100
+                },
+                status: "required",
+                projecttype: "required",
+                complyr: {
+                        required: true,
+                        number: true,
+                        rangelength: [4, 4],
+                        min: 1900,
+                        max: 2100
+                },
+                tothu: {
+                        required: true,
+                        number: true
+                },
+                commsf: {
+                        required: true,
+                        number: true
+                },
+                prjacrs: {
+                    required: true,
+                    number: true
+                },
+                url: { 
+                    url: true,
+                    maxlength: 200 
+                },
+                url_add: { 
+                    url: true,
+                    maxlength: 200 
+                },
+                hotelrms: "number",
+                rptdemp: "number",
+                totemp: "number",
+                parking_spaces: "digits",
+                total_cost: "digits",
+                dev_name: { maxlength: 100 }
+            },
+            messages: {
+                    complyr: "Please enter a valid year, like \"2013\"."
+            },
+            errorElement: "span",
+            errorPlacement: function(error, element) {
+                    element.after(error);
+            }
+        });
+
+        // conditional form field relations
+        var conditionalFields = {
+            id_tothu: {
+                elCollapse: "div.housing",
+                fieldValidationRules: {
+                    id_singfamhu: {
+                        required: true,
+                        digits: true
+                    }, 
+                    id_twnhsmmult: {
+                        required: true,
+                        digits: true
+                    }, 
+                    id_lgmultifam: {
+                        required: true,
+                        digits: true
+                    }, 
+                    id_ovr55: {
+                        required: true
+                    },
+                    id_pctaffall: {
+                        required: true
+                    },
+                    id_gqpop: {
+                        required: true,
+                        digits: true
+                    }
+                }
+            },
+            id_commsf: {
+                elCollapse: "div.non-res",
+                fieldValidationRules: {
+                    id_retpct: {
+                        required: true
+                    },
+                    id_ofcmdpct: {
+                        required: true
+                    },
+                    id_indmfpct: {
+                        required: true
+                    },
+                    id_whspct: {
+                        required: true
+                    },
+                    id_rndpct: {
+                        required: true
+                    },
+                    id_edinstpct: {
+                        required: true
+                    },
+                    id_othpct: {
+                        required: true
+                    }
+                }
+            }
+        }
+        // collapse, add validation rules and red asterisk
+        _.forEach( conditionalFields, function( properties, fieldId ) {
+
+            $( "#" + fieldId ).on( "change", function( event ) {
+
+                // empty value returns NaN and therefore 0
+                var elValue = parseInt( $( this ).val() ) || 0;
+
+                if ( elValue > 0 ) {
+
+                    // show fields
+                    $( properties.elCollapse ).collapse( "show" );
+
+                    // make all fields required
+                    _.forEach( properties.fieldValidationRules, function( rules, conditionalFieldId ) {
+                        var $conditionalField = $( "#" + conditionalFieldId ),
+                            $label = $( "label[for='" + conditionalFieldId + "']" ),
+                            requiredHtml = "<span class=\"required\">&nbsp;*</span>",
+                            isRequired = $label.find( "span.required" ).length > 0 ? true : false;
+                        
+                        if ( isRequired === false ) {
+                            $conditionalField.rules( "add", rules );
+                            $label.html( $label.html() + requiredHtml );
+                        }
+                        
+                    });
+
+                } else {
+
+                    // hide fields
+                    $( properties.elCollapse ).collapse( "hide" );
+
+                    // remove rules
+                    _.forEach( properties.fieldValidationRules, function( rules, conditionalFieldId ) {
+                        var $conditionalField = $( "#" + conditionalFieldId ),
+                            $label = $( "label[for='" + conditionalFieldId + "']" ),
+                            isRequired = $label.find( "span.required" ).length > 0 ? true : false;
+
+                        if ( isRequired === true ) {
+                            // FIXME: cannot remove granular rules
+                            $conditionalField.rules( "remove" );
+                            $label.html( $label.text().slice( 0,-2 ) );
+                        }
+                        
+                    });
+
+                    // remove error messages
+                    $( properties.elCollapse + " span.error" ).remove();
+
+                }
+            });
+        });
+
+
+        // check for location before submit
+        $("form.projectdata").on("submit", function(event) {
+
+            // no location provided
+            var projectLocation = $( "#id_location" ).val();
+            if ( _.isEmpty( projectLocation ) === true ) {
+                // add error
+                $( "#map-caption p" ).addClass( "error" );
+                return false;
+            }
+
+            // form doesn't validate
+            if ( $("form.projectdata").valid() === false ) {
+                return false;
+            }
+
+            // clean percent values
+            adjustPctFields( { method: "computerize" } );
+
+        });
 
     }
 
@@ -298,7 +530,7 @@ window.dd = window.dd || {};
     
     }
 
-    /*** Data requests */
+    /*** Data Requests */
 
     // request projects=, add them to projectslayer and zoom map to extent
     function searchProjects( args ) {
@@ -328,31 +560,6 @@ window.dd = window.dd || {};
 
     /*** Utilities */
 
-    // modify serialized form to match Django's lookup methods and trigger search
-    function cleanFormQuery( query ) {
-
-        // remove properties with empty strings
-        query =_.omit( query, function( value ) {
-            return value === '';
-        });
-
-        // inverse fieldLookups and build query with valid django lookups
-        var lookups = _.invert( fieldLookups );
-        var lookupQuery = {};
-        _.forEach( query, function(value, key) {
-            var field = key;
-            // make sure type is correct
-            if ( _.contains( operatorFields[0], field ) ) {
-                value = parseInt( value );
-            } else if ( _.contains( operatorFields[1], field ) ) {
-                value = parseFloat( value );
-            }
-            lookupQuery[ lookups[ field ] ] = value;
-        });
-
-        return lookupQuery;
-    }
-
     // change string to simple plural depending on given number
     function plural( string, number ) {
         if ( number != 1 ) {
@@ -361,6 +568,32 @@ window.dd = window.dd || {};
             return string;
         }
 
+    }
+
+    // transform percent values to human readable strings ("57%") or database values (0.57)
+    function adjustPctFields( args ) {
+
+        var args = args || {};
+        var method = args.method;
+
+        function adjustValue( value ) {
+            if ( method === "humanize" ) {
+                var value = value * 100 + "%";
+            } else if ( method === "computerize" ) {
+                var value = parseFloat( value ) / 100;
+            }
+            return value;
+        }
+
+        // adjust percent values in form
+        _.forEach( pctEl, function( el ) {
+            var $el = $( "#id_" + el ),
+                elValue = $el.val();
+                if ( _.isEmpty( elValue ) === false ) {
+                    elValue = adjustValue( $el.val() );
+                    $el.val( elValue );
+                }
+        });
     }
 
     /**** Public */
