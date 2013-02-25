@@ -258,6 +258,10 @@ class Project(models.Model):
 
     def save(self, *args, **kwargs):
 
+        # record user
+        user = kwargs.pop('user', None)
+        self.last_modified_by = user
+
         # set TAZ
         try:
             self.taz = Taz.objects.get(geometry__contains=self.location)
