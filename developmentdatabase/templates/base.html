@@ -125,7 +125,7 @@
                 var ddname = $(this).val();
                 if (ddname !== "") {
                     ddname.replace(" ", "+");
-                    window.location = "{% url search %}?format=json&limit=20&ddname__icontains=" + ddname;
+                    window.location = "{% url search %}?ddname__icontains=" + ddname;
                 }
             }
         });
