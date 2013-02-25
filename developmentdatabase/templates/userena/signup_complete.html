@@ -11,5 +11,6 @@
 <p>{% blocktrans %}We will store your signup information for {{ userena_activation_days }} days on our server. {% endblocktrans %}</p>
 {% else  %}
 <p>You can now use the supplied credentials to <a href="{% url userena_signin %}">signin</a>.</p>
+<p>If you're eligible for editing projects, your account will be activated within one business day.</p>
 {% endif %}
 {% endblock %}
