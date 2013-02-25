@@ -449,6 +449,30 @@ window.dd = window.dd || {};
 
     }
 
+    // detail page with bing map and project point
+    function initDetailPage( args ) {
+
+        var args = args || {};
+
+        // Render map without projectLayer
+        initMap( { 
+            basemap: "bing",
+            projectMarkerStyle: {
+                radius: 10,
+                color: "#fff",
+                weight: 2,
+                opacity: 1,
+                fillColor: "#044388",
+                fillOpacity: 0.4
+            }
+        } );
+
+        if ( isNaN( args.dd_id ) === false ) {  
+            searchProjects( { dd_id: args.dd_id } );
+        }
+
+    }
+
     /*** Mapping */
 
     // initialize dd.map with basemaps, layercontrol and empty projectLayer
@@ -460,7 +484,8 @@ window.dd = window.dd || {};
             zoom = args.zoom || 9,
             overlays = {},
             showLayerControl = ( args.showLayerControl !== false ) ? true : false,
-            showProjectLayer = ( args.showProjectLayer !== false ) ? true : false;
+            showProjectLayer = ( args.showProjectLayer !== false ) ? true : false,
+            projectMarkerStyle = args.projectMarkerStyle || {};
         
         // available basemaps
         var basemaps = {
@@ -481,17 +506,22 @@ window.dd = window.dd || {};
         .setView( center, zoom );
 
         if ( showProjectLayer === true ) {
+
+            // point style
+            var defaultStyle = {
+                radius: 6,
+                fillColor: "#044388",
+                color: "#fff",
+                weight: 1,
+                opacity: 0.6,
+                fillOpacity: 0.6
+            };
+            projectMarkerStyle = _.assign( defaultStyle, projectMarkerStyle );
+
             // initialize empty projectlayer
             projectLayer = L.geoJson( null, {
                 pointToLayer: function ( feature, latlng ) {
-                    return L.circleMarker(latlng, {
-                        radius: 6,
-                        fillColor: "#044388",
-                        color: "#fff",
-                        weight: 1,
-                        opacity: 0.6,
-                        fillOpacity: 0.6
-                    })
+                    return L.circleMarker(latlng, projectMarkerStyle )
                 }
                 // , onEachFeature: function( feature, layer ) {
                 //     layer.bindPopup( popup_html( feature.properties ), {
@@ -602,6 +632,7 @@ window.dd = window.dd || {};
     dd.searchProjects = searchProjects;
     dd.initSearchPage = initSearchPage;
     dd.initUpdatePage = initUpdatePage;
+    dd.initDetailPage = initDetailPage;
 
 })();
 

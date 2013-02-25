@@ -122,19 +122,11 @@
 {% block javascript %}
 {{ block.super }}
 <script type="text/javascript">
-$(function() {
+$( document ).ready(function() {
 
-    dd.map_project({{ project.location.geojson|safe }}, {
-        "popupContent": "<a href=\"{{ project.get_absolute_url }}\">{{ project.ddname }}</a>"
-    });
-    dd.map.fitBounds(dd.projects.getBounds());
-
-    dd.map.addLayer(dd.bing);
-
-    // dd.layersControl.addBaseLayer(dd.bing);
-//     addBaseLayer( <ILayer> layer, <String> name )   this    Adds a base layer (radio button entry) with the given name to the control.
-// addOverlay( <ILayer> layer, <String> name ) this    Adds an overlay (checkbox entry) with the given name to the control.
-// removeLayer( <ILayer> layer )
+    dd.initDetailPage( {
+        dd_id: {{ project.dd_id }}
+    } );
 
 });
 </script>
