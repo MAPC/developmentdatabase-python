@@ -264,6 +264,13 @@ window.dd = window.dd || {};
             $collapseLink.text( $collapseLink.text().replace("less", "more") );
         });
 
+        // Enable tooltips
+        $( "form.projectdata div.controls" ).tooltip({
+            placement: "right"
+        });
+        // FIXME: conflicts with collapse
+        // $( "form.projectdata div.collapes div.controls" ).tooltip( "destroy" );
+
         /*** From Validation */
 
         var validator = $( "form.projectdata" ).validate({
