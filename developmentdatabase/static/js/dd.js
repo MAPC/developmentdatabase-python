@@ -251,25 +251,11 @@ window.dd = window.dd || {};
                 .fireEvent( "dragend" );
         });
 
-        // activate collapsibles
-        $(".collapse").collapse({
-            toggle: false
-        });
-        $(".collapse").on('shown', function () {
-            $collapseLink = $( this ).next( "div" ).find( "a" );
-            $collapseLink.text( $collapseLink.text().replace("more", "less") );
-        });
-        $(".collapse").on('hidden', function () {
-            $collapseLink = $( this ).next( "div" ).find( "a" );
-            $collapseLink.text( $collapseLink.text().replace("less", "more") );
-        });
-
-        // Enable tooltips
+        // Enable Field Tooltips
+        // FIXME: tooltips do not show in collapse containers
         $( "form.projectdata div.controls" ).tooltip({
             placement: "right"
         });
-        // FIXME: conflicts with collapse
-        // $( "form.projectdata div.collapes div.controls" ).tooltip( "destroy" );
 
         /*** From Validation */
 
