@@ -109,7 +109,7 @@ def add(request):
             new_location.srid = 4326
             new_location.transform(26986)
             entry.location = new_location
-            entry.save( user=request.user )
+            entry.save( user=request.user, update_walkscore=True )
             return redirect('detail', dd_id=entry.dd_id)
     # show empty form
     else:
@@ -139,7 +139,7 @@ def update(request, dd_id):
                 new_location.srid = 4326
                 new_location.transform(26986)
                 entry.location = new_location
-                entry.save( user=request.user )
+                entry.save( user=request.user, update_walkscore=True )
                 return redirect('detail', dd_id=entry.dd_id)
         # show projectform
         else:

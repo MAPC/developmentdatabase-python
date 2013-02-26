@@ -276,10 +276,13 @@ class Project(models.Model):
 
         # the free walkscore api is limited to 1000 requests per day
         # update walkscore only on new or moved projects
-        udate_walkscore = kwargs.pop('update_walkscore', None)
+        udate_walkscore = kwargs.pop('update_walkscore', False)
         if udate_walkscore == True:
             # get walkscore
-            self.walkscore = self.get_walkscore()
+            try:
+                self.walkscore = self.get_walkscore()
+            except:
+                pass
 
         super(Project, self).save(*args, **kwargs)
 
@@ -305,7 +308,8 @@ class Project(models.Model):
         return self._meta.get_field_by_name(field)[0].verbose_name
 
     def get_walkscore(self):
-        """ Gets walkscore from API, limited to 1000 requests per day 
+        """ 
+        Gets walkscore from API, limited to 1000 requests per day 
         Example response:
         {
             "status": 1,
@@ -337,16 +341,18 @@ class Project(models.Model):
         }
         ws_request = requests.get('http://api.walkscore.com/score', params=ws_params)
 
+        ws_json = ws_request.json()
+
         # check if we have good response
-        if ws_request.json['status'] == 1:
+        if ws_json['status'] == 1:
             walkscore = WalkScore.objects.get_or_create(
-                status = ws_request.json['status'],
-                walkscore = ws_request.json['walkscore'],
-                description = ws_request.json['description'],
-                updated = pytz.UTC.localize(parse_datetime(ws_request.json['updated'])), # assume UTC
-                ws_link = ws_request.json['ws_link'],
-                snapped_lat = ws_request.json['snapped_lat'],
-                snapped_lon = ws_request.json['snapped_lon']
+                status = ws_json['status'],
+                walkscore = ws_json['walkscore'],
+                description = ws_json['description'],
+                updated = pytz.UTC.localize(parse_datetime(ws_json['updated'])), # assume UTC
+                ws_link = ws_json['ws_link'],
+                snapped_lat = ws_json['snapped_lat'],
+                snapped_lon = ws_json['snapped_lon']
             )
             return walkscore[0]
         else:
