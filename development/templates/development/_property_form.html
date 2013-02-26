@@ -1,6 +1,6 @@
 <div class="control-group{% if property.field.required %} required{% endif %}" {% if property.field.help_text %}data-original-title="{{ property.field.help_text }}"{% endif %} id="div_{{ property.auto_id }}" >
     <label for="{{ property.auto_id }}" class="control-label">{% firstof label property.field.label %}{% if property.field.required %}<span class="required">&nbsp;*</span>{% endif %}</label>
-    <div class="controls" {% if tooltip %}title="{{ tooltip }}"{% endif %}>
+    <div class="controls" {% if tooltip %}data-toggle="tooltip" data-original-title="{{ tooltip }}"{% endif %}>
         {{ property }}  
     </div>
 </div>
