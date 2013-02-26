@@ -14,7 +14,12 @@ class ProjectfilterForm(BootstrapMixin, forms.ModelForm):
 
     class Meta:
         model = Project
-        fields = ('municipality', 'ddname', 'projecttype', 'status', 'complyr', 'tothu', 'ovr55', 'pctaffall', 'totemp', )
+        fields = (
+            'municipality', 'ddname', 'projecttype', 'status', 'complyr', 'prjacrs', 'rdv', 'stalled', 'phased',
+            'tothu', 'singfamhu', 'twnhsmmult', 'lgmultifam', 'gqpop', 'ovr55', 'pctaffall', 'clustosrd', 'ch40', 
+            'totemp', 'commsf', 'retpct', 'ofcmdpct', 'indmfpct', 'whspct', 'rndpct', 'othpct', 'hotelrms',
+            'parking_spaces', 'as_of_right', 'todstation', 'total_cost',
+            )
         help_tooltip = True
 
 

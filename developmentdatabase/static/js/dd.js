@@ -35,12 +35,47 @@ window.dd = window.dd || {};
             tothu__exact: 'tothu',
             ovr55: 'ovr55',
             pctaffall__exact: 'pctaffall',
-            totempl__exact: 'totemp'
+            totempl__exact: 'totemp',
+            ch40: 'ch40', 
+            todstation: 'todstation',
+            prjacrs__exact: 'prjacrs', 
+            singfamhu__exact: 'singfamhu', 
+            twnhsmmult__exact: 'twnhsmmult', 
+            lgmultifam__exact: 'lgmultifam', 
+            gqpop__exact: 'gqpop', 
+            commsf__exact: 'commsf', 
+            retpct__exact: 'retpct', 
+            ofcmdpct__exact: 'ofcmdpct', 
+            indmfpct__exact: 'indmfpct', 
+            whspct__exact: 'whspct', 
+            rndpct__exact: 'rndpct', 
+            othpct__exact: 'othpct', 
+            hotelrms__exact: 'hotelrms', 
+            parking_spaces__exact: 'parking_spaces', 
+            total_cost__exact: 'total_cost',
+            rdv: 'rdv', 
+            clustosrd: 'clustosrd',
+            as_of_right: 'as_of_right',
+            stalled: 'stalled', 
+            phased: 'phased'
         };
+
+        
+        // 'singfamhu', 'twnhsmmult', 'lgmultifam', 'gqpop', 'parking_spaces', 'total_cost'
+
+        // 'prjacrs', 'commsf', 'retpct', 'ofcmdpct', 'indmfpct', 'whspct', 'rndpct', 'othpct', 'hotelrms',
+           
+
+        // 'rdv', 'clustosrd','as_of_right'
+
+        // 'stalled', 'phased',
+
 
         // number form fields, require prepended operator dropdown
         // [0]: int fields, [1]: float fields
-        var numberFields = [ ['complyr'], ['tothu', 'pctaffall', 'totemp'] ];
+        var numberFields = [ ['complyr', 'singfamhu', 'twnhsmmult', 'lgmultifam', 'gqpop', 'parking_spaces', 'total_cost' ], ['tothu', 'pctaffall', 'totemp', 'prjacrs', 'commsf', 'retpct', 'ofcmdpct', 'indmfpct', 'whspct', 'rndpct', 'othpct', 'hotelrms' ] ];
+
+        var nullbooleanFields = ['ovr55', 'rdv', 'clustosrd','as_of_right']
 
         // tooltip fields
         var tooltipFields = [
@@ -51,10 +86,24 @@ window.dd = window.dd || {};
                 id: "tothu",
                 title: "Number of units" 
             }, { 
+                id: "singfamhu",
+                title: "Number of units" 
+            }, { 
+                id: "twnhsmmult",
+                title: "Number of units" 
+            }, { 
+                id: "lgmultifam",
+                title: "Number of units" 
+            }, { 
+                id: "gqpop",
+                title: "Number of beds" 
+            }, { 
+                id: "commsf",
+                title: "In square feet" 
+            }, { 
                 id: "pctaffall",
                 title: "In percent" 
-            },
-            {
+            }, {
                 id: "totemp",
                 title: "MAPC Estimated Employment"
             } 
@@ -72,8 +121,10 @@ window.dd = window.dd || {};
         /*** Tweak Search Form UI */
 
         // Nullable Boolean in Django defaults to "unknown" option
-        $("#id_ovr55 option:first-child").before("<option value=''>---------</option>");
-        $("#id_ovr55").val("");
+        _.forEach( nullbooleanFields, function( field ) {
+            $("#id_" + field + " option:first-child").before("<option value=''>---------</option>");
+            $("#id_" + field ).val("");
+        });
         
         _.forEach( tooltipFields, function( field ) {  
             $( "#id_" + field.id ).tooltip( { 
@@ -154,7 +205,7 @@ window.dd = window.dd || {};
         /*** User Interaction Events */
 
         // search query 
-        $("form.projectfilters .btn[type='submit']").on("click", function( event ) {
+        $(".form-actions .btn[type='submit']").on("click", function( event ) {
             event.preventDefault();
             var formQueryObject = $("form.projectfilters").serializeObject();
             var query = cleanFormQuery( formQueryObject );
@@ -162,7 +213,7 @@ window.dd = window.dd || {};
         });
 
         // reset form
-        $("form.projectfilters button.reset").on( "click", function( event ) {
+        $(".form-actions button.reset").on( "click", function( event ) {
             event.preventDefault();
             $("form.projectfilters").find("input:text, select").val("");
             $("form.projectfilters select.operator").val("__exact");

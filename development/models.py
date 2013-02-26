@@ -173,9 +173,11 @@ class TODStation(models.Model):
     class Meta:
         verbose_name = _('TODStation')
         verbose_name_plural = _('TODStations')
+        ordering = ['station_name', ]
+
 
     def __unicode__(self):
-        return self.station_name
+        return self.station_name.title()
     
 
 class Project(models.Model):
@@ -200,7 +202,7 @@ class Project(models.Model):
     clustosrd = models.NullBooleanField('Cluster Subdivision', blank=True, null=True)
     ovr55 = models.NullBooleanField('Age Restricted', blank=True, null=True)
     mxduse = models.NullBooleanField('Mixed Use', blank=True, null=True)
-    ch40 = models.ForeignKey(ZoningTool, blank=True, null=True)
+    ch40 = models.ForeignKey(ZoningTool, blank=True, null=True, verbose_name='Zoning Tool')
 
     rptdemp = models.FloatField('Reported Employment', blank=True, null=True)
     emploss = models.FloatField('Employment Loss', blank=True, null=True)
@@ -212,7 +214,7 @@ class Project(models.Model):
     whspct = models.FloatField('Warehouse / Trucking Percentage', blank=True, null=True, help_text='In percent.')
     rndpct = models.FloatField('Lab / R & D  Percentage', blank=True, null=True, help_text='In percent.')
     edinstpct = models.FloatField('Edu / Institution Percentage)', blank=True, null=True, help_text='In percent.')
-    othpct = models.FloatField('Other', blank=True, null=True, help_text='In percent.')
+    othpct = models.FloatField('Other Non-Residential Percentage', blank=True, null=True, help_text='In percent.')
     hotelrms = models.FloatField('Hotel Rooms', blank=True, null=True)
 
     mfdisc = models.FloatField('Metro Future Discount', blank=True, null=True, help_text='In percent.')
@@ -233,7 +235,7 @@ class Project(models.Model):
     parking_spaces = models.IntegerField('Parking Spaces', blank=True, null=True)
     as_of_right = models.NullBooleanField('As Of Right', blank=True, null=True)
     walkscore = models.ForeignKey(WalkScore, null=True, blank=True)
-    todstation = models.ForeignKey(TODStation, null=True, blank=True)
+    todstation = models.ForeignKey(TODStation, null=True, blank=True, verbose_name=u'TOD Station')
     total_cost = models.IntegerField('Total Cost', blank=True, null=True)
     total_cost_allocated_pct = models.FloatField('Funding Allocated', blank=True, null=True, help_text='In percent.')
     draft = models.BooleanField(help_text='Required project information is incomplete.')
