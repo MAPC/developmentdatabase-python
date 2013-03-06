@@ -61,16 +61,6 @@ window.dd = window.dd || {};
         };
 
         
-        // 'singfamhu', 'twnhsmmult', 'lgmultifam', 'gqpop', 'parking_spaces', 'total_cost'
-
-        // 'prjacrs', 'commsf', 'retpct', 'ofcmdpct', 'indmfpct', 'whspct', 'rndpct', 'othpct', 'hotelrms',
-           
-
-        // 'rdv', 'clustosrd','as_of_right'
-
-        // 'stalled', 'phased',
-
-
         // number form fields, require prepended operator dropdown
         // [0]: int fields, [1]: float fields
         var numberFields = [ ['complyr', 'singfamhu', 'twnhsmmult', 'lgmultifam', 'gqpop', 'parking_spaces', 'total_cost' ], ['tothu', 'pctaffall', 'totemp', 'prjacrs', 'commsf', 'retpct', 'ofcmdpct', 'indmfpct', 'whspct', 'rndpct', 'othpct', 'hotelrms' ] ];
@@ -126,6 +116,7 @@ window.dd = window.dd || {};
             $("#id_" + field ).val("");
         });
         
+        // Add tooltips
         _.forEach( tooltipFields, function( field ) {  
             $( "#id_" + field.id ).tooltip( { 
                 title: field.title,
@@ -133,11 +124,10 @@ window.dd = window.dd || {};
             } );
         });
         
-        // prepand operator select to operator form fields
+        // Prepend operator to number fields
         var operatorHtml = _.template(
             $( "script.operator-select" ).html()
         );
-
         _.forEach( _.flatten( numberFields ), function( value ) {
 
             // jQuery 1.9 being picky about whitespaces 
@@ -165,12 +155,12 @@ window.dd = window.dd || {};
             
             _.forEach( query, function(value, key) {
 
-                var field = fieldLookups[key] || key.split("__")[0];
+                var field = fieldLookups[ key ] || key.split( "__" )[0];
                 var $field = $( "#id_" + field );
                 $field.val( value );
                 
                 if ( _.contains( numberFields, field ) === true ) {
-                    var lookup = key.split("__")[1]
+                    var lookup = key.split( "__" )[1]
                     $field.prev( "select" ).val( "__" + lookup );
                 }
             
@@ -308,7 +298,7 @@ window.dd = window.dd || {};
             placement: "right"
         });
 
-        /*** From Validation */
+        /*** Client-side Form Validation */
 
         var validator = $( "form.projectdata" ).validate({
             rules: {
@@ -469,7 +459,6 @@ window.dd = window.dd || {};
                 }
             });
         });
-
 
         // check for location before submit
         $("form.projectdata").on("submit", function(event) {
