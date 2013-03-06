@@ -36,11 +36,9 @@ def detail(request, dd_id):
     return render_to_response('development/detail.html', locals(), context_instance=RequestContext(request))
 
 
-def get_projects(request):
+def projects_geojson(request):
     """ 
-        Filters projects according to GET params and 
-        returns GeoJSON object,
-        unless otherwise specified.
+        Return GeoJSON represantion of filtered projects.
     """
 
     querydict = request.GET
@@ -49,48 +47,55 @@ def get_projects(request):
 
     format = querydict.get('format', None)
 
-    if format == "CSV":
-        # CSV download
-
-        del kwargs['format']
-
+    # GeoJSON default
+    try:
         projects = Project.objects.transform(4326).filter(**kwargs)
-
-        response = HttpResponse(mimetype='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=projects.csv'
-        writer = csv.writer(response)
-    
-        field_names = ['dd_id', 'ddname'] 
-        # Write a first row with header information
-        writer.writerow(field_names)
-    
-        # Write data rows
         for project in projects:
-            try:
-                writer.writerow([getattr(project, field) for field in field_names])
-            except UnicodeEncodeError:
-                print 'Could not export data row.'
+            geojson_prop = dict(
+                ddname = project.ddname.title(), 
+                url = project.get_absolute_url(),
+            )
+            geojson_geom = json.loads(project.location.geojson)
+            geojson_feat = dict(type='Feature', geometry=geojson_geom, properties=geojson_prop)
+            features.append(geojson_feat)
+        response = dict( type='FeatureCollection', features=features )
+    except FieldError:
+        response = dict( type='FeatureCollection', features=features )
 
-        return response
+    return HttpResponse(json.dumps(response), mimetype='application/json')
 
-    else:
-        # GeoJSON default
+
+@login_required
+def projects_csv(request):
+    """
+        Return filtered projects as CSV for download.
+    """
+
+    querydict = request.GET
+    kwargs = querydict.dict()
+    features = []
+
+    format = querydict.get('format', None)
+
+    projects = Project.objects.transform(4326).filter(**kwargs)
+
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=projects.csv'
+    writer = csv.writer(response)
+
+    field_names = ['dd_id', 'ddname', 'status', 'prjacrs', 'tothu', 'commsf'] 
+    # Write a first row with header information
+    writer.writerow(['Project ID', 'Name', 'Status', 'Project Area', 'Total Housing Units', 'Total Non-Residential Development'])
+
+    # Write data rows
+    for project in projects:
         try:
-            projects = Project.objects.transform(4326).filter(**kwargs)
-            for prop in projects:
+            writer.writerow([getattr(project, field) for field in field_names])
+        except UnicodeEncodeError:
+            print 'Could not export data row.'
 
-                geojson_prop = dict(
-                    ddname = prop.ddname.title(), 
-                    url = prop.get_absolute_url(),
-                )
-                geojson_geom = json.loads(prop.location.geojson)
-                geojson_feat = dict(type='Feature', geometry=geojson_geom, properties=geojson_prop)
-                features.append(geojson_feat)
-            response = dict( type='FeatureCollection', features=features )
-        except FieldError:
-            response = dict( type='FeatureCollection', features=features )
+    return response
 
-        return HttpResponse(json.dumps(response), mimetype='application/json')
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='Project Editors').count() > 0, login_url='/')
