@@ -632,7 +632,9 @@ window.dd = window.dd || {};
 
                 if (projects.features.length > 0 ) {
                     projectLayer.addData( projects );
-                    map.fitBounds( projectLayer.getBounds() );
+                    console.log(projectLayer.getBounds());
+                    map.setZoom(9);
+                    // map.fitBounds( projectLayer.getBounds() );
                 } 
 
             }

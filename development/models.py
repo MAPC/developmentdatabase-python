@@ -38,13 +38,13 @@ class Subregion(models.Model):
     
 
 class Municipality(models.Model):
-    muni_id = models.IntegerField('Municipality ID', primary_key=True)
-    name = models.CharField('Municipality Name', max_length=50, unique=True)
+    muni_id       = models.IntegerField('Municipality ID', primary_key=True)
+    name          = models.CharField('Municipality Name', max_length=50, unique=True)
     communitytype = models.ForeignKey(CommunityType, blank=True, null=True)
-    subregion = models.ForeignKey(Subregion, null=True)
+    subregion     = models.ForeignKey(Subregion, null=True)
     
-    geometry = models.MultiPolygonField(srid=26986)
-    objects = models.GeoManager()
+    geometry      = models.MultiPolygonField(srid=26986)
+    objects       = models.GeoManager()
     
     class Meta:
         verbose_name_plural = 'Municipalities'
@@ -60,11 +60,11 @@ class Taz(models.Model):
     smaller regional units than towns. 
     """
     
-    taz_id = models.IntegerField(primary_key=True)
+    taz_id       = models.IntegerField(primary_key=True)
     municipality = models.ForeignKey(Municipality)
     
-    geometry = models.MultiPolygonField(srid=26986)
-    objects = models.GeoManager()
+    geometry     = models.MultiPolygonField(srid=26986)
+    objects      = models.GeoManager()
     
     class Meta:
         verbose_name=u'TAZ'
@@ -81,11 +81,11 @@ class ZipCode(models.Model):
     """
 
     zipcode = models.CharField(max_length=5)
-    name = models.CharField(max_length=100)
-    state = models.CharField(max_length=2)
+    name    = models.CharField(max_length=100)
+    state   = models.CharField(max_length=2)
 
     geometry = models.MultiPolygonField(srid=26986)
-    objects = models.GeoManager()
+    objects  = models.GeoManager()
 
     class Meta:
         verbose_name = _('ZipCode')
@@ -132,16 +132,16 @@ class ProjectType(models.Model):
 class WalkScore(models.Model):
     """ Model class according to http://www.walkscore.com/professional/api.php """
 
-    status = models.IntegerField()
-    walkscore = models.IntegerField()
+    status      = models.IntegerField()
+    walkscore   = models.IntegerField()
     description = models.CharField(max_length=100)
-    updated = models.DateTimeField()
-    ws_link = models.URLField()
+    updated     = models.DateTimeField()
+    ws_link     = models.URLField()
     snapped_lat = models.FloatField()
     snapped_lon = models.FloatField()
 
-    geometry = models.PointField(geography=True, null=True)
-    objects = models.GeoManager() 
+    geometry    = models.PointField(geography=True, null=True)
+    objects     = models.GeoManager() 
 
     class Meta:
         verbose_name = _('WalkScore')
@@ -185,67 +185,67 @@ class Project(models.Model):
     An economic or housing development project.
     """
 
-    dd_id = models.AutoField(primary_key=True)
-    taz = models.ForeignKey(Taz, blank=True, null=True, editable=False)
-    ddname = models.CharField('Project Name', max_length=100)
-    status = models.ForeignKey(ProjectStatus)
-    complyr = models.IntegerField('Year of Completion', null=True, help_text='Estimated or actual.')
-    prjacrs = models.FloatField('Project Area', null=True, help_text='In acres.')
-    rdv = models.NullBooleanField('Redevelopment', blank=True, null=True)
+    dd_id      = models.AutoField(primary_key=True)
+    taz        = models.ForeignKey(Taz, blank=True, null=True, editable=False)
+    ddname     = models.CharField('Project Name', max_length=100)
+    status     = models.ForeignKey(ProjectStatus)
+    complyr    = models.IntegerField('Year of Completion', null=True, help_text='Estimated or actual.')
+    prjacrs    = models.FloatField('Project Area', null=True, help_text='In acres.')
+    rdv        = models.NullBooleanField('Redevelopment', blank=True, null=True)
     
-    singfamhu = models.IntegerField('Single Family Housing', blank=True, null=True, help_text='Number of units.')
+    singfamhu  = models.IntegerField('Single Family Housing', blank=True, null=True, help_text='Number of units.')
     twnhsmmult = models.IntegerField('Townhouse and Small Multifamily', blank=True, null=True, help_text='Number of units.')
     lgmultifam = models.IntegerField('Large Multifamily', blank=True, null=True, help_text='Number of units.')
-    tothu = models.FloatField('Total Housing', null=True, help_text='Number of units.')
-    gqpop = models.IntegerField('Group Quarters', blank=True, null=True, help_text='Number of beds.')
-    pctaffall = models.FloatField('Affordable Units', blank=True, null=True, help_text='In percent.')
-    clustosrd = models.NullBooleanField('Cluster Subdivision', blank=True, null=True)
-    ovr55 = models.NullBooleanField('Age Restricted', blank=True, null=True)
-    mxduse = models.NullBooleanField('Mixed Use', blank=True, null=True)
-    ch40 = models.ForeignKey(ZoningTool, blank=True, null=True, verbose_name='Zoning Tool')
+    tothu      = models.FloatField('Total Housing', null=True, help_text='Number of units.')
+    gqpop      = models.IntegerField('Group Quarters', blank=True, null=True, help_text='Number of beds.')
+    pctaffall  = models.FloatField('Affordable Units', blank=True, null=True, help_text='In percent.')
+    clustosrd  = models.NullBooleanField('Cluster Subdivision', blank=True, null=True)
+    ovr55      = models.NullBooleanField('Age Restricted', blank=True, null=True)
+    mxduse     = models.NullBooleanField('Mixed Use', blank=True, null=True)
+    ch40       = models.ForeignKey(ZoningTool, blank=True, null=True, verbose_name='Zoning Tool')
 
-    rptdemp = models.FloatField('Reported Employment', blank=True, null=True)
-    emploss = models.FloatField('Employment Loss', blank=True, null=True)
-    totemp = models.FloatField('Est. employment', blank=True, null=True)
-    commsf = models.FloatField('Total Non-Residential Development', null=True, help_text='In square feet.')
-    retpct = models.FloatField('Retail / Restaurant Percentage', blank=True, null=True, help_text='In percent.')
-    ofcmdpct = models.FloatField('Office / Medical Percentage', blank=True, null=True, help_text='In percent.')
-    indmfpct = models.FloatField('Manufacturing / Industrial Percentage', blank=True, null=True, help_text='In percent.')
-    whspct = models.FloatField('Warehouse / Trucking Percentage', blank=True, null=True, help_text='In percent.')
-    rndpct = models.FloatField('Lab / R & D  Percentage', blank=True, null=True, help_text='In percent.')
-    edinstpct = models.FloatField('Edu / Institution Percentage)', blank=True, null=True, help_text='In percent.')
-    othpct = models.FloatField('Other Non-Residential Percentage', blank=True, null=True, help_text='In percent.')
-    hotelrms = models.FloatField('Hotel Rooms', blank=True, null=True)
+    rptdemp    = models.FloatField('Reported Employment', blank=True, null=True)
+    emploss    = models.FloatField('Employment Loss', blank=True, null=True)
+    totemp     = models.FloatField('Est. employment', blank=True, null=True)
+    commsf     = models.FloatField('Total Non-Residential Development', null=True, help_text='In square feet.')
+    retpct     = models.FloatField('Retail / Restaurant Percentage', blank=True, null=True, help_text='In percent.')
+    ofcmdpct   = models.FloatField('Office / Medical Percentage', blank=True, null=True, help_text='In percent.')
+    indmfpct   = models.FloatField('Manufacturing / Industrial Percentage', blank=True, null=True, help_text='In percent.')
+    whspct     = models.FloatField('Warehouse / Trucking Percentage', blank=True, null=True, help_text='In percent.')
+    rndpct     = models.FloatField('Lab / R & D  Percentage', blank=True, null=True, help_text='In percent.')
+    edinstpct  = models.FloatField('Edu / Institution Percentage)', blank=True, null=True, help_text='In percent.')
+    othpct     = models.FloatField('Other Non-Residential Percentage', blank=True, null=True, help_text='In percent.')
+    hotelrms   = models.FloatField('Hotel Rooms', blank=True, null=True)
 
-    mfdisc = models.FloatField('Metro Future Discount', blank=True, null=True, help_text='In percent.')
+    mfdisc     = models.FloatField('Metro Future Discount', blank=True, null=True, help_text='In percent.')
     projecttype_detail = models.TextField('Project Type Detail', blank=True, null=True)
     
-    description = models.TextField('description', blank=True, null=True)
-    url = models.URLField('Project Website', blank=True, null=True, verify_exists=False)
-    mapcintrnl = models.TextField('MAPC Internal Comments', blank=True, null=True)
+    description  = models.TextField('description', blank=True, null=True)
+    url          = models.URLField('Project Website', blank=True, null=True, verify_exists=False)
+    mapcintrnl   = models.TextField('MAPC Internal Comments', blank=True, null=True)
     otheremprat2 = models.FloatField(blank=True, null=True)
 
     # new
-    projecttype = models.ForeignKey(ProjectType, null=True)
-    stalled = models.BooleanField('Stalled')
-    phased = models.BooleanField('Phased')
-    dev_name = models.CharField('Developer Name', blank=True, null=True, max_length=100)
-    url_add = models.URLField('Additional Website', blank=True, null=True, verify_exists=False)
+    projecttype  = models.ForeignKey(ProjectType, null=True)
+    stalled      = models.BooleanField('Stalled')
+    phased       = models.BooleanField('Phased')
+    dev_name     = models.CharField('Developer Name', blank=True, null=True, max_length=100)
+    url_add      = models.URLField('Additional Website', blank=True, null=True, verify_exists=False)
     affordable_comment = models.TextField('Affordability Comment', blank=True, null=True)
-    parking_spaces = models.IntegerField('Parking Spaces', blank=True, null=True)
-    as_of_right = models.NullBooleanField('As Of Right', blank=True, null=True)
-    walkscore = models.ForeignKey(WalkScore, null=True, blank=True)
-    todstation = models.ForeignKey(TODStation, null=True, blank=True, verbose_name=u'TOD Station')
-    total_cost = models.IntegerField('Total Cost', blank=True, null=True)
+    parking_spaces     = models.IntegerField('Parking Spaces', blank=True, null=True)
+    as_of_right  = models.NullBooleanField('As Of Right', blank=True, null=True)
+    walkscore    = models.ForeignKey(WalkScore, null=True, blank=True)
+    todstation   = models.ForeignKey(TODStation, null=True, blank=True, verbose_name=u'TOD Station')
+    total_cost   = models.IntegerField('Total Cost', blank=True, null=True)
     total_cost_allocated_pct = models.FloatField('Funding Allocated', blank=True, null=True, help_text='In percent.')
-    draft = models.BooleanField(help_text='Required project information is incomplete.')
-    removed = models.BooleanField(help_text='Deleted project, will not be shown on public page')    
+    draft        = models.BooleanField(help_text='Required project information is incomplete.')
+    removed      = models.BooleanField(help_text='Deleted project, will not be shown on public page')    
 
     # internal
-    created_by = models.ForeignKey(User, editable=False, blank=True, null=True, related_name='project_created_by')
-    created = models.DateTimeField(auto_now_add=True)
+    created_by       = models.ForeignKey(User, editable=False, blank=True, null=True, related_name='project_created_by')
+    created          = models.DateTimeField(auto_now_add=True)
     last_modified_by = models.ForeignKey(User, editable=False, blank=True, null=True, related_name='project_last_modified_by')
-    last_modified = models.DateTimeField(auto_now=True)
+    last_modified    = models.DateTimeField(auto_now=True)
 
     # tmp
     xcoord = models.FloatField(blank=True, null=True)
@@ -253,7 +253,7 @@ class Project(models.Model):
 
     # geometry
     location = models.PointField(srid=26986, blank=True, null=True) # SRS mass state plane
-    objects = models.GeoManager()
+    objects  = models.GeoManager()
     
     class Meta:
         ordering = ['dd_id', ]

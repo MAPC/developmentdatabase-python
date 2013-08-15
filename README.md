@@ -1,6 +1,6 @@
 # MAPC's Development Database
 
-A database that tracks development projects.
+A database that tracks development projects throughout Metro Boston.
 
 Features:
 
@@ -9,7 +9,7 @@ Features:
 * Tastypie Data API
 * Comments
 
-MAPC Project team: Tim Reardon, Meghna, Dutta, Rob Goodspeed, Christian Spanring 
+MAPC Project team: Tim Reardon, Meghna Dutta, Rob Goodspeed, Christian Spanring, Matt Cloyd
 
 ## Dependencies
 
@@ -23,4 +23,4 @@ Python dependencies can be installed through the pip requirements file:
 
 ---
 
-Copyright 2012 MAPC
+Copyright 2013 MAPC
