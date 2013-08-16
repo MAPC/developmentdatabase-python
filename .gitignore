@@ -4,7 +4,6 @@ local_settings.py
 notes.md
 
 data/*
-*/migrations/*
 *.sublime-*
 
 developmentdatabase/media/*

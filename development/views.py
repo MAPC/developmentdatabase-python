@@ -1,9 +1,9 @@
 from django.shortcuts import render_to_response, redirect
-from django.template import RequestContext
-from django.http import Http404, HttpResponse
+from django.template  import RequestContext
+from django.http      import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib.gis.geos import GEOSGeometry
-from django.core.exceptions import FieldError
+from django.contrib.gis.geos        import GEOSGeometry
+from django.core.exceptions         import FieldError
 
 import json
 import csv

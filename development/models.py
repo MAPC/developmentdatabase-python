@@ -80,9 +80,9 @@ class ZipCode(models.Model):
     Massachusetts Zip Codes, used for approx. geocoding
     """
 
-    zipcode = models.CharField(max_length=5)
-    name    = models.CharField(max_length=100)
-    state   = models.CharField(max_length=2)
+    zipcode  = models.CharField(max_length=5)
+    name     = models.CharField(max_length=100)
+    state    = models.CharField(max_length=2)
 
     geometry = models.MultiPolygonField(srid=26986)
     objects  = models.GeoManager()
