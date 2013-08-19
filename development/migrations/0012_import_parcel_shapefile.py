@@ -9,21 +9,26 @@ import os
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        os.system("shp2pgsql -s 26986 data/parcel_sample.shp development_parcel | psql -h localhost -d ddtest -U mapcuser")
-        db.execute("ALTER SEQUENCE development_parcel_gid_seq RENAME TO development_parcel_parcel_id_seq")
-        db.execute("ALTER TABLE development_parcel RENAME gid TO parcel_id")
+        os.system("shp2pgsql -s 26986 -g geometry data/parcel_sample.shp development_parcel | psql -h localhost -d ddtest -U mapcuser")
+        # db.execute("ALTER SEQUENCE development_parcel_gid_seq RENAME TO development_parcel_parcel_id_seq")
+        # db.execute("ALTER TABLE development_parcel RENAME gid TO parcel_id")
         
-        db.delete_column('development_parcel', 'objectid')
-        db.delete_column('development_parcel', 'shape_leng')
-        db.delete_column('development_parcel', 'shape_area')
-
+        db.rename_column('development_parcel', 'objectid', 'parcel_id')
         db.rename_column('development_parcel', 'muni_id', 'municipality')
         
-        # db.add_column('development_project', 'parcel_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['development.Parcel']))
+        db.delete_column('development_parcel', 'shape_leng')
+        db.delete_column('development_parcel', 'shape_area')
+        
+        db.add_column('development_project', 'parcel',
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['development.Parcel'], null=True, blank=True),
+                      keep_default=False)
 
     def backwards(self, orm):
         db.delete_table('development_parcel', cascade=True)
         # db.delete_column('development_project', 'parcel_id')
+
+        # Deleting field 'Project.parcel'
+        db.delete_column('development_project', 'parcel_id')
 
 
     models = {

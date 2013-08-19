@@ -184,7 +184,8 @@ class Parcel(models.Model):
     """
     A distinct plot of land
     """
-    parcel_id    = models.AutoField(primary_key=True)
+    gid          = models.AutoField(primary_key=True)
+    parcel_id    = models.IntegerField(null=True)
     geometry     = models.MultiPolygonField(srid=26989, null=True)
     municipality = models.ForeignKey(Municipality, null=True)
     taxloc_id    = models.CharField('Tax Loc ID', max_length=18, null=True)
