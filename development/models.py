@@ -194,7 +194,7 @@ class Parcel(models.Model):
     land_value   = models.FloatField('Land Value', null=True)
     bldg_value   = models.FloatField('Building Value', null=True)
     othr_value   = models.FloatField('Other Value', null=True)
-    total_value  = models.FloatField('Total Value', null=True)
+    total_valu   = models.FloatField('Total Value', null=True)
     ls_price     = models.FloatField('List Price', null=True)
     ls_date      = models.CharField('List Date', max_length=8, null=True)
     bldg_area    = models.FloatField('Building Area', null=True)
@@ -207,7 +207,7 @@ class Parcel(models.Model):
     zoning       = models.CharField('Zoning', max_length=8, null=True)
     style        = models.CharField('Architectural Style', max_length=20, null=True)
     yr_built     = models.IntegerField('Year Built', null=True)
-    site_attr    = models.CharField('Site Address', max_length=80, null=True)
+    site_addr    = models.CharField('Site Address', max_length=80, null=True)
     addr_str     = models.CharField('Site Street Address', max_length=60, null=True)
     addr_num     = models.CharField('Site Number on Street', max_length=12, null=True)
     addr_zip     = models.CharField('Site Zip Code', max_length=10, null=True)
@@ -219,6 +219,9 @@ class Parcel(models.Model):
     fy           = models.IntegerField('Fiscal Year?', null=True)
     lot_areaft   = models.FloatField('Lot Area in Feet', null=True)
     far          = models.FloatField('Floor Area Ratio', null=True)
+
+    def __unicode__(self):
+        return self.taxloc_id + " " + self.zoning
 
 
 class Project(models.Model):
@@ -313,13 +316,13 @@ class Project(models.Model):
         except Taz.DoesNotExist:
             self.taz = None 
 
-        # set TOD station
+        # set TOD Station
         try:
             self.todstation = TODStation.objects.get(geometry__contains=self.location)
         except TODStation.DoesNotExist:
             self.todstation = None
         
-        # set parcel
+        # set Parcel
         try:
             self.parcel = Parcel.objects.get(geometry__contains=self.location)
         except Parcel.DoesNotExist:

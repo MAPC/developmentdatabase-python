@@ -1,36 +1,27 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-import os
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        os.system("shp2pgsql -s 26986 -g geometry data/parcel_sample.shp development_parcel | psql -h localhost -d ddtest -U mapcuser")
-        # db.execute("ALTER SEQUENCE development_parcel_gid_seq RENAME TO development_parcel_parcel_id_seq")
-        # db.execute("ALTER TABLE development_parcel RENAME gid TO parcel_id")
-        
-        db.rename_column('development_parcel', 'objectid', 'parcel_id')
-        db.rename_column('development_parcel', 'muni_id', 'municipality_id')
-        db.alter_column('development_parcel', 'municipality_id', self.gf('django.db.models.fields.related.ForeignKey')(default=4, to=orm['development.Municipality']))        
-        
-        db.delete_column('development_parcel', 'shape_leng')
-        db.delete_column('development_parcel', 'shape_area')
-        
-        db.add_column('development_project', 'parcel',
-                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['development.Parcel'], null=True, blank=True),
-                      keep_default=False)
+        pass
+        projects = orm.Project.objects.all()
+        for project in projects:
+            try:
+                project.parcel = orm.Parcel.objects.get(geometry__contains=project.location)
+            except orm.Parcel.DoesNotExist:
+                project.parcel = None
+            project.save()
 
     def backwards(self, orm):
-        db.delete_table('development_parcel', cascade=True)
-        # db.delete_column('development_project', 'parcel_id')
-
-        # Deleting field 'Project.parcel'
-        db.delete_column('development_project', 'parcel_id')
-
+        pass
+        projects = orm.Project.objects.all()
+        for project in projects:
+            project.parcel = None
+            project.save()
 
     models = {
         'auth.group': {
@@ -108,6 +99,7 @@ class Migration(SchemaMigration):
             'owner_name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True'}),
             'owner_stat': ('django.db.models.fields.CharField', [], {'max_length': '2', 'null': 'True'}),
             'owner_zip': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True'}),
+            'parcel_id': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
             'parloc_id': ('django.db.models.fields.CharField', [], {'max_length': '18', 'null': 'True'}),
             'res_area': ('django.db.models.fields.FloatField', [], {'null': 'True'}),
             'rooms_num': ('django.db.models.fields.FloatField', [], {'null': 'True'}),
@@ -240,3 +232,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['development']
+    symmetrical = True
