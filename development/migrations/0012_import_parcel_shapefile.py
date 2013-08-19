@@ -9,7 +9,7 @@ import os
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        os.system("shp2pgsql -s 26986 -g geometry data/parcel_sample.shp development_parcel | psql -h localhost -d ddtest -U mapcuser")
+        os.system("shp2pgsql -s 26986 -g geometry data/parcel_sample/ma_parcel_sample.shp development_parcel | psql -h localhost -d ddtest -U mapcuser")
         # db.execute("ALTER SEQUENCE development_parcel_gid_seq RENAME TO development_parcel_parcel_id_seq")
         # db.execute("ALTER TABLE development_parcel RENAME gid TO parcel_id")
         

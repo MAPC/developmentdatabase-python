@@ -220,8 +220,15 @@ class Parcel(models.Model):
     lot_areaft   = models.FloatField('Lot Area in Feet', null=True)
     far          = models.FloatField('Floor Area Ratio', null=True)
 
+    objects      = models.GeoManager()
+
+    class Meta:
+        verbose_name = _('Parcel')
+        verbose_name_plural = _('Parcels')
+        ordering = ['gid', ]
+
     def __unicode__(self):
-        return self.taxloc_id + " " + self.zoning
+        return self.taxloc_id
 
 
 class Project(models.Model):
@@ -322,11 +329,11 @@ class Project(models.Model):
         except TODStation.DoesNotExist:
             self.todstation = None
         
-        # set Parcel
-        try:
-            self.parcel = Parcel.objects.get(geometry__contains=self.location)
-        except Parcel.DoesNotExist:
-            self.parcel = None
+        # # set Parcel
+        # try:
+        #     self.parcel = Parcel.objects.get(geometry__contains=self.location)
+        # except Parcel.DoesNotExist:
+        #     self.parcel = None
 
 
         # the free walkscore api is limited to 1000 requests per day
