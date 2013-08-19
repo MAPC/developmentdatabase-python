@@ -178,7 +178,47 @@ class TODStation(models.Model):
 
     def __unicode__(self):
         return self.station_name.title()
-    
+
+
+class Parcel(models.Model):
+    """
+    A distinct plot of land
+    """
+    parcel_id    = models.AutoField(primary_key=True)
+    geometry     = models.MultiPolygonField(srid=26989, null=True)
+    municipality = models.ForeignKey(Municipality, null=True)
+    taxloc_id    = models.CharField('Tax Loc ID', max_length=18, null=True)
+    parloc_id    = models.CharField('Parcel Loc ID', max_length=18, null=True)
+    loc_id_cnt   = models.IntegerField('Loc ID Count', null=True)
+    land_value   = models.FloatField('Land Value', null=True)
+    bldg_value   = models.FloatField('Building Value', null=True)
+    othr_value   = models.FloatField('Other Value', null=True)
+    total_value  = models.FloatField('Total Value', null=True)
+    ls_price     = models.FloatField('List Price', null=True)
+    ls_date      = models.CharField('List Date', max_length=8, null=True)
+    bldg_area    = models.FloatField('Building Area', null=True)
+    res_area     = models.FloatField('Residential Area', null=True)
+    luc_1        = models.CharField('Field Description', max_length=4, null=True)
+    luc_2        = models.CharField('Field Description', max_length=4, null=True)
+    luc_adjust   = models.CharField('Field Description', max_length=5, null=True)
+    units_num    = models.FloatField('Number of Units', null=True)
+    rooms_num    = models.FloatField('Number of Rooms', null=True)
+    zoning       = models.CharField('Zoning', max_length=8, null=True)
+    style        = models.CharField('Architectural Style', max_length=20, null=True)
+    yr_built     = models.IntegerField('Year Built', null=True)
+    site_attr    = models.CharField('Site Address', max_length=80, null=True)
+    addr_str     = models.CharField('Site Street Address', max_length=60, null=True)
+    addr_num     = models.CharField('Site Number on Street', max_length=12, null=True)
+    addr_zip     = models.CharField('Site Zip Code', max_length=10, null=True)
+    owner_name   = models.CharField('Owner Name', max_length=80, null=True)
+    owner_addr   = models.CharField('Owner Street Address', max_length=80, null=True)
+    owner_city   = models.CharField('Owner City', max_length=25, null=True)
+    owner_stat   = models.CharField('Owner State', max_length=2, null=True)
+    owner_zip    = models.CharField('Owner Zip Code', max_length=10, null=True)
+    fy           = models.IntegerField('Fiscal Year?', null=True)
+    lot_areaft   = models.FloatField('Lot Area in Feet', null=True)
+    far          = models.FloatField('Floor Area Ratio', null=True)
+
 
 class Project(models.Model):
     """
@@ -241,6 +281,8 @@ class Project(models.Model):
     draft        = models.BooleanField(help_text='Required project information is incomplete.')
     removed      = models.BooleanField(help_text='Deleted project, will not be shown on public page')    
 
+    parcel       = models.ForeignKey(Parcel, null=True, blank=True)
+
     # internal
     created_by       = models.ForeignKey(User, editable=False, blank=True, null=True, related_name='project_created_by')
     created          = models.DateTimeField(auto_now_add=True)
@@ -275,6 +317,13 @@ class Project(models.Model):
             self.todstation = TODStation.objects.get(geometry__contains=self.location)
         except TODStation.DoesNotExist:
             self.todstation = None
+        
+        # set parcel
+        try:
+            self.parcel = Parcel.objects.get(geometry__contains=self.location)
+        except Parcel.DoesNotExist:
+            self.parcel = None
+
 
         # the free walkscore api is limited to 1000 requests per day
         # update walkscore only on new or moved projects
