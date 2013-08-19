@@ -10,7 +10,7 @@ def percentage(value):
 @register.filter
 def currency(value):
     if value != 'None':
-        return '$ %s' % (value)
+        return '$ %.2f' % (value)
 
 @register.filter
 def url(value):

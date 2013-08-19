@@ -94,6 +94,18 @@
                         {# include "development/_property.html" with property=project.[NEW TXT] label="Other Development Team" #}
                         {# include "development/_property.html" with property=project.[NEW TXT] label="Leasing/Sales Agent" #}
                 </div>
+                <div class="span6">
+                        <h3>Land Parcel Information</h3>
+
+                        {% include "development/_property.html" with property=project.parcel.total_valu|currency label="Total Value" %}
+                        {% include "development/_property.html" with property=project.parcel.land_value|currency label="Land Value" %}
+                        {% include "development/_property.html" with property=project.parcel.bldg_value|currency label="Building Value" %}
+                        {% include "development/_property.html" with property=project.parcel.bldg_area  label="Building Area" %}
+                        {% include "development/_property.html" with property=project.parcel.res_area   label="Residential Area" %}
+                        {% include "development/_property.html" with property=project.parcel.units_num  label="Number of Units" %}
+                        {% include "development/_property.html" with property=project.parcel.rooms_num  label="Number of Rooms" %}
+                        {% include "development/_property.html" with property=project.parcel.far        label="Floor Area Ratio" %}
+                </div>
         </div>
         <div class="row">
                 <div class="span12">
