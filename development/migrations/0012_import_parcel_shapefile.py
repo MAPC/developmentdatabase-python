@@ -9,13 +9,14 @@ import os
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # TODO: Load sample json
         os.system("shp2pgsql -s 26986 -g geometry data/parcel_sample/ma_parcel_sample.shp development_parcel | psql -h localhost -d ddtest -U mapcuser")
         # db.execute("ALTER SEQUENCE development_parcel_gid_seq RENAME TO development_parcel_parcel_id_seq")
         # db.execute("ALTER TABLE development_parcel RENAME gid TO parcel_id")
         
         db.rename_column('development_parcel', 'objectid', 'parcel_id')
         db.rename_column('development_parcel', 'muni_id', 'municipality_id')
-        db.alter_column('development_parcel', 'municipality_id', self.gf('django.db.models.fields.related.ForeignKey')(default=4, to=orm['development.Municipality']))        
+        db.alter_column('development_parcel', 'municipality_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['development.Municipality']))        
         
         db.delete_column('development_parcel', 'shape_leng')
         db.delete_column('development_parcel', 'shape_area')
@@ -23,6 +24,8 @@ class Migration(SchemaMigration):
         db.add_column('development_project', 'parcel',
                       self.gf('django.db.models.fields.related.ForeignKey')(to=orm['development.Parcel'], null=True, blank=True),
                       keep_default=False)
+        db.execute('CREATE INDEX "development_parcel_geometry_id" ON "development_parcel" USING GIST ( "geometry" GIST_GEOMETRY_OPS )')
+        db.send_create_signal('development', ['Parcel'])
 
     def backwards(self, orm):
         db.delete_table('development_parcel', cascade=True)

@@ -184,10 +184,12 @@ class Parcel(models.Model):
     """
     A distinct plot of land
     """
+
     gid          = models.AutoField(primary_key=True)
     parcel_id    = models.IntegerField(null=True)
     geometry     = models.MultiPolygonField(srid=26989, null=True)
-    municipality = models.ForeignKey(Municipality, null=True)
+    objects      = models.GeoManager()
+    municipality = models.ForeignKey(Municipality)
     taxloc_id    = models.CharField('Tax Loc ID', max_length=18, null=True)
     parloc_id    = models.CharField('Parcel Loc ID', max_length=18, null=True)
     loc_id_cnt   = models.IntegerField('Loc ID Count', null=True)
@@ -219,8 +221,6 @@ class Parcel(models.Model):
     fy           = models.IntegerField('Fiscal Year?', null=True)
     lot_areaft   = models.FloatField('Lot Area in Feet', null=True)
     far          = models.FloatField('Floor Area Ratio', null=True)
-
-    objects      = models.GeoManager()
 
     class Meta:
         verbose_name = _('Parcel')

@@ -3,22 +3,21 @@ import datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from development.models import Parcel, Project
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        parcels = Parcel.objects.all()
+        parcels = orm['development.Parcel'].objects.all()
         for parcel in parcels:
             try:
-                project = Project.objects.get(location__within=parcel.geometry)
+                project = orm['development.Project'].objects.get(location__within=parcel.geometry)
                 project.parcel = parcel
-            except Project.DoesNotExist:
+            except orm['development.Project'].DoesNotExist:
                 project.parcel = None
             project.save()
 
     def backwards(self, orm):
-        projects = orm.Project.objects.all()
+        projects = orm['development.Project'].objects.all()
         for project in projects:
             project.parcel = None
             project.save()
