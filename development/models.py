@@ -187,7 +187,7 @@ class Parcel(models.Model):
 
     gid          = models.AutoField(primary_key=True)
     parcel_id    = models.IntegerField(null=True)
-    geometry     = models.MultiPolygonField(srid=26989, null=True)
+    geometry     = models.MultiPolygonField(srid=26986, null=True)
     objects      = models.GeoManager()
     municipality = models.ForeignKey(Municipality)
     taxloc_id    = models.CharField('Tax Loc ID', max_length=18, null=True)
@@ -255,6 +255,7 @@ class Project(models.Model):
     mxduse     = models.NullBooleanField('Mixed Use', blank=True, null=True)
     ch40       = models.ForeignKey(ZoningTool, blank=True, null=True, verbose_name='Zoning Tool')
 
+    # Nonresidential Development Fields
     rptdemp    = models.FloatField('Reported Employment', blank=True, null=True)
     emploss    = models.FloatField('Employment Loss', blank=True, null=True)
     totemp     = models.FloatField('Est. employment', blank=True, null=True)
@@ -276,7 +277,6 @@ class Project(models.Model):
     mapcintrnl   = models.TextField('MAPC Internal Comments', blank=True, null=True)
     otheremprat2 = models.FloatField(blank=True, null=True)
 
-    # new
     projecttype  = models.ForeignKey(ProjectType, null=True)
     stalled      = models.BooleanField('Stalled')
     phased       = models.BooleanField('Phased')
@@ -329,11 +329,11 @@ class Project(models.Model):
         except TODStation.DoesNotExist:
             self.todstation = None
         
-        # # set Parcel
-        # try:
-        #     self.parcel = Parcel.objects.get(geometry__contains=self.location)
-        # except Parcel.DoesNotExist:
-        #     self.parcel = None
+        # set Parcel
+        try:
+            self.parcel = Parcel.objects.get(geometry__contains=self.location)
+        except Parcel.DoesNotExist:
+            self.parcel = None
 
 
         # the free walkscore api is limited to 1000 requests per day
