@@ -69,7 +69,7 @@
                         {% include "development/_property.html" with property=project.othpct|percentage label="Other" %}
                         {% include "development/_property.html" with property=project.hotelrms|floatformat:0 label="Hotel rooms" %}
                         {% include "development/_property.html" with property=project.rptdemp|floatformat:0|intcomma label="Reported Employment" %}
-                        {% include "development/_property.html" with property=project.totemp|floatformat:0|intcomma label="MAPC Estimated Employment" %}
+                        {% include "development/_property.html" with property=project.est_employment|floatformat:0|intcomma label="MAPC Estimated Employment Potential" %}
 
                 </div>
         </div>

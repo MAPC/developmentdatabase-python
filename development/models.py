@@ -378,10 +378,11 @@ class Project(models.Model):
         return zipcode
 
     def parcel_address(self):
-        if self.get_zipcode != None:
-            site_address   = self.parcel.site_addr or ''
-            city_state_zip = ", " + self.get_zipcode().address or ''
-            return site_address + city_state_zip
+        if self.parcel != None:
+            if self.get_zipcode != None:
+                site_address   = self.parcel.site_addr or ''
+                city_state_zip = ", " + self.get_zipcode().address or ''
+                return site_address + city_state_zip
 
     @models.permalink
     def get_absolute_url(self):
