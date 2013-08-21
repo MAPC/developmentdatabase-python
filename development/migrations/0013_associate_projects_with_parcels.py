@@ -7,20 +7,10 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        parcels = orm['development.Parcel'].objects.all()
-        for parcel in parcels:
-            try:
-                project = orm['development.Project'].objects.get(location__within=parcel.geometry)
-                project.parcel = parcel
-            except orm['development.Project'].DoesNotExist:
-                project.parcel = None
-            project.save()
+        for project in orm['development.Project'].objects.all(): project.save()
 
     def backwards(self, orm):
-        projects = orm['development.Project'].objects.all()
-        for project in projects:
-            project.parcel = None
-            project.save()
+        db.execute("UPDATE development_project SET parcel_id = NULL")
 
     models = {
         'auth.group': {

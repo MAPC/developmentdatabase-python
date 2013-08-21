@@ -332,6 +332,8 @@ class Project(models.Model):
         # set Parcel
         try:
             self.parcel = Parcel.objects.get(geometry__contains=self.location)
+        except Parcel.MultipleObjectsReturned:
+            self.parcel = Parcel.objects.filter(geometry__contains=self.location)[0]
         except Parcel.DoesNotExist:
             self.parcel = None
 
