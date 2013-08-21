@@ -351,6 +351,9 @@ class Project(models.Model):
         except Parcel.DoesNotExist:
             self.parcel = None
 
+        # estimate employment
+        self.est_employment = self.estimate_employment()
+
 
         # the free walkscore api is limited to 1000 requests per day
         # update walkscore only on new or moved projects
@@ -383,6 +386,60 @@ class Project(models.Model):
                 site_address   = self.parcel.site_addr or ''
                 city_state_zip = ", " + self.get_zipcode().address or ''
                 return site_address + city_state_zip
+
+    def estimate_employment(self):
+        categories = [
+            'retail_restaurant',
+            'office_med',
+            'manuf_indust',
+            'warehouse_trucking',
+            'lab_rd',
+            'edu_inst',
+            'other_nonres'
+        ]
+
+        category_fields = {
+            'retail_restaurant':  'retpct',
+            'office_med':         'ofcmdpct',
+            'manuf_indust':       'indmfpct',
+            'warehouse_trucking': 'whspct',
+            'lab_rd':             'rndpct',
+            'edu_inst':           'edinstpct',
+            'other_nonres':       'othpct',
+        }
+
+        field_values = {
+            'retpct':    self.retpct,
+            'ofcmdpct':  self.ofcmdpct,
+            'indmfpct':  self.indmfpct,
+            'whspct':    self.whspct,
+            'rndpct':    self.rndpct,
+            'edinstpct': self.edinstpct,
+            'othpct':    self.othpct,
+        }
+
+        category_multipliers = {
+            'retail_restaurant':  0.0052,
+            'office_med':         0.0015,
+            'manuf_indust':       0.0045,
+            'warehouse_trucking': 0.0011,
+            'lab_rd':             0.0021,
+            'edu_inst':           0.0044,
+            'other_nonres':       0.00129 
+        }
+
+        total_nonres_sqft = self.commsf
+
+        estimated_employment = 0
+        
+        for category in categories:
+            field_name = category_fields[category]
+            if field_name != None:
+                percent_category  = field_values[field_name] or 0
+                employee_per_sqft = category_multipliers[category] or 0
+                estimated_employment += ((total_nonres_sqft * percent_category) * employee_per_sqft)
+
+        return estimated_employment
 
     @models.permalink
     def get_absolute_url(self):
