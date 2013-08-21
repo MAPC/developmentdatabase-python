@@ -189,7 +189,7 @@ class Parcel(models.Model):
     parcel_id    = models.IntegerField(null=True)
     geometry     = models.MultiPolygonField(srid=26986, null=True)
     objects      = models.GeoManager()
-    municipality = models.ForeignKey(Municipality)
+    municipality = models.ForeignKey(Municipality, null=True)
     taxloc_id    = models.CharField('Tax Loc ID', max_length=18, null=True)
     parloc_id    = models.CharField('Parcel Loc ID', max_length=18, null=True)
     loc_id_cnt   = models.IntegerField('Loc ID Count', null=True)
@@ -218,7 +218,7 @@ class Parcel(models.Model):
     owner_city   = models.CharField('Owner City', max_length=25, null=True)
     owner_stat   = models.CharField('Owner State', max_length=2, null=True)
     owner_zip    = models.CharField('Owner Zip Code', max_length=10, null=True)
-    fy           = models.IntegerField('Fiscal Year?', null=True)
+    fy           = models.IntegerField('Fiscal Yearmpy ', null=True)
     lot_areaft   = models.FloatField('Lot Area in Feet', null=True)
     far          = models.FloatField('Floor Area Ratio', null=True)
 
@@ -228,7 +228,7 @@ class Parcel(models.Model):
         city  = self.owner_city or ''
         state = self.owner_stat or ''
         zipc  = self.owner_zip  or ''
-        return name + " " + addr + " " + city + " " + state + " " + zipc
+        return name + " " + addr + " " + city + " " + state + " " + zipc        
 
 
     class Meta:
@@ -316,6 +316,11 @@ class Project(models.Model):
     # geometry
     location = models.PointField(srid=26986, blank=True, null=True) # SRS mass state plane
     objects  = models.GeoManager()
+
+    # Calculated Fields
+    est_employment = models.FloatField('MAPC Estimated Employment Potential', null=True)
+
+
     
     class Meta:
         ordering = ['dd_id', ]
