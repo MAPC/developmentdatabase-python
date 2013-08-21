@@ -222,6 +222,15 @@ class Parcel(models.Model):
     lot_areaft   = models.FloatField('Lot Area in Feet', null=True)
     far          = models.FloatField('Floor Area Ratio', null=True)
 
+    def owner_data(self):
+        name  = self.owner_name or ''
+        addr  = self.owner_addr or ''
+        city  = self.owner_city or ''
+        state = self.owner_stat or ''
+        zipc  = self.owner_zip  or ''
+        return name + " " + addr + " " + city + " " + state + " " + zipc
+
+
     class Meta:
         verbose_name = _('Parcel')
         verbose_name_plural = _('Parcels')
@@ -363,6 +372,11 @@ class Project(models.Model):
             zipcode = None
         return zipcode
 
+    def parcel_address(self):
+        if self.get_zipcode != None:
+            site_address   = self.parcel.site_addr or ''
+            city_state_zip = ", " + self.get_zipcode().address or ''
+            return site_address + city_state_zip
 
     @models.permalink
     def get_absolute_url(self):

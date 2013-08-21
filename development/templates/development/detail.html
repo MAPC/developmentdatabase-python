@@ -6,7 +6,14 @@
 {% block title %}Explore Projects{% endblock %}
 
 {% block pageheader %}
-<h1 class="front-page">{{ project.ddname }} <span class="update-title">in <a href="/projects/search/?taz__municipality={{ project.municipality.muni_id }}" title="View more projects in {{ project.municipality.name }}">{{ project.municipality.name }}</a></span></h1>
+<h1 class="front-page">{{ project.ddname }} 
+    <span class="update-title">in 
+        <a href="/projects/search/?taz__municipality={{ project.municipality.muni_id }}" title="View more projects in {{ project.municipality.name }}">
+            {{ project.municipality.name }}
+        </a>
+    </span>
+</h1>
+<h6>{{ project.parcel_address }}</h6>
 {% if project.description %}<p class="lead">{{ project.description|truncatewords:50 }}</p>{% endif %}
 {% endblock pageheader %}
 
@@ -96,21 +103,18 @@
                 </div>
                 <div class="span6">
                         <h3>Land Parcel Information</h3>
+                        <h6>AS OF FY {{ project.parcel.fy }}</h6>
 
-                        {% include "development/_property.html" with property=project.parcel.total_valu|currency label="Total Value" %}
-                        {% include "development/_property.html" with property=project.parcel.land_value|currency label="Land Value" %}
-                        {% include "development/_property.html" with property=project.parcel.bldg_value|currency label="Building Value" %}
-                        {% include "development/_property.html" with property=project.parcel.othr_value|currency label="Other Value" %}
-                        {% include "development/_property.html" with property=project.parcel.lot_areaft label="Lot Area" %}
-                        {% include "development/_property.html" with property=project.parcel.bldg_area  label="Building Area" %}
+                        {% include "development/_property.html" with property=project.parcel.land_value|intcomma|currency label="Land Value" %}
+                        {% include "development/_property.html" with property=project.parcel.bldg_value|intcomma|currency label="Building Value" %}
+                        {% include "development/_property.html" with property=project.parcel.othr_value|intcomma|currency label="Other Value" %}
+                        {% include "development/_property.html" with property=project.parcel.total_valu|intcomma|currency label="Total Value" %}
+                        
+                        {% include "development/_property.html" with property=project.parcel.lot_areaft|intcomma label="Lot Area (square feet)" %}
+                        {% include "development/_property.html" with property=project.parcel.bldg_area|intcomma label="Building Area (square feet)" %}
+                        
                         {% include "development/_property.html" with property=project.parcel.units_num  label="Number of Units" %}
-                        {% include "development/_property.html" with property=project.parcel.rooms_num  label="Number of Rooms" %}
-                        {% include "development/_property.html" with property=project.parcel.far        label="Floor Area Ratio" %}
-                        {% include "development/_property.html" with property=project.parcel.owner_name label="Owner Name" %}
-                        {% include "development/_property.html" with property=project.parcel.owner_addr label="Owner Address" %}
-                        {% include "development/_property.html" with property=project.parcel.owner_city label="Owner City" %}
-                        {% include "development/_property.html" with property=project.parcel.owner_stat label="Owner State" %}
-                        {% include "development/_property.html" with property=project.parcel.owner_zip label="Owner Zip" %}
+                        {% include "development/_property.html" with property=project.parcel.owner_data label="Owner Information" %}
 
                 </div>
         </div>
