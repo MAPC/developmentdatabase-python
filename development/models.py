@@ -419,8 +419,8 @@ class Project(models.Model):
         }
 
         category_multipliers = {
-            'retail_restaurant':  0.0052,
-            'office_med':         0.0015,
+            'retail_restaurant':  0.0062,
+            'office_med':         0.0031,
             'manuf_indust':       0.0045,
             'warehouse_trucking': 0.0011,
             'lab_rd':             0.0021,
@@ -432,12 +432,17 @@ class Project(models.Model):
 
         estimated_employment = 0
         
+        # print(self.ddname)
+
         for category in categories:
             field_name = category_fields[category]
             if field_name != None:
                 percent_category  = field_values[field_name] or 0
                 employee_per_sqft = category_multipliers[category] or 0
-                estimated_employment += ((total_nonres_sqft * percent_category) * employee_per_sqft)
+                try:
+                    estimated_employment += ((total_nonres_sqft * percent_category) * employee_per_sqft)
+                except TypeError:
+                    pass
 
         return estimated_employment
 
