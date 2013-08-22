@@ -6,6 +6,7 @@ notes.md
 data/*
 *.sublime-*
 
+development/migrations/
 developmentdatabase/media/*
 
 #################

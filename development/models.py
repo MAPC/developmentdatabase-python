@@ -331,6 +331,7 @@ class Project(models.Model):
         user = kwargs.pop('user', None)
         self.last_modified_by = user
 
+        # TODO: Ripe for refactoring & metaprogramming
         # set TAZ
         try:
             self.taz = Taz.objects.get(geometry__contains=self.location)
@@ -436,12 +437,12 @@ class Project(models.Model):
         }
 
         category_multipliers = {
-            'retail_restaurant':  0.0062,
-            'office_med':         0.0031,
-            'manuf_indust':       0.0045,
-            'warehouse_trucking': 0.0011,
-            'lab_rd':             0.0021,
-            'edu_inst':           0.0044,
+            'retail_restaurant':  750,
+            'office_med':         330,
+            'manuf_indust':       500,
+            'warehouse_trucking': 750,
+            'lab_rd':             330,
+            'edu_inst':           330,
             'other_nonres':       self.otheremprat2 
         }
 
@@ -456,8 +457,12 @@ class Project(models.Model):
             if field_name != None:
                 percent_category  = field_values[field_name] or 0
                 employee_per_sqft = category_multipliers[category] or 0
+                sqft_per_employee = 0 
+                if employee_per_sqft > 0:
+                    sqft_per_employee = 1.0 / employee_per_sqft
+
                 try:
-                    estimated_employment += ((total_nonres_sqft * percent_category) * employee_per_sqft)
+                    estimated_employment += ((total_nonres_sqft * percent_category) * sqft_per_employee)
                 except TypeError:
                     pass
 

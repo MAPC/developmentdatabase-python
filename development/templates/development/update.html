@@ -19,7 +19,7 @@
                         {% include "development/_property_form.html" with property=project.description label="Project Description" tooltip="Brief summary of the project, 200 words maximum" %}
                         {% include "development/_property_form.html" with property=project.projecttype label="Project Type" %}
                         {% include "development/_property_form.html" with property=project.projecttype_detail label="Project Type Details" tooltip="Clarify project type, if necessary." %}
-                        {% include "development/_property_form.html" with property=project.status label="Status" tooltip="Projected: Known opportunity or planning priority but no specific proposal or developer; Planning/Permitting: Specific proposal & proponent, building permit not yet issued; Construction: Commencement of site work to receipt of final occupancy permit; Completed: Development is occupied or available for occupancy; Cancelled: Developer/Owner has indicated project is cancelled; Stalled: Project is in planning/permitting or construction phase but is not actively moving forward" %}
+                        {% include "development/_property_form.html" with property=project.status label="Status" tooltip="Projected: Known opportunity or planning priority but no specific proposal or developer; Planning/Permitting: Specific proposal &amp; proponent, building permit not yet issued; Construction: Commencement of site work to receipt of final occupancy permit; Completed: Development is occupied or available for occupancy; Cancelled: Developer/Owner has indicated project is cancelled; Stalled: Project is in planning/permitting or construction phase but is not actively moving forward" %}
                         {% include "development/_property_form.html" with property=project.complyr label="Year of Completion" %}
                         {% include "development/_property_form.html" with property=project.prjacrs label="Project Site Area" %}
                         {% include "development/_property_form.html" with property=project.stalled label="Stalled" tooltip="Check here if project is in Planning/Permitting or Construction phase but not actively moving forward" %}
@@ -66,13 +66,14 @@
 
                         <div class="non-res collapse">
 
-                        {% include "development/_property_form.html" with property=project.retpct label="Retail or Restaurant" %}
-                        {% include "development/_property_form.html" with property=project.ofcmdpct label="Office or Medical" %}
-                        {% include "development/_property_form.html" with property=project.indmfpct label="Manufacturing or Industrial" %}
-                        {% include "development/_property_form.html" with property=project.whspct label="Warehouse or Trucking" %}
-                        {% include "development/_property_form.html" with property=project.rndpct label="Lab or R&D" %}
-                        {% include "development/_property_form.html" with property=project.edinstpct label="Educational or Institution" %}
-                        {% include "development/_property_form.html" with property=project.othpct label="Other" %}
+                        {% include "development/_property_form_pct.html" with property=project.retpct label="Retail or Restaurant" %}
+                        {% include "development/_property_form_pct.html" with property=project.ofcmdpct label="Office or Medical" %}
+                        {% include "development/_property_form_pct.html" with property=project.indmfpct label="Manufacturing or Industrial" %}
+                        {% include "development/_property_form_pct.html" with property=project.whspct label="Warehouse or Trucking" %}
+                        {% include "development/_property_form_pct.html" with property=project.rndpct label="Lab or R&amp;D" %}
+                        {% include "development/_property_form_pct.html" with property=project.edinstpct label="Educational or Institution" %}
+                        {% include "development/_property_form_pct.html" with property=project.othpct label="Other" %}
+                        {% include "development/_property_form.html" with property=project.otheremprat2 label="Estimated Sq Ft / Employee for Other Building Usage" tooltip="If you filled in Other(%) above, how many square feet per employee do you estimate?" %}
                         {% include "development/_property_form.html" with property=project.hotelrms label="Hotel rooms" %}
                         {% include "development/_property_form.html" with property=project.rptdemp label="Reported Employment" %}
 
