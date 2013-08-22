@@ -284,7 +284,7 @@ class Project(models.Model):
     description  = models.TextField('description', blank=True, null=True)
     url          = models.URLField('Project Website', blank=True, null=True, verify_exists=False)
     mapcintrnl   = models.TextField('MAPC Internal Comments', blank=True, null=True)
-    otheremprat2 = models.FloatField(blank=True, null=True)
+    otheremprat2 = models.FloatField('Multiplier for Other Square Footage', blank=True, null=True)
 
     projecttype  = models.ForeignKey(ProjectType, null=True)
     stalled      = models.BooleanField('Stalled')
@@ -367,6 +367,23 @@ class Project(models.Model):
 
         super(Project, self).save(*args, **kwargs)
 
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        retail    = self.retpct    or 0.0
+        office    = self.ofcmdpct  or 0.0
+        manuf     = self.indmfpct  or 0.0
+        warehouse = self.whspct    or 0.0
+        labrnd    = self.rndpct    or 0.0
+        education = self.edinstpct or 0.0
+        other     = self.othpct    or 0.0
+        total_pct = (retail + office + manuf + warehouse + labrnd + education + other)
+        
+        if total_pct > 1.0:
+            raise ValidationError('Floor space use percentages may not equal more than 1.')
+
+
     def __unicode__(self):
         return self.ddname
 
@@ -425,7 +442,7 @@ class Project(models.Model):
             'warehouse_trucking': 0.0011,
             'lab_rd':             0.0021,
             'edu_inst':           0.0044,
-            'other_nonres':       0.00129 
+            'other_nonres':       self.otheremprat2 
         }
 
         total_nonres_sqft = self.commsf
@@ -444,7 +461,10 @@ class Project(models.Model):
                 except TypeError:
                     pass
 
-        return estimated_employment
+        if estimated_employment == 0:
+            return None
+        else:
+            return estimated_employment
 
     @models.permalink
     def get_absolute_url(self):

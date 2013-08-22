@@ -13,7 +13,9 @@
         </a>
     </span>
 </h1>
-<h6>{{ project.parcel_address }}</h6>
+{% if project.parcel_address != None %}
+    <h6>{{ project.parcel_address }}</h6>
+{% endif %}
 {% if project.description %}<p class="lead">{{ project.description|truncatewords:50 }}</p>{% endif %}
 {% endblock pageheader %}
 
@@ -103,8 +105,9 @@
                 </div>
                 <div class="span6">
                         <h3>Land Parcel Information</h3>
-                        <h6>AS OF FY {{ project.parcel.fy }}</h6>
-
+                        {% if project.parcel.fy != None %}
+                            <h6>AS OF FY {{ project.parcel.fy }}</h6>
+                        {% endif %}
                         {% include "development/_property.html" with property=project.parcel.land_value|intcomma|currency label="Land Value" %}
                         {% include "development/_property.html" with property=project.parcel.bldg_value|intcomma|currency label="Building Value" %}
                         {% include "development/_property.html" with property=project.parcel.othr_value|intcomma|currency label="Other Value" %}
