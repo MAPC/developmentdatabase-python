@@ -51,7 +51,7 @@
                         {% include "development/_property_form.html" with property=project.twnhsmmult label="Townhouse and Small Multifamily" tooltip="Units in townhouses, attached single family, or small multifamily buildings (2 - 4 units)" %}
                         {% include "development/_property_form.html" with property=project.lgmultifam label="Large Multifamily" tooltip="Units in mixed use buildings or buildings with 5 or more residential units" %}
                         {% include "development/_property_form.html" with property=project.ovr55 label="Age Restricted" tooltip="Percent of units which are deed restricted for residents older than a certain age" %}
-                        {% include "development/_property_form.html" with property=project.pctaffall label="Affordable Units" tooltip="Percent of subsidized or deed-restricted affordable units." %}
+                        {% include "development/_property_form_pct.html" with property=project.pctaffall label="Affordable Units" tooltip="Percent of subsidized or deed-restricted affordable units." %}
                         {% include "development/_property_form.html" with property=project.affordable_comment label="Affordability Comments" tooltip="Provide additional information about the level(s) of affordability" %}
                         {% include "development/_property_form.html" with property=project.gqpop label="Group Quarters" tooltip="Number of beds in a Dormitory, Nursing Home, Assisted Living, or other group quarters situation." %}
 

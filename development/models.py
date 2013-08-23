@@ -443,14 +443,13 @@ class Project(models.Model):
             'warehouse_trucking': 750,
             'lab_rd':             330,
             'edu_inst':           330,
-            'other_nonres':       self.otheremprat2 
+            'other_nonres':       self.otheremprat2,
+            'hotel':              0.5
         }
 
         total_nonres_sqft = self.commsf
 
         estimated_employment = 0
-        
-        # print(self.ddname)
 
         for category in categories:
             field_name = category_fields[category]
@@ -460,11 +459,12 @@ class Project(models.Model):
                 sqft_per_employee = 0 
                 if employee_per_sqft > 0:
                     sqft_per_employee = 1.0 / employee_per_sqft
-
                 try:
                     estimated_employment += ((total_nonres_sqft * percent_category) * sqft_per_employee)
                 except TypeError:
                     pass
+
+        estimated_employment += (self.hotelrms or 0) * category_multipliers['hotel']
 
         if estimated_employment == 0:
             return None
