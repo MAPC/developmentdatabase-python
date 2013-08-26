@@ -1,30 +1,34 @@
+# BASE SETTINGS COMMON TO ALL ENVIRONMENTS
 import os, sys
+from django.core.exceptions import ImproperlyConfigured
+
+def get_env_variable(var_name):
+    """ Get the environment variable or return exception """
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        error_msg = "Set the %s environment variable" % var_name
+        raise ImproperlyConfigured(error_msg)
 
 abspath = lambda *p: os.path.abspath(os.path.join(*p))
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 
-# Django settings for developmentdatabase project.
-
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Matt Cloyd', 'mapc@mapc.org'),
 )
-
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
-    }
-}
+# The current environment. Set the environment variable ENV_TYPE in each environment
+# to one of: [local, staging, production].
+# TODO: DJANGO_SETTINGS_MODULE = eval(developmentdatabase.settings.#{get_env_variable("ENV_TYPE")})
+
+DJANGO_SETTINGS_MODULE = get_env_variable("ENV_TYPE_FULL")
+SECRET_KEY   = get_env_variable("SECRET_KEY")
+BING_API_KEY = get_env_variable("BING_API_KEY")
+WSAPIKEY     = get_env_variable("WSAPIKEY")
+
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -33,7 +37,7 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/New York'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -192,6 +196,8 @@ AUTHENTICATION_BACKENDS = (
     'guardian.backends.ObjectPermissionBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+# TODO: Why are these set here? Why is this not in URLConfs?
 AUTH_PROFILE_MODULE = 'profiles.Profile'
 LOGIN_REDIRECT_URL = '/projects/search/'
 LOGIN_URL = '/accounts/signin/'
@@ -209,8 +215,3 @@ WS_MORE_INFO_ICON = 'http://www2.walkscore.com/images/api-more-info.gif'
 WS_MORE_INFO_LINK = 'http://www.walkscore.com/how-it-works.shtml'
 WS_LOGO_URL = 'http://www2.walkscore.com/images/api-logo.gif'
 
-# import local settings
-try:
-    from local_settings import *
-except ImportError:
-    pass
