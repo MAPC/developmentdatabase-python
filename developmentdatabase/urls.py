@@ -27,7 +27,8 @@ urlpatterns = patterns('',
     url('^$', TemplateView.as_view(template_name='index.html'), name='home'),
     url('^$', TemplateView.as_view(template_name='development/filter.html'), name='project_filter'),
     
-    (r'^projects/', include('development.urls')),    
+    (r'^projects/', include('development.urls')),
+    (r'^moderation/', include('tim.urls')) ,
 
     # API
     (r'^api/', include(v1_api.urls)),

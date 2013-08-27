@@ -13,8 +13,8 @@ def get_env_variable(var_name):
 abspath = lambda *p: os.path.abspath(os.path.join(*p))
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-print("PROJECT ROOT")
-print(PROJECT_ROOT)
+# print("PROJECT ROOT")
+# print(PROJECT_ROOT)
 
 ADMINS = (
     ('Matt Cloyd', 'mapc@mapc.org'),
