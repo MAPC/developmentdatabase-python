@@ -1,5 +1,4 @@
 # LOCAL / DEVELOPMENT ENVIRONMENT SETTINGS
-from settings import *
 from .base import *
 
 DEBUG = True

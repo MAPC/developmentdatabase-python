@@ -37,7 +37,7 @@ WSAPIKEY     = get_env_variable("WSAPIKEY")
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/New York'
+TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -146,7 +146,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     
     # 3rd party
-    'userena', 
+    'userena',
     'guardian',
     'easy_thumbnails',
     'reversion',
@@ -156,6 +156,7 @@ INSTALLED_APPS = (
 
     # project
     'development',
+    'tim',
 )
 
 # A sample logging configuration. The only tangible logging
