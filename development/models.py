@@ -469,7 +469,7 @@ class Project(models.Model):
         if estimated_employment == 0:
             return None
         else:
-            return estimated_employment
+            return int(estimated_employment)
 
     @models.permalink
     def get_absolute_url(self):

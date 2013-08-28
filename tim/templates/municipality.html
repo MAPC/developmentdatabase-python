@@ -1,0 +1,24 @@
+{% extends "_map_inc.html" %}
+
+{% block title %}Explore Projects{% endblock %}
+
+{% block pageheader %}
+<h1 class="front-page">
+  {% if municipality.name %}
+    <span class="update-title">
+      Pending Edits for 
+    </span>
+    {{ municipality.name }}
+  {% else %}
+    {{ municipality_name }} is not a municipality in our database. Please try another municipality.
+  {% endif %}
+</h1>
+{% endblock pageheader %}
+
+{% block body %}
+
+{% for project in pending_projects %}
+  {% include "_moderated_project.html" with number=project %}
+{% endfor %}
+
+{% endblock body %}

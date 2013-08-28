@@ -35,11 +35,11 @@ class ProjectTypeAdmin(admin.ModelAdmin):
     list_editable = ('name', 'order')
 
 
-admin.site.register(Project,       ProjectAdmin) 
+admin.site.register(Project,       ProjectAdmin)
 admin.site.register(Taz,           TazAdmin)
-admin.site.register(Municipality,  admin.OSMGeoAdmin) 
-admin.site.register(ZipCode,       admin.OSMGeoAdmin) 
-admin.site.register(WalkScore,     admin.OSMGeoAdmin) 
+admin.site.register(Municipality,  admin.OSMGeoAdmin)
+admin.site.register(ZipCode,       admin.OSMGeoAdmin)
+admin.site.register(WalkScore,     admin.OSMGeoAdmin)
 admin.site.register(CommunityType, admin.ModelAdmin)
 admin.site.register(ProjectStatus, admin.ModelAdmin)
 admin.site.register(ZoningTool,    admin.ModelAdmin)

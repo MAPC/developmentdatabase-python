@@ -26,5 +26,31 @@ class ModeratedProject(Project):
         verbose_name_plural = _('ModeratedProjects')
         ordering            = ['object_id',]
 
+
     def __unicode__(self):
         return str(self.project_object)
+
+
+    @classmethod
+    def new_from_project(self, project):
+        """
+        Creates a new instance of ModeratedProject based on an
+        existing Project object.
+        """
+        project_fields = project._meta.get_all_field_names()
+        modproj_fields = self._meta.get_all_field_names()
+        common_fields  = list( set(project_fields).intersection(modproj_fields) )
+
+        moderated_project = ModeratedProject(project_object=project)
+
+        for field in common_fields:
+            moderated_project.__setattr__(field, getattr(project, field))
+
+    def changes(self):
+        pass
+
+
+
+
+
+

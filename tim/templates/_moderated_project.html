@@ -1,0 +1,26 @@
+<hr/>
+<br/>
+
+<div class="row">
+  <div class="span6">
+    <a href="/projects/detail/{{ project.dd_id }}" target="_blank">
+      <h3>{{ project.name }}</h3>
+    </a>
+  </div>
+</div>
+
+{% if project.proposed_edits %}
+  <div class="row">
+    {% for k,v in project.proposed_edits.items %}
+      {% include "_moderated_project_field.html" with field_name=k current=v.current  proposed=v.proposed %}
+    {% endfor %}
+  </div>
+  <div class="row">
+    <div class="span4 offset8">
+      {% include '_buttons.html' %}
+    </div>
+  </div>
+{% endif %}
+
+<br/>
+<br/>
