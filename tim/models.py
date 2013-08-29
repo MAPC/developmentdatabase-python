@@ -2,7 +2,9 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.db.models.signals import post_save
 from development.models import Project
+from .signals import notify_municipal_user
 
 class ModeratedProject(Project):
     """
@@ -11,7 +13,7 @@ class ModeratedProject(Project):
     opposed to a Project. Once approved by a Municipal User / Admin,
     the ModeratedProject updates the corresponding Project.
     """
-    approved   = models.BooleanField(default=False)
+    accepted   = models.BooleanField(default=False)
     completed  = models.BooleanField(default=False)
 
     content_type   = models.ForeignKey(ContentType) 
@@ -50,7 +52,7 @@ class ModeratedProject(Project):
         pass
 
 
-
+# post_save.connect(notify_municipal_user, sender=ModeratedProject)
 
 
 

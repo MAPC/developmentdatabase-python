@@ -13,7 +13,6 @@ from tim.models import ModeratedProject
 
 
 
-
 def correct_municipal_user_or_staff(view):
     """
     Checks to see if the user:
@@ -33,7 +32,7 @@ def correct_municipal_user_or_staff(view):
             if user.is_anonymous():
                 return HttpResponseForbidden("Log in as a Municipal User to access moderation.")
 
-            if user.groups.filter(name="Municipal Users").count() == 0:
+            if not user.profile.is_municipal:
                 return HttpResponseForbidden("You are not a Municipal User. If you see this message in error, please contact MAPC.")
 
             if user.profile.municipality.name != municipality_name:
@@ -48,6 +47,39 @@ def correct_municipal_user_or_staff(view):
 
     return inner
 
+
+
+def user_who_may_moderate(view):
+    """
+    Checks to see if the user:
+        1) is not anonymous (aka logged in)
+        2) is a Municipal User and thus has the power to moderate
+        3) is moderating a post belonging to their municipality.
+    If so, it accepts or declines the edit.
+    """
+    @wraps(view)
+    def inner(request, project, *args, **kwargs):
+
+        try:
+            moderated_project = ModeratedProject.objects.get(object_id=project)
+        except ModeratedProject.DoesNotExist:
+            return Http404
+
+        user = request.user
+        
+        if not user.is_staff:
+            if user.is_anonymous():
+                return HttpResponseForbidden("Log in as a Municipal User to access moderation.")
+
+            if not user.profile.is_municipal:
+                return HttpResponseForbidden("You are not a Municipal User. If you see this message in error, please contact MAPC.")
+
+            if user.profile.municipality.name != moderated_project.municipality.name:
+                return HttpResponseForbidden("You may not moderate other municipalities' pending edits.") 
+
+        return view(request, moderated_project, *args, **kwargs)
+
+    return inner
 
 
 
@@ -130,3 +162,28 @@ def municipality(request, municipality):
         ]
 
     return render_to_response('municipality.html', locals(), context_instance=RequestContext(request))
+
+
+@user_who_may_moderate
+def accept(request, project):
+    project.accepted  = True
+    project.completed = True
+    project.save()
+    return HttpResponse('You ACCEPTED changes to the project %s' % (project))
+
+@user_who_may_moderate
+def decline(request, project):
+    project.accepted  = False
+    project.completed = True
+    project.save()
+    return HttpResponse('You DECLINED changes to the project %s' % (project))
+
+@staff_member_required
+def reopen(request, project):
+    project.accepted  = False
+    project.completed = False
+    project.save()
+    return HttpResponse('You REOPENED changes to the project %s' % (project))
+
+
+

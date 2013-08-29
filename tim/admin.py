@@ -11,7 +11,7 @@ class ModeratedProjectAdmin(reversion.VersionAdmin):
     # ]
     # list_filter = ('complyr',)
     exclude = ('location',)
-    list_display = ('ddname', 'municipality', 'last_modified', 'completed', 'approved', )
+    list_display = ('ddname', 'municipality', 'last_modified', 'completed', 'accepted', )
     search_fields = ['ddname','description',]
 
 

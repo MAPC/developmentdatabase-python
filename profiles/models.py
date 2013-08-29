@@ -17,6 +17,16 @@ class Profile(UserenaBaseProfile):
     municipality = models.ForeignKey(Municipality, null=True, help_text='The municipality you would like to add and edit projects.')
     position = models.CharField(max_length=100, null=True, help_text='Your postion in that municipality.')
 
+    def is_municipal(self):
+        if self.user.groups.filter(name="Municipal Users").count() > 0:
+            return True
+        return False
+
+    def is_trusted(self):
+        if self.user.groups.filter(name="Trusted Users").count() > 0:
+            return True
+        return False    
+
 
 @receiver(signup_complete)
 def my_callback(sender, **kwargs):
