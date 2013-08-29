@@ -12,7 +12,7 @@
 {% if project.proposed_edits %}
   <div class="row">
     {% for k,v in project.proposed_edits.items %}
-      {% include "_moderated_project_field.html" with field_name=k current=v.current  proposed=v.proposed %}
+      {% include "_moderated_project_field.html" with field_name=k current=v.current proposed=v.proposed %}
     {% endfor %}
   </div>
   <div class="row">
