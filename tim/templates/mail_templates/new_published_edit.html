@@ -1,0 +1,19 @@
+{% extends "mail_base.html" %}
+{% load i18n %}
+
+<!--A Trusted User or Municipal User edited a project in your municipality.-->
+
+{% block body %}
+
+  {{ first_name }}:
+
+  A trusted contributor has submitted an edit for <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">{{ project.name }}</a> in your municipality, {{ municipality_name }}.
+
+  No action is required, we just wanted to let you know.
+
+  {% include "../_moderated_project.html" with project=project %}
+
+  {% trans "Thank you" %},
+  {% trans "The Development Database Team" %}
+
+{% endblock body %}

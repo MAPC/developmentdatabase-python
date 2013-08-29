@@ -1,0 +1,18 @@
+{% extends "mail_base.html" %}
+{% load i18n %}
+
+<!--A Municipal User closed your pending edit, either approving or rejecting it.-->
+
+{% block body %}
+
+  {{ first_name }}:
+
+  Your edit on <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> was {{ action_taken }}.
+
+  <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">View the {{ was_updated }}project.</a>
+
+
+  {% trans "Sincerely" %},
+  {% trans "The Development Database Team" %}
+
+{% endblock body %}
