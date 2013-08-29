@@ -1,7 +1,7 @@
 # Create your views here.
 from django.shortcuts import render_to_response, redirect
 from django.template  import RequestContext
-from django.http      import Http404, HttpResponse
+from django.http      import Http404, HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.gis.geos        import GEOSGeometry
@@ -10,6 +10,47 @@ from django.utils.functional import wraps
 
 from development.models import Municipality, Project
 from tim.models import ModeratedProject
+
+
+
+
+def correct_municipal_user_or_staff(view):
+    """
+    Checks to see if the user:
+        1) is not anonymous (aka logged in)
+        2) is a Municipal User and thus has the power to moderate
+        3) is viewing their own municipality.
+    If so, it returns to the view the municipality object, from which
+    the pending projects may be obtained.
+    """
+    @wraps(view)
+    def inner(request, municipality_name, *args, **kwargs):
+
+        user = request.user
+        municipality_name = municipality_name.capitalize()
+
+        if not user.is_staff:
+            if user.is_anonymous():
+                return HttpResponseForbidden("Log in as a Municipal User to access moderation.")
+
+            if user.groups.filter(name="Municipal Users").count() == 0:
+                return HttpResponseForbidden("You are not a Municipal User. If you see this message in error, please contact MAPC.")
+
+            if user.profile.municipality.name != municipality_name:
+                return HttpResponseForbidden("You may not view other municipalities' pending edits.")
+
+        try:
+            municipality = Municipality.objects.get(name=municipality_name)
+        except Municipality.DoesNotExist:
+            return Http404
+
+        return view(request, municipality, *args, **kwargs)
+
+    return inner
+
+
+
+
 
 
 @staff_member_required
@@ -41,24 +82,14 @@ def all(request):
     return render_to_response('all.html', locals(), context_instance=RequestContext(request))
     
 
-# is staff OR 
-# is a municipal user and the user's municipality = municipality name
-def municipality(request, municipality_name):
+@correct_municipal_user_or_staff
+def municipality(request, municipality):
     """
     List a municipality's projects awaiting moderation.
     Available only to Municipal Users of the given municipality.
     """
-
-    municipality_name = municipality_name.capitalize()
-    if request.user.profile.municipality.name != municipality_name: return Http404
-
-    try:
-        municipality = Municipality.objects.get(name=municipality_name)
-    except Municipality.DoesNotExist:
-        pass
-        # raise Http404
     
-    if municipality_name == "Cambridge":
+    if municipality.name == "Cambridge":
         pending_projects = [
             {'name': 'Elm St., #325',
              'dd_id': '1487',
@@ -78,7 +109,7 @@ def municipality(request, municipality_name):
             },
         ]
 
-    if municipality_name == "Somerville":
+    if municipality.name == "Somerville":
         pending_projects = [
             {'name': '245 Beacon Street 1',
              'dd_id': '1612',
@@ -98,6 +129,5 @@ def municipality(request, municipality_name):
             },
         ]
 
-
     return render_to_response('municipality.html', locals(), context_instance=RequestContext(request))
-    # return HttpResponse("You are looking at %(municipality)s's projects awaiting moderation." % locals())
+
