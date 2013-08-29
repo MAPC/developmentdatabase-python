@@ -2,11 +2,11 @@
 from django.shortcuts import render_to_response, redirect
 from django.template  import RequestContext
 from django.http      import Http404, HttpResponse, HttpResponseForbidden
+from django.utils.functional import wraps
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.gis.geos        import GEOSGeometry
 from django.core.exceptions         import FieldError
-from django.utils.functional import wraps
 
 from development.models import Municipality, Project
 from tim.models import ModeratedProject
@@ -130,4 +130,3 @@ def municipality(request, municipality):
         ]
 
     return render_to_response('municipality.html', locals(), context_instance=RequestContext(request))
-

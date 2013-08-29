@@ -33,11 +33,18 @@ DATABASES = {
 # )
 
 # Email
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'mail.mapc.org'
-EMAIL_HOST_USER = 'RSVPSender'
+
+to_file = 'django.core.mail.backends.filebased.EmailBackend'
+dummy   = 'django.core.mail.backends.dummy.EmailBackend'
+
+EMAIL_BACKEND   = to_file
+EMAIL_FILE_PATH = '/sent_mail'
+
+EMAIL_USE_TLS       = True
+EMAIL_HOST          = 'mail.mapc.org'
+EMAIL_HOST_USER     = 'RSVPSender'
 EMAIL_HOST_PASSWORD = 'Password1'
-DEFAULT_FROM_EMAIL = 'MAPC Development Database <projections@mapc.org>'
+DEFAULT_FROM_EMAIL  = 'MAPC Development Database <projections@mapc.org>'
 EMAIL_PORT = 25
 
 # Userena

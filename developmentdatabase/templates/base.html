@@ -70,6 +70,10 @@
                         <li><a href='{% url userena_profile_edit user.username %}'>{% trans "Edit details" %}</a></li>
                         <li><a href='{% url userena_password_change user.username %}'>{% trans "Change password" %}</a></li>
                         <li><a href='{% url userena_email_change user.username %}'>{% trans "Change email" %}</a></li>
+                        {% if is_municipal %}
+                            <li class="divider"></li>
+                            <li><a href='/moderate/{{ user.profile.municipality.name }}'>Moderate {{ user.profile.municipality.name }}</a></li>
+                        {% endif %}
                         <li class="divider"></li>
                         <li><a href="{% url userena_signout %}">Log Out</a></li>
                     </ul>

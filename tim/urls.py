@@ -5,6 +5,6 @@ from tim import views
 
 
 urlpatterns = patterns('tim.views',
-    url('^all/',                     'all',          name='all'),
+    url('^all/',                         'all',          name='all'),
     url('^(?P<municipality_name>\w+)/$', 'municipality', name='municipality'),
 )

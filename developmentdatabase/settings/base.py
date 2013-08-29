@@ -107,7 +107,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
-    'developmentdatabase.context_processors.template_settings')
+    'developmentdatabase.context_processors.template_settings',
+    'tim.context_processors.auth_variables',)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
