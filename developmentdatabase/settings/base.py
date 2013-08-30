@@ -106,18 +106,18 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.media',
     'django.core.context_processors.static',
-    'django.contrib.messages.context_processors.messages',
+    'django.contrib.messages.context_processors.messages', # flash
     'developmentdatabase.context_processors.template_settings',
     'tim.context_processors.auth_variables',)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', # required to be listed before flash
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'reversion.middleware.RevisionMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware', # flash
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -190,6 +190,9 @@ LOGGING = {
         },
     }
 }
+
+# flash
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # tastypie
 API_LIMIT_PER_PAGE = 20

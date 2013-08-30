@@ -62,6 +62,26 @@ a, a:hover {
   text-shadow: none;
 }
 
+
+/* Flash
+-------------------------------------------------- */
+.flash {
+  background-color: rgb(223, 240, 216);
+  border: thin solid rgb(214, 214, 214);
+  display: block;
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  padding: 6px 2px 0 2px;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.flash ul {
+  list-style-type: none;
+}
+
 /* Page header
 -------------------------------------------------- */
 .page-header {

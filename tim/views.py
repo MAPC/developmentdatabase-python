@@ -1,7 +1,7 @@
-# Create your views here.
 from django.shortcuts import render_to_response, redirect
 from django.template  import RequestContext
-from django.http      import Http404, HttpResponse, HttpResponseForbidden
+from django.http      import Http404, HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from django.contrib import messages
 from django.utils.functional import wraps
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
@@ -163,27 +163,36 @@ def municipality(request, municipality):
 
     return render_to_response('municipality.html', locals(), context_instance=RequestContext(request))
 
-
-@user_who_may_moderate
+# TODO: Uncomment, hook this up to the ModeratedProject / Project workflow
+# @user_who_may_moderate
 def accept(request, project):
-    project.accepted  = True
-    project.completed = True
-    project.save()
-    return HttpResponse('You ACCEPTED changes to the project %s' % (project))
+    project = {'name': 'Elm St., #325'}    
 
-@user_who_may_moderate
+    # project.accepted  = True
+    # project.completed = True
+    # project.save()
+
+    messages.add_message(request, messages.INFO, 'You accepted changes to %s' % (project['name']))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# @user_who_may_moderate
 def decline(request, project):
-    project.accepted  = False
-    project.completed = True
-    project.save()
-    return HttpResponse('You DECLINED changes to the project %s' % (project))
+    project = {'name': 'Elm St., #325'}
+    # project.accepted  = False
+    # project.completed = True
+    # project.save()
+    messages.add_message(request, messages.INFO, 'You declined changes to %s' % (project['name']))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-@staff_member_required
+
+# @staff_member_required
 def reopen(request, project):
-    project.accepted  = False
-    project.completed = False
-    project.save()
-    return HttpResponse('You REOPENED changes to the project %s' % (project))
+    project = {'name': 'Elm St., #325'}
+    # project.accepted  = False
+    # project.completed = False
+    # project.save()
+    messages.add_message(request, messages.INFO, 'You reopened %s' % (project['name']))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 
