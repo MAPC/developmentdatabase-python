@@ -3,13 +3,25 @@
 
 <!--A Trusted User or Municipal User edited a project in your municipality.-->
 
+{% block title %}
+  {% blocktrans with project_name=project_name %}
+    "A Trusted User Updated {{ project_name }}.
+  {% endblocktrans %}
+{% endblock %}
+
 {% block body %}
 
   {{ first_name }}:
 
-  A trusted contributor has submitted an edit for <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">{{ project.name }}</a> in your municipality, {{ municipality_name }}.
+  <p>
+    {% blocktrans with project_name=project_name municipality_name=municipality_name %}
+      A trusted contributor has submitted an edit for <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> in your municipality, {{ municipality_name }}.
+    {% endblocktrans %}
+  </p>
 
-  No action is required, we just wanted to let you know.
+  <p>
+    {% trans "No action is required, we just wanted to let you know." %}
+  </p>
 
   {% include "../_moderated_project.html" with project=project %}
 

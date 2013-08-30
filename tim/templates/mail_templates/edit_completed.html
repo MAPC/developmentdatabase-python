@@ -3,14 +3,23 @@
 
 <!--A Municipal User closed your pending edit, either approving or rejecting it.-->
 
+{% block title %}
+  {% blocktrans with action_taken=action_taken %} Your Edit Has Been {{ action_taken }}.
+{% endblock %}
+
 {% block body %}
 
   {{ first_name }}:
 
-  Your edit on <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> was {{ action_taken }}.
+  {% blocktrans with protocol=protocol site_domain=site.domain project_name=project_name project_id=project_id action_taken=action_taken was_updated=was_updated %}
+    <p>
+      Your edit on <a href="{{ protocol }}://{{ site_domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> was {{ action_taken }}.
+    </p>
 
-  <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">View the {{ was_updated }}project.</a>
-
+    <p>
+      <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">View the {{ was_updated }}project.</a>
+    </p>
+  {% endblocktrans %}
 
   {% trans "Sincerely" %},
   {% trans "The Development Database Team" %}
