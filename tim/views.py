@@ -163,17 +163,18 @@ def municipality(request, municipality):
 
     return render_to_response('municipality.html', locals(), context_instance=RequestContext(request))
 
+
 # TODO: Uncomment, hook this up to the ModeratedProject / Project workflow
 # @user_who_may_moderate
 def accept(request, project):
     project = {'name': 'Elm St., #325'}    
-
     # project.accepted  = True
     # project.completed = True
     # project.save()
-
-    messages.add_message(request, messages.INFO, 'You accepted changes to %s' % (project['name']))
+    # send mail to user who made edit
+    messages.add_message(request, messages.INFO, 'You accepted changes to %s.' % (project['name']))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 # @user_who_may_moderate
 def decline(request, project):
@@ -181,7 +182,8 @@ def decline(request, project):
     # project.accepted  = False
     # project.completed = True
     # project.save()
-    messages.add_message(request, messages.INFO, 'You declined changes to %s' % (project['name']))
+    # send mail to user who made edit
+    messages.add_message(request, messages.INFO, 'You declined changes to %s.' % (project['name']))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
