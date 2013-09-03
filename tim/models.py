@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models.signals import post_save
 from development.models import Project
+from django.contrib.auth.models import User
 from .signals import notify_municipal_user
 
 class ModeratedProject(Project):
@@ -15,23 +16,73 @@ class ModeratedProject(Project):
     """
     accepted   = models.BooleanField(default=False)
     completed  = models.BooleanField(default=False)
-
-    content_type   = models.ForeignKey(ContentType) 
-    object_id      = models.PositiveIntegerField()
-    project_object = generic.GenericForeignKey('content_type', 'object_id')
-
-    # Project, null=True, related_name='real_project'
-
+    project    = models.ForeignKey(Project, related_name='authoritative_project')
+    user       = models.ForeignKey(User, null=True)
     
     class Meta:
         verbose_name        = _('ModeratedProject')
         verbose_name_plural = _('ModeratedProjects')
-        ordering            = ['object_id',]
+
+    # def __unicode__(self):
+        # return str(self.project.ddname) or 'Untitled'
+
+    def diff(self):
+        moderated_project = self
+        project           = self.project
+
+        diff = {}
+
+        editable_fields = list( set(moderated_project._meta.get_all_field_names()).intersection(project._meta.get_all_field_names()) )
+        frozen_fields   = list([ 'last_modified', 'proposed', 'created', 'dd_id', 'authoritative_project' ])
+
+        for frozen_field in frozen_fields:
+            try:
+                editable_fields.remove(frozen_field)
+            except:
+                pass
+
+        for field in editable_fields:
+            proposed = getattr(moderated_project, field, None)
+            current  = getattr(project,           field, None)
+
+            if proposed != current:
+                diff[field] = {'name': field, 'current': current, 'proposed': proposed}
+
+        return diff
 
 
-    def __unicode__(self):
-        return str(self.project_object)
+    def changed_fields(self):
+        moderated_project = self
+        project           = self.project_object
 
+        fields = list()
+
+        for field in set( moderated_project._meta.fields + project._meta.fields ):
+            proposed = getattr(moderated_project, field.name, None)
+            current  = getattr(project,           field.name, None)
+
+            if proposed != current:
+                fields.append(field.name)
+
+        return fields
+
+
+    def accept(self):
+        self.accepted  = True
+        self.completed = True
+        # TODO: Signal for the Project to take in the accepted ModeratedProject's changes.
+        self.save()
+
+    
+    def decline(self):
+        self.accepted  = False
+        self.completed = True
+        self.save()
+
+    def reopen(self):
+        self.accepted  = False
+        self.completed = False
+        self.save()
 
     @classmethod
     def new_from_project(self, project):
@@ -39,20 +90,31 @@ class ModeratedProject(Project):
         Creates a new instance of ModeratedProject based on an
         existing Project object.
         """
-        project_fields = project._meta.get_all_field_names()
-        modproj_fields = self._meta.get_all_field_names()
-        common_fields  = list( set(project_fields).intersection(modproj_fields) )
+        moderated_project_fields = set( self._meta.get_all_field_names() )
+        project_fields           = set( project._meta.get_all_field_names() )
 
-        moderated_project = ModeratedProject(project_object=project)
+        common_fields = project_fields.intersection(moderated_project_fields)
+        common_fields.remove('dd_id') # moderated_project.dd_id = None
+        common_fields.remove('authoritative_project')
+
+        moderated_project = ModeratedProject(project=project)
 
         for field in common_fields:
             moderated_project.__setattr__(field, getattr(project, field))
+        
+        moderated_project.save()
+        return moderated_project
 
-    def changes(self):
-        pass
 
+# Signals
 
+# TODO: 
+# Notify Municipal User of a new Moderated Project.
 # post_save.connect(notify_municipal_user, sender=ModeratedProject)
+
+# Notify User of their changes being accepted or declined
+# post_save.connect(notify_registered_user, )
+# will need: moderated_project.[accepted, completed, user]
 
 
 

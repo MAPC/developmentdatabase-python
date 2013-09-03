@@ -388,6 +388,9 @@ class Project(models.Model):
     def __unicode__(self):
         return self.ddname
 
+    def name(self):
+        return self.ddname
+        
     def municipality(self):
         return self.taz.municipality
 

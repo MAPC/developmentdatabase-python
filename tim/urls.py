@@ -8,5 +8,4 @@ urlpatterns = patterns('tim.views',
     url('^(?P<municipality_name>\w+)/$', 'municipality', name='municipality'),
     url('^(?P<project>\d+)/accept/$',    'accept',       name='accept'),
     url('^(?P<project>\d+)/decline/$',   'decline',      name='decline'),
-    url('^(?P<project>\d+)/reopen/$',    'reopen',       name='reopen'),
 )

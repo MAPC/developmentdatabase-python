@@ -1,7 +1,7 @@
 # from mailers import send_new_pending_edit, send_new_published_edit, send_edit_completed
 
 def notify_municipal_user(sender, **kwargs):
-    
+
     print(kwargs)
 
     # if kwargs['instance']:

@@ -89,27 +89,7 @@ def user_who_may_moderate(view):
 def all(request):
     """List all projects awaiting moderation"""
 
-    # pending_projects = ModeratedProject.objects.filter(completed=False)
-    # pending_projects = [1, 2, 3]
-
-    pending_projects = [
-        {'name': '100 Acres',
-         'dd_id': '1',
-         'proposed_edits':
-            {
-                'Title': {'current': '100 Acres','proposed': 'Harborlot'},
-                'Reported Employment': {'current': 80,'proposed': 100},
-            }
-        },
-        {'name': 'Residences At 8 Winter Street',
-         'dd_id': '345',
-         'proposed_edits':
-            {
-                'description': {'current': 'Change office use of floors 3 thru 12 to residnetial with 4-6 units per floor for a total of 40 to 60 units. The conceptual floor plans show studios, 1 BR and 2BR units.','proposed': '3F-12F becoming residential (4-6 units/floor), total 40-60 units. Draft floor plans show studios, 1 BR and 2BR units.'},
-                'Project Area': {'current': 12.022202,'proposed': 12.0},
-            }
-        },
-    ]
+    pending_projects = ModeratedProject.objects.filter(completed=False)
 
     return render_to_response('all.html', locals(), context_instance=RequestContext(request))
     
@@ -120,46 +100,7 @@ def municipality(request, municipality):
     List a municipality's projects awaiting moderation.
     Available only to Municipal Users of the given municipality.
     """
-    
-    if municipality.name == "Cambridge":
-        pending_projects = [
-            {'name': 'Elm St., #325',
-             'dd_id': '1487',
-             'proposed_edits':
-                {
-                    'description': {'current': 'Prior use: vacant','proposed': 'Prior use: empty'},
-                    'Reported Employment': {'current': 0, 'proposed': 12},
-                }
-            },
-            {'name': 'Cambridge St., #1066 (Antiques Mall)',
-             'dd_id': '1513',
-             'proposed_edits':
-                {
-                    'description': {'current': 'Prior use: retail, warehouse', 'proposed': 'Prior use: retail, warehouse, to be a modern antiques outlet'},
-                    'Reported Employment': {'current': 0, 'proposed': 4},
-                }
-            },
-        ]
-
-    if municipality.name == "Somerville":
-        pending_projects = [
-            {'name': '245 Beacon Street 1',
-             'dd_id': '1612',
-             'proposed_edits':
-                {
-                    'Title': {'current': '245 Beacon Street 1','proposed': 'Beacon Historical'},
-                    'Project Site Area (acres)': {'current': 0, 'proposed': 0.7},
-                }
-            },
-            {'name': '308 BEACON ST',
-             'dd_id': '1407',
-             'proposed_edits':
-                {
-                    'Project Website': {'current': None, 'proposed': 'http://www.308beaconstreet.com'},
-                    'Project Site Area (acres)': {'current': 0, 'proposed': 1.1},
-                }
-            },
-        ]
+    pending_projects = ModeratedProject.objects.filter(completed=False, taz__municipality__name=municipality.name)
 
     return render_to_response('municipality.html', locals(), context_instance=RequestContext(request))
 
@@ -168,10 +109,8 @@ def municipality(request, municipality):
 # @user_who_may_moderate
 def accept(request, project):
     project = {'name': 'Elm St., #325'}    
-    # project.accepted  = True
-    # project.completed = True
-    # project.save()
-    # send mail to user who made edit
+    
+    # project.accept()
     messages.add_message(request, messages.INFO, 'You accepted changes to %s.' % (project['name']))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -179,22 +118,8 @@ def accept(request, project):
 # @user_who_may_moderate
 def decline(request, project):
     project = {'name': 'Elm St., #325'}
-    # project.accepted  = False
-    # project.completed = True
-    # project.save()
-    # send mail to user who made edit
+    
+    # project.decline()
     messages.add_message(request, messages.INFO, 'You declined changes to %s.' % (project['name']))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-# @staff_member_required
-def reopen(request, project):
-    project = {'name': 'Elm St., #325'}
-    # project.accepted  = False
-    # project.completed = False
-    # project.save()
-    messages.add_message(request, messages.INFO, 'You reopened %s' % (project['name']))
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
 
