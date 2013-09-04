@@ -108,18 +108,16 @@ def municipality(request, municipality):
 # TODO: Uncomment, hook this up to the ModeratedProject / Project workflow
 # @user_who_may_moderate
 def accept(request, project):
-    project = {'name': 'Elm St., #325'}    
-    
-    # project.accept()
-    messages.add_message(request, messages.INFO, 'You accepted changes to %s.' % (project['name']))
+    project = ModeratedProject.objects.get(dd_id=project)
+    project.accept()
+    messages.add_message(request, messages.INFO, 'You accepted changes to %s.' % ( project.name() ))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 # @user_who_may_moderate
 def decline(request, project):
-    project = {'name': 'Elm St., #325'}
-    
-    # project.decline()
-    messages.add_message(request, messages.INFO, 'You declined changes to %s.' % (project['name']))
+    project = ModeratedProject.objects.get(dd_id=project)
+    project.decline()
+    messages.add_message(request, messages.INFO, 'You declined changes to %s.' % ( project.name() ))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

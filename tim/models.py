@@ -16,7 +16,7 @@ class ModeratedProject(Project):
     """
     accepted   = models.BooleanField(default=False)
     completed  = models.BooleanField(default=False)
-    project    = models.ForeignKey(Project, related_name='authoritative_project')
+    project    = models.ForeignKey(Project, related_name='moderated_project')
     user       = models.ForeignKey(User, null=True)
     
     class Meta:
@@ -33,7 +33,7 @@ class ModeratedProject(Project):
         diff = {}
 
         editable_fields = list( set(moderated_project._meta.get_all_field_names()).intersection(project._meta.get_all_field_names()) )
-        frozen_fields   = list([ 'last_modified', 'proposed', 'created', 'dd_id', 'authoritative_project' ])
+        frozen_fields   = list([ 'last_modified', 'proposed', 'created', 'dd_id', 'moderated_project' ])
 
         for frozen_field in frozen_fields:
             try:
@@ -70,7 +70,7 @@ class ModeratedProject(Project):
     def accept(self):
         self.accepted  = True
         self.completed = True
-        # TODO: Signal for the Project to take in the accepted ModeratedProject's changes.
+        self.update_project_with_edits()
         self.save()
 
     
@@ -84,6 +84,12 @@ class ModeratedProject(Project):
         self.completed = False
         self.save()
 
+    def update_project_with_edits(self):
+        project = self.project
+        for edit, value in self.diff().iteritems():
+            project.__setattr__(edit, value['proposed'])
+        project.save()
+
     @classmethod
     def new_from_project(self, project):
         """
@@ -95,7 +101,7 @@ class ModeratedProject(Project):
 
         common_fields = project_fields.intersection(moderated_project_fields)
         common_fields.remove('dd_id') # moderated_project.dd_id = None
-        common_fields.remove('authoritative_project')
+        common_fields.remove('moderated_project')
 
         moderated_project = ModeratedProject(project=project)
 
