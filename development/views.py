@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response, redirect
 from django.template  import RequestContext
 from django.http      import Http404, HttpResponse
+from django.contrib                 import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.gis.geos        import GEOSGeometry
 from django.core.exceptions         import FieldError
@@ -49,7 +50,7 @@ def projects_geojson(request):
 
     # GeoJSON default
     try:
-        projects = Project.for_display.transform(4326).filter(**kwargs)
+        projects = Project.objects.transform(4326).filter(**kwargs)
         for project in projects:
             geojson_prop = dict(
                 ddname = project.ddname.title(), 
@@ -77,7 +78,7 @@ def projects_csv(request):
 
     format = querydict.get('format', None)
 
-    projects = Project.for_display.transform(4326).filter(**kwargs)
+    projects = Project.objects.transform(4326).filter(**kwargs)
 
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=projects.csv'
@@ -98,7 +99,7 @@ def projects_csv(request):
 
 
 @login_required
-@user_passes_test(lambda u: u.groups.filter(name='Project Editors').count() > 0, login_url='/')
+# @user_passes_test(lambda u: u.groups.filter(name='Project Editors').count() > 0, login_url='/')
 def add(request):
     """ Add new project """
 
@@ -124,7 +125,7 @@ def add(request):
 
 
 @login_required
-@user_passes_test(lambda u: u.groups.filter(name='Project Editors').count() > 0, login_url='/')
+# @user_passes_test(lambda u: u.groups.filter(name='Project Editors').count() > 0, login_url='/')
 def update(request, dd_id):
     """ Update existing project """
 
@@ -132,6 +133,8 @@ def update(request, dd_id):
         project = Project.objects.transform(4326).get(pk=dd_id)
     except Project.DoesNotExist:
         raise Http404
+
+    # TODO: refactor this
 
     if has_permissions(request.user, project.taz.municipality):     
         # update project
@@ -144,13 +147,13 @@ def update(request, dd_id):
                 new_location.srid = 4326
                 new_location.transform(26986)
                 entry.location = new_location
-                entry.save( user=request.user, update_walkscore=True )
+                entry.save(user=request.user, update_walkscore=True)
+                messages.add_message(request, messages.INFO, 'Your edits to %s were saved.' % (entry.ddname) )
                 return redirect('detail', dd_id=entry.dd_id)
-        # show projectform
         else:
             project = ProjectForm(instance=project)
     else:
-        # TODO: better usability, show user a message what happened
+        messages.add_message(request, messages.INFO, 'You are not authorized to edit projects outside your municipality.' )
         return redirect('detail', dd_id=dd_id)
 
     return render_to_response('development/update.html', locals(), context_instance=RequestContext(request))

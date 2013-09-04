@@ -33,13 +33,13 @@ class ModeratedProject(Project):
         diff = {}
 
         editable_fields = list( set(moderated_project._meta.get_all_field_names()).intersection(project._meta.get_all_field_names()) )
-        frozen_fields   = list([ 'last_modified', 'proposed', 'created', 'dd_id', 'moderated_project' ])
+        frozen_fields   = [ 'last_modified', 'proposed', 'created', 'dd_id', 'moderated_project' ]
 
         for frozen_field in frozen_fields:
             try:
                 editable_fields.remove(frozen_field)
             except:
-                pass
+                print("%s could not be removed from the editable fields." % (frozen_field) )
 
         for field in editable_fields:
             proposed = getattr(moderated_project, field, None)

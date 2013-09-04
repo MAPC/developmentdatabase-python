@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils.dateparse import parse_datetime
 
+from model_utils.managers import InheritanceManager
+
 import pytz
 import requests
 import reversion
@@ -240,10 +242,14 @@ class Parcel(models.Model):
         return self.taxloc_id
 
 
-class DisplayProjectManager(models.GeoManager):
-    def get_query_set(self):
-        return super(DisplayProjectManager, self).get_query_set().filter(moderated_project=None)
-
+class DisplayProjectManager(models.GeoManager, InheritanceManager):
+    pass
+    # def get_query_set(self):
+    #     all_projects = super(DisplayProjectManager, self).get_query_set().select_subclasses()
+        # return all_projects
+        # def only_pure_projects(x): return x.__class__.__name__ == 'Project'
+        # return filter(only_pure_projects, all_projects)
+        
 
 class Project(models.Model):
     """
@@ -321,7 +327,9 @@ class Project(models.Model):
     # geometry
     location = models.PointField(srid=26986, blank=True, null=True) # SRS mass state plane
     objects  = models.GeoManager()
+    
     for_display = DisplayProjectManager()
+    inh_objects = InheritanceManager()
 
     # Calculated Fields
     est_employment = models.FloatField('MAPC Estimated Employment Potential', null=True)
