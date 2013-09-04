@@ -104,9 +104,7 @@ def municipality(request, municipality):
 
     return render_to_response('municipality.html', locals(), context_instance=RequestContext(request))
 
-
-# TODO: Uncomment, hook this up to the ModeratedProject / Project workflow
-# @user_who_may_moderate
+@user_who_may_moderate
 def accept(request, project):
     project = ModeratedProject.objects.get(dd_id=project)
     project.accept()
@@ -114,7 +112,7 @@ def accept(request, project):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-# @user_who_may_moderate
+@user_who_may_moderate
 def decline(request, project):
     project = ModeratedProject.objects.get(dd_id=project)
     project.decline()
