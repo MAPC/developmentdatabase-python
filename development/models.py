@@ -240,6 +240,11 @@ class Parcel(models.Model):
         return self.taxloc_id
 
 
+class DisplayProjectManager(models.GeoManager):
+    def get_query_set(self):
+        return super(DisplayProjectManager, self).get_query_set().filter(moderated_project=None)
+
+
 class Project(models.Model):
     """
     An economic or housing development project.
@@ -316,11 +321,10 @@ class Project(models.Model):
     # geometry
     location = models.PointField(srid=26986, blank=True, null=True) # SRS mass state plane
     objects  = models.GeoManager()
+    for_display = DisplayProjectManager()
 
     # Calculated Fields
     est_employment = models.FloatField('MAPC Estimated Employment Potential', null=True)
-
-
     
     class Meta:
         ordering = ['dd_id', ]

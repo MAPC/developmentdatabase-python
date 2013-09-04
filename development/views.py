@@ -49,7 +49,7 @@ def projects_geojson(request):
 
     # GeoJSON default
     try:
-        projects = Project.objects.transform(4326).filter(**kwargs)
+        projects = Project.for_display.transform(4326).filter(**kwargs)
         for project in projects:
             geojson_prop = dict(
                 ddname = project.ddname.title(), 
@@ -77,7 +77,7 @@ def projects_csv(request):
 
     format = querydict.get('format', None)
 
-    projects = Project.objects.transform(4326).filter(**kwargs)
+    projects = Project.for_display.transform(4326).filter(**kwargs)
 
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=projects.csv'
