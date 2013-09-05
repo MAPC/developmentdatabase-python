@@ -3,6 +3,7 @@ from django import forms
 from bootstrap.forms import BootstrapForm, BootstrapMixin, Fieldset
 
 from development.models import Project, Municipality
+from tim.models import ModeratedProject
 
 
 class ProjectfilterForm(BootstrapMixin, forms.ModelForm):
@@ -30,3 +31,18 @@ class ProjectForm(BootstrapMixin, forms.ModelForm):
         widgets = {
             'location': forms.HiddenInput(),
         }
+
+class ModeratedProjectForm(BootstrapMixin, forms.ModelForm):
+
+    class Meta:
+        model = ModeratedProject
+        widgets = {
+            'location': forms.HiddenInput(),
+        }
+
+    def clean(self):
+        super(ModeratedProjectForm, self).clean()
+        del self._errors['user']
+        del self._errors['project']
+        del self._errors['est_employment']
+        return self.cleaned_data

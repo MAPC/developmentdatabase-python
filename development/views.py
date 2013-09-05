@@ -138,8 +138,14 @@ def update(request, dd_id):
     # TODO: refactor this
 
     if has_permissions(request.user, project.taz.municipality):     
+
+        user = request.user.profile
+
         if request.method == 'POST':
-            updated_project = ProjectForm(request.POST, instance=project)
+            mod_proj = ModeratedProject.new_from_project(project)
+            mod_proj.user = request.user
+
+            updated_project = ModeratedProjectForm(request.POST, instance=mod_proj)
             
             if updated_project.is_valid():
                 # transform location
@@ -147,12 +153,29 @@ def update(request, dd_id):
                 new_location = GEOSGeometry(entry.location)
                 new_location.srid = 4326
                 new_location.transform(26986)
-                entry.location = new_location
+                tolerance = 0.000000001
+                if (abs(entry.location.x - new_location.x) > tolerance) or (abs(entry.location.y - new_location.y) > tolerance):
+                    entry.location = new_location
+                else:
+                    entry.location = entry.location
                 entry.save(user=request.user, update_walkscore=True)
+
+                if user.is_trusted() or user.is_municipal():
+                    entry.accept()
+                    messages.add_message(request, messages.INFO, 'You are a trusted user, so your edits will be published immediately.')
+                else:
+                    messages.add_message(request, messages.INFO, 'Your edits will be moderated.')
+                
                 messages.add_message(request, messages.INFO, 'Your edits to %s were saved.' % (entry.ddname) )
-                return redirect('detail', dd_id=entry.dd_id)
+                return redirect('detail', dd_id=entry.project.dd_id)
+            else:
+                messages.add_message(request, messages.INFO, updated_project.errors)
+                # messages.add_message(request, messages.INFO, 'Your edits to %s were NOT saved.' % (project.ddname) )
+                return redirect('update', dd_id=project.dd_id)
+
         else:
-            project = ProjectForm(instance=project)
+            project = ModeratedProjectForm(instance=ModeratedProject.new_from_project(project))
+
     else:
         messages.add_message(request, messages.INFO, 'You are not authorized to edit projects outside your municipality.' )
         return redirect('detail', dd_id=dd_id)

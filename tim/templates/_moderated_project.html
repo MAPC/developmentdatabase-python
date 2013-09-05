@@ -15,12 +15,13 @@
       {% include "_moderated_project_field.html" with field_name=field_name current=value.current proposed=value.proposed %}
     {% endfor %}
   </div>
+{% endif %}
   <div class="row">
     <div class="span4 offset8">
       {% include '_buttons.html' with pk=project.dd_id %}
     </div>
   </div>
-{% endif %}
+
 
 <br/>
 <br/>

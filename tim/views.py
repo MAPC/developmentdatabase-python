@@ -61,7 +61,7 @@ def user_who_may_moderate(view):
     def inner(request, project, *args, **kwargs):
 
         try:
-            moderated_project = ModeratedProject.objects.get(object_id=project)
+            moderated_project = ModeratedProject.objects.get(project=project)
         except ModeratedProject.DoesNotExist:
             return Http404
 
@@ -104,7 +104,8 @@ def municipality(request, municipality):
 
     return render_to_response('municipality.html', locals(), context_instance=RequestContext(request))
 
-@user_who_may_moderate
+# TODO: auth here
+# @user_who_may_moderate
 def accept(request, project):
     project = ModeratedProject.objects.get(dd_id=project)
     project.accept()
@@ -112,7 +113,7 @@ def accept(request, project):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-@user_who_may_moderate
+# @user_who_may_moderate
 def decline(request, project):
     project = ModeratedProject.objects.get(dd_id=project)
     project.decline()

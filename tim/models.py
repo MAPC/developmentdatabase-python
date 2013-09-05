@@ -108,7 +108,7 @@ class ModeratedProject(Project):
         for field in common_fields:
             moderated_project.__setattr__(field, getattr(project, field))
         
-        moderated_project.save()
+        # moderated_project.save()
         return moderated_project
 
 
