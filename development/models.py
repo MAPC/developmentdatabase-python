@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
+from django.db.models.loading import get_model
 
 from django.conf import settings
 from django.utils.dateparse import parse_datetime
@@ -242,14 +243,10 @@ class Parcel(models.Model):
         return self.taxloc_id
 
 
-class DisplayProjectManager(models.GeoManager, InheritanceManager):
-    pass
-    # def get_query_set(self):
-    #     all_projects = super(DisplayProjectManager, self).get_query_set().select_subclasses()
-        # return all_projects
-        # def only_pure_projects(x): return x.__class__.__name__ == 'Project'
-        # return filter(only_pure_projects, all_projects)
-        
+class DisplayProjectManager(models.GeoManager):
+    def get_query_set(self):
+        moderated_project = get_model('tim','ModeratedProject')
+        return super(DisplayProjectManager, self).get_query_set().exclude( dd_id__in=[m.dd_id for m in moderated_project.objects.all()] )
 
 class Project(models.Model):
     """
@@ -327,9 +324,7 @@ class Project(models.Model):
     # geometry
     location = models.PointField(srid=26986, blank=True, null=True) # SRS mass state plane
     objects  = models.GeoManager()
-    
-    for_display = DisplayProjectManager()
-    inh_objects = InheritanceManager()
+    display  = DisplayProjectManager()
 
     # Calculated Fields
     est_employment = models.FloatField('MAPC Estimated Employment Potential', null=True)
@@ -398,7 +393,7 @@ class Project(models.Model):
 
 
     def __unicode__(self):
-        return self.ddname
+        return "%s (%s)" % (self.ddname, self.dd_id)
 
     def name(self):
         return self.ddname

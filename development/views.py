@@ -10,7 +10,8 @@ import json
 import csv
 
 from development.models import Project
-from development.forms import ProjectfilterForm, ProjectForm
+from tim.models import ModeratedProject
+from development.forms import ProjectfilterForm, ProjectForm, ModeratedProjectForm
 
 def has_permissions(user, municipality):
     if not user.is_anonymous() and (user.groups.filter(name='MAPC Staff').count() > 0 or user.get_profile().municipality == municipality):
@@ -50,7 +51,7 @@ def projects_geojson(request):
 
     # GeoJSON default
     try:
-        projects = Project.objects.transform(4326).filter(**kwargs)
+        projects = Project.display.transform(4326).filter(**kwargs)
         for project in projects:
             geojson_prop = dict(
                 ddname = project.ddname.title(), 
@@ -78,7 +79,7 @@ def projects_csv(request):
 
     format = querydict.get('format', None)
 
-    projects = Project.objects.transform(4326).filter(**kwargs)
+    projects = Project.display.transform(4326).filter(**kwargs)
 
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=projects.csv'
@@ -137,9 +138,9 @@ def update(request, dd_id):
     # TODO: refactor this
 
     if has_permissions(request.user, project.taz.municipality):     
-        # update project
         if request.method == 'POST':
             updated_project = ProjectForm(request.POST, instance=project)
+            
             if updated_project.is_valid():
                 # transform location
                 entry = updated_project.save(commit=False)
