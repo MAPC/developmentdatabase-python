@@ -32,21 +32,16 @@ class ModeratedProject(Project):
 
         diff = {}
 
-        editable_fields = list( set(moderated_project._meta.get_all_field_names()).intersection(project._meta.get_all_field_names()) )
-        frozen_fields   = [ 'last_modified', 'proposed', 'created', 'dd_id', 'moderated_project' ]
-
-        for frozen_field in frozen_fields:
-            try:
-                editable_fields.remove(frozen_field)
-            except:
-                print("%s could not be removed from the editable fields." % (frozen_field) )
+        frozen_fields   = [ 'last_modified', 'created', 'dd_id', 'moderated_project' ]
+        editable_fields = list( set(moderated_project._meta.fields).intersection(project._meta.fields) )
 
         for field in editable_fields:
-            proposed = getattr(moderated_project, field, None)
-            current  = getattr(project,           field, None)
+            if field.name in frozen_fields: continue
+            proposed = getattr(moderated_project, field.name, None)
+            current  = getattr(project,           field.name, None)
 
             if proposed != current:
-                diff[field] = {'name': field, 'current': current, 'proposed': proposed}
+                diff[field.verbose_name] = {'name': field.verbose_name.title(), 'current': current, 'proposed': proposed}
 
         return diff
 
