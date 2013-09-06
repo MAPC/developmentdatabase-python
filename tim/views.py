@@ -11,6 +11,7 @@ from django.core.exceptions         import FieldError
 from development.models import Municipality, Project
 from tim.models import ModeratedProject
 
+from django.core.mail import send_mail
 
 
 def correct_municipal_user_or_staff(view):
@@ -109,6 +110,7 @@ def municipality(request, municipality):
 def accept(request, project):
     project = ModeratedProject.objects.get(dd_id=project)
     project.accept()
+    send_completed_notification(project, project.user)
     messages.add_message(request, messages.INFO, 'You accepted changes to %s.' % ( project.name() ))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -117,6 +119,23 @@ def accept(request, project):
 def decline(request, project):
     project = ModeratedProject.objects.get(dd_id=project)
     project.decline()
+    send_completed_notification(project, project.user)
     messages.add_message(request, messages.INFO, 'You declined changes to %s.' % ( project.name() ))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def send_completed_notification(project, user):
+    if not user.profile.is_municipal() or not user.profile.is_trusted():
+        if project.accepted:
+            edit_status = "accepted"
+        else:
+            edit_status = "declined"
+        subject = "Edits to %s were %s." % (project.ddname, edit_status)
+        body = "Your edits to %s were recently %s. Thank you for contributing to the Development Database." % (project.ddname, edit_status)
+
+        send_mail(subject, body, user.email, ['mcloyd@mapc.org'], fail_silently=False)
+
+
+
+
 

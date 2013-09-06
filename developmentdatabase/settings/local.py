@@ -38,7 +38,7 @@ to_file = 'django.core.mail.backends.filebased.EmailBackend'
 dummy   = 'django.core.mail.backends.dummy.EmailBackend'
 
 EMAIL_BACKEND   = to_file
-EMAIL_FILE_PATH = '/sent_mail'
+EMAIL_FILE_PATH = abspath(PROJECT_ROOT, 'sent_mail')
 
 EMAIL_USE_TLS       = True
 EMAIL_HOST          = 'mail.mapc.org'
