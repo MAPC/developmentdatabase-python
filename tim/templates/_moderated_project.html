@@ -12,7 +12,7 @@
 {% if project.diff %}
   <div class="row">
     {% for field_name, value in project.diff.items %}
-      {% include "_moderated_project_field.html" with field_name=field_name current=value.current proposed=value.proposed %}
+      {% include "_moderated_project_field.html" with field_name=field_name value=value %}
     {% endfor %}
   </div>
 {% endif %}
