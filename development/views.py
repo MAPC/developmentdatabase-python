@@ -135,7 +135,7 @@ def update(request, dd_id):
     except Project.DoesNotExist:
         raise Http404
 
-    # TODO: refactor this
+    # TODO: refactor this whole block
 
     if has_permissions(request.user, project.taz.municipality):     
 
@@ -144,30 +144,33 @@ def update(request, dd_id):
         if request.method == 'POST':
             mod_proj = ModeratedProject.new_from_project(project)
             mod_proj.user = request.user
-            mod_proj.est_employment = 0
 
             updated_project = ModeratedProjectForm(request.POST, instance=mod_proj)
             
             if updated_project.is_valid():
-                # TODO: FIX EST_EMPLOYMENT, ALL validations and LOCATION TOLERANCE
                 entry = updated_project.save(commit=False)
                 new_location = GEOSGeometry(entry.location)
                 new_location.srid = 4326
                 new_location.transform(26986)
-                tolerance = 0.00000001
-                if (abs(entry.location.x - new_location.x) > tolerance) or (abs(entry.location.y - new_location.y) > tolerance):
+
+                # TODO: Refactor
+                tolerance = 0.00000001 # TODO: FIX THIS VALIDATION
+                if (abs(mod_proj.location.x - new_location.x) > tolerance) or (abs(mod_proj.location.y - new_location.y) > tolerance):
                     entry.location = new_location
                 else:
-                    entry.location = entry.location
+                    entry.location = mod_proj.location
+
                 entry.save(user=request.user, update_walkscore=True)
 
                 if user.is_trusted() or user.is_municipal():
+                    # TODO: refactor
                     entry.accept()
                     municipal_users = User.objects.filter(profile__municipality=entry.municipality())
                     emails = [ user.email for user in municipal_users ]
                     send_mail('Development Database: New Published Edit', 'A trusted user edited %s.' % entry.name(), emails.pop(), emails, fail_silently=False)
                     messages.add_message(request, messages.INFO, 'You are a trusted user, so your edits will be published immediately.')
                 else:
+                    # TODO: refactor
                     municipal_users = User.objects.filter(profile__municipality=entry.municipality())
                     emails = [ user.email for user in municipal_users ]
                     send_mail('Development Database: New Edit', 'There is a new edit for moderation in %s.' % entry.municipality(), emails.pop(), emails, fail_silently=False)
@@ -176,8 +179,7 @@ def update(request, dd_id):
                 messages.add_message(request, messages.INFO, 'Your edits to %s were saved.' % (entry.ddname) )
                 return redirect('detail', dd_id=entry.project.dd_id)
             else:
-                messages.add_message(request, messages.INFO, updated_project.errors)
-                # messages.add_message(request, messages.INFO, 'Your edits to %s were NOT saved.' % (project.ddname) )
+                messages.add_message(request, messages.INFO, "There were errors in your submission: %s" % (updated_project.errors))
                 return redirect('update', dd_id=project.dd_id)
 
         else:

@@ -36,13 +36,7 @@ class ModeratedProjectForm(BootstrapMixin, forms.ModelForm):
 
     class Meta:
         model = ModeratedProject
+        exclude = ('user', 'project', 'est_employment', )
         widgets = {
             'location': forms.HiddenInput(),
         }
-
-    def clean(self):
-        super(ModeratedProjectForm, self).clean()
-        del self._errors['user']
-        del self._errors['project']
-        del self._errors['est_employment']
-        return self.cleaned_data
