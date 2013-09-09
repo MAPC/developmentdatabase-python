@@ -1,5 +1,7 @@
 from django.shortcuts import render_to_response, redirect
-from django.template  import RequestContext
+from django.core.mail import send_mail
+from django.template  import RequestContext, Context
+from django.template.loader import get_template
 from django.http      import Http404, HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.contrib import messages
 from django.utils.functional import wraps
@@ -11,7 +13,7 @@ from django.core.exceptions         import FieldError
 from development.models import Municipality, Project
 from tim.models import ModeratedProject
 
-from django.core.mail import send_mail
+
 
 
 def correct_municipal_user_or_staff(view):
@@ -128,12 +130,26 @@ def send_completed_notification(project, user):
     if not user.profile.is_municipal() or not user.profile.is_trusted():
         if project.accepted:
             edit_status = "accepted"
+            was_updated = "updated "
         else:
             edit_status = "declined"
-        subject = "Edits to %s were %s." % (project.ddname, edit_status)
-        body = "Your edits to %s were recently %s. Thank you for contributing to the Development Database." % (project.ddname, edit_status)
+            was_updated = ""
 
-        send_mail(subject, body, user.email, ['mcloyd@mapc.org'], fail_silently=False)
+        subject = "Edits to %s were %s." % (project.ddname, edit_status)
+        body = get_template('mail_templates/edit_completed.html').render(
+            Context({
+                'action_taken': edit_status,
+                'project_name': project.ddname,
+                'project_id'  : project.dd_id,
+                'was_updated' : was_updated
+            })
+        )
+
+        send_mail(subject,
+                  body,
+                  user.email,
+                  ['mcloyd@mapc.org'],
+                  fail_silently=False)
 
 
 

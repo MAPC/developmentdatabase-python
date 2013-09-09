@@ -1,11 +1,13 @@
 from django.shortcuts import render_to_response, redirect
-from django.template  import RequestContext
+from django.core.mail import send_mail
+from django.template  import RequestContext, Context
+from django.template.loader import get_template
 from django.http      import Http404, HttpResponse
 from django.contrib                 import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.gis.geos        import GEOSGeometry
 from django.core.exceptions         import FieldError
-from django.core.mail import send_mail
+
 
 import json
 import csv
@@ -153,12 +155,7 @@ def update(request, dd_id):
                 new_location.srid = 4326
                 new_location.transform(26986)
 
-                # TODO: Refactor
-                tolerance = 0.00000001 # TODO: FIX THIS VALIDATION
-                if (abs(mod_proj.location.x - new_location.x) > tolerance) or (abs(mod_proj.location.y - new_location.y) > tolerance):
-                    entry.location = new_location
-                else:
-                    entry.location = mod_proj.location
+                entry.location = new_location
 
                 entry.save(user=request.user, update_walkscore=True)
 
@@ -167,13 +164,45 @@ def update(request, dd_id):
                     entry.accept()
                     municipal_users = User.objects.filter(profile__municipality=entry.municipality())
                     emails = [ user.email for user in municipal_users ]
-                    send_mail('Development Database: New Published Edit', 'A trusted user edited %s.' % entry.name(), emails.pop(), emails, fail_silently=False)
+                    
+                    body = get_template('mail_templates/new_pending_edit.html').render(
+                        Context({
+                            'project_id' : entry.project.dd_id,
+                            'project_name' : entry.project.ddname,
+                            'municipality_name' : entry.municipality().name,
+                            'project': entry
+                       })
+                    )
+
+                    send_mail(
+                        'Development Database: New Edit',
+                        body,
+                        emails.pop(),
+                        emails,
+                        fail_silently=False)
+                    
                     messages.add_message(request, messages.INFO, 'You are a trusted user, so your edits will be published immediately.')
                 else:
                     # TODO: refactor
                     municipal_users = User.objects.filter(profile__municipality=entry.municipality())
                     emails = [ user.email for user in municipal_users ]
-                    send_mail('Development Database: New Edit', 'There is a new edit for moderation in %s.' % entry.municipality(), emails.pop(), emails, fail_silently=False)
+                    
+                    body = get_template('mail_templates/new_pending_edit.html').render(
+                        Context({
+                            'project_id' : entry.project.dd_id,
+                            'project_name' : entry.project.ddname,
+                            'municipality_name' : entry.municipality().name,
+                            'project': entry
+                       })
+                    )
+
+                    send_mail(
+                        'Development Database: New Edit',
+                        body,
+                        emails.pop(),
+                        emails,
+                        fail_silently=False)
+
                     messages.add_message(request, messages.INFO, 'Your edits will be moderated.')
                     
                 messages.add_message(request, messages.INFO, 'Your edits to %s were saved.' % (entry.ddname) )

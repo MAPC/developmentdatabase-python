@@ -1,19 +1,19 @@
-{% extends "mail_base.html" %}
+{% extends "mail_templates/mail_base.html" %}
 {% load i18n %}
 
 <!--A Municipal User closed your pending edit, either approving or rejecting it.-->
 
 {% block title %}
-  {% blocktrans with action_taken=action_taken %} Your Edit Has Been {{ action_taken }}.
+  {% blocktrans with action_taken=action_taken %}
+    Your Edit Has Been {{ action_taken }}.
+  {% endblocktrans %}
 {% endblock %}
 
 {% block body %}
 
-  {{ first_name }}:
-
-  {% blocktrans with protocol=protocol site_domain=site.domain project_name=project_name project_id=project_id action_taken=action_taken was_updated=was_updated %}
+  {% blocktrans with protocol=protocol site_domain=site_domain project_name=project_name project_id=project_id action_taken=action_taken was_updated=was_updated %}
     <p>
-      Your edit on <a href="{{ protocol }}://{{ site_domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> was {{ action_taken }}.
+      Your edits to <a href="{{ protocol }}://{{ site_domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> were {{ action_taken }}.
     </p>
 
     <p>

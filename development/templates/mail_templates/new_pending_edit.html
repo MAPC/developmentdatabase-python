@@ -1,17 +1,15 @@
-{% extends "mail_base.html" %}
+{% extends "mail_templates/mail_base.html" %}
 {% load i18n %}
 
 <!--A Registered User edited a project in your municipality, and awaits moderation.-->
 
-{% block title %}
-  A New Edit on {{ project_name }} Requires Moderation
-{% endblock %}
+{% block title %}A New Edit on {{ project_name }} Requires Moderation{% endblock %}
 
 {% block body %}
 
   <p>
     {% blocktrans with project_name=project_name municipality_name=municipality_name %}
-      A registered user has submitted an edit for <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> in your municipality, {{ municipality_name }}.
+      A registered user has submitted an edit for <a href="{{ request.protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> in your municipality, {{ municipality_name }}.
     {% endblocktrans %}
   </p>
 
@@ -28,4 +26,4 @@
   {% trans "Thank you" %},
   {% trans "The Development Database Team" %}
 
-{% block body %}
+{% endblock body %}
