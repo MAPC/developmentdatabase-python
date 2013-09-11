@@ -38,6 +38,11 @@ def detail(request, dd_id):
     except Project.DoesNotExist:
         raise Http404
 
+    if request.user.is_authenticated():
+        logged_in = True
+    else:
+        logged_in = False
+
     return render_to_response('development/detail.html', locals(), context_instance=RequestContext(request))
 
 
