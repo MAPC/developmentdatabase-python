@@ -83,7 +83,7 @@
             </div>
         </header>
 
-        {% block body %}{% endblock %}
+        {% block body %}{% endblock body %}
 
         <footer class="footer">
             <p>
@@ -95,31 +95,31 @@
 
     <!-- JavaScripts -->
     {% block javascript %}
-    <script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}lib/jquery/jquery.url.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}lib/lodash/lodash.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        // global dd namespace
-        window.dd = window.dd || {
-            BING_API_KEY: "{{ BING_API_KEY }}"
-        };
-    </script>
-    <script src="{{ STATIC_URL }}js/dd.js" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}lib/jquery/jquery.url.js" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}lib/lodash/lodash.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            // global dd namespace
+            window.dd = window.dd || {
+                BING_API_KEY: "{{ BING_API_KEY }}"
+            };
+        </script>
+        <script src="{{ STATIC_URL }}js/dd.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-    $(function() {
-        $(".navbar input.search-query").keyup(function(event) {
-            if(event.which == 13) {
-                var ddname = $(this).val();
-                if (ddname !== "") {
-                    ddname.replace(" ", "+");
-                    window.location = "{% url search %}?ddname__icontains=" + ddname;
-                }
-            }
-        });
-    });
-</script>
+        <script type="text/javascript">
+            $(function() {
+                $(".navbar input.search-query").keyup(function(event) {
+                    if(event.which == 13) {
+                        var ddname = $(this).val();
+                        if (ddname !== "") {
+                            ddname.replace(" ", "+");
+                            window.location = "{% url search %}?ddname__icontains=" + ddname;
+                        }
+                    }
+                });
+            });
+        </script>
 
     {% endblock %}
    <script type="text/javascript">

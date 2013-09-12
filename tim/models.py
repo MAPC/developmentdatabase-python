@@ -32,7 +32,7 @@ class ModeratedProject(Project):
 
         diff = {}
 
-        frozen_fields   = [ 'last_modified', 'created', 'dd_id', 'moderated_project' ]
+        frozen_fields   = [ 'last_modified', 'created', 'dd_id', 'moderated_project', 'location' ]
         editable_fields = list( set(moderated_project._meta.fields).intersection(project._meta.fields) )
 
         for field in editable_fields:
