@@ -1,27 +1,63 @@
-<hr/>
-<br/>
+{% extends "_map_inc.html" %}
 
-<div class="row">
-  <div class="span6">
-    <a href="/projects/detail/{{ project.project.dd_id }}" target="_blank">
-      <h3>{{ project.project.ddname }}</h3>
-    </a>
-  </div>
-</div>
+{% block body %}
+  <hr/>
+  <br/>
 
-{% if project.diff %}
   <div class="row">
-    {% for field_name, value in project.diff.items %}
-      {% include "_moderated_project_field.html" with field_name=field_name value=value %}
-    {% endfor %}
-  </div>
-{% endif %}
-  <div class="row">
-    <div class="span4 offset8">
-      {% include '_buttons.html' with pk=project.dd_id %}
+    <div class="span6">
+      <a href="/projects/detail/{{ project.project.dd_id }}" target="_blank">
+        <h3>{{ project.project.ddname }}</h3>
+      </a>
     </div>
   </div>
 
 
-<br/>
-<br/>
+
+  {% if project.diff %}
+    
+    <div class="row">
+
+      <div class="span12" style="margin-bottom:30px">
+        <div class="span10 offset1">
+          <div class="well" id="map_canvas" style="height:200px">
+          </div>
+          <h6>
+            If approved, the displayed location will be saved.
+          </h6>
+        </div>
+      </div>
+    
+      {% for field_name, value in project.diff.items %}
+        {% include "_moderated_project_field.html" with field_name=field_name value=value %}
+      {% endfor %}
+    </div>
+  {% endif %}
+    <div class="row">
+      <div class="span4 offset8">
+        {% include '_buttons.html' with pk=project.dd_id %}
+      </div>
+    </div>
+
+
+
+  <br/>
+  <br/>
+{% endblock body %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script type="text/javascript">
+  
+
+    $( document ).ready(function() {
+
+        dd.initDetailPage( {
+            dd_id: {{ project.project.dd_id }}
+        } );
+
+    });
+
+  
+  </script>
+{% endblock %}
