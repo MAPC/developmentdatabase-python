@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "_map_inc.html" %}
 
 {% block title %}{{ municipality.name }} Pending Edits{% endblock %}
 
@@ -17,17 +17,37 @@
 
 {% block body %}
 
-{% if pending_projects%}
-  {% for project in pending_projects %}
-    {% include "_moderated_project.html" with project=project %}
-  {% endfor %}
-{% else %}
-  <p>
-    There are presently no pending edits for {{ municipality.name }}. But thank you for checking in!
-  </p>
-  <p>
-    We will make sure to email you when users propose changes.
-  </p>
-{% endif %}
+  {% if pending_projects%}
+    {% for project in pending_projects %}
+      {% if project == pending_projects.0 %}
+        {% include "_map_preview.html" with project=project %}
+      {% endif %}
+      {% include "_moderated_project.html" with project=project %}
+    {% endfor %}
+  {% else %}
+    <p>
+      There are presently no pending edits for {{ municipality.name }}. But thank you for checking in!
+    </p>
+    <p>
+      We will make sure to email you when users propose changes.
+    </p>
+  {% endif %}
 
 {% endblock body %}
+
+{% block javascript %}
+  {{ block.super }}
+  <script type="text/javascript">
+  
+
+    $( document ).ready(function() {
+
+        dd.initDetailPage( {
+            dd_id: {{ pending_projects.0.project.dd_id }}
+        } );
+
+    });
+
+  
+  </script>
+{% endblock %}
