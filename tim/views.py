@@ -33,13 +33,16 @@ def correct_municipal_user_or_staff(view):
 
         if not user.is_staff:
             if user.is_anonymous():
-                return HttpResponseForbidden("Log in as a Municipal User to access moderation.")
+                messages.add_message(request, messages.INFO, 'Log in as a municipal user to moderate project edits.' )
+                return HttpResponseRedirect('/')
 
             if not user.profile.is_municipal:
-                return HttpResponseForbidden("You are not a Municipal User. If you see this message in error, please contact MAPC.")
+                messages.add_message(request, messages.INFO, "You are not a Municipal User. If you see this message in error, please contact MAPC." )
+                return HttpResponseRedirect('/')
 
             if user.profile.municipality.name != municipality_name:
-                return HttpResponseForbidden("You may not view other municipalities' pending edits.")
+                messages.add_message(request, messages.INFO, "You may not moderate other municipalities' pending edits." )
+                return HttpResponseRedirect('/')
 
         try:
             municipality = Municipality.objects.get(name=municipality_name)
@@ -140,7 +143,8 @@ def send_completed_notification(project, user):
                 'action_taken': edit_status,
                 'project_name': project.ddname,
                 'project_id'  : project.dd_id,
-                'was_updated' : was_updated
+                'was_updated' : was_updated,
+                'domain'      : request.META['HTTP_HOST']
             })
         )
 

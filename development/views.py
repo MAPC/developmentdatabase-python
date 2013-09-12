@@ -170,17 +170,18 @@ def update(request, dd_id):
                     municipal_users = User.objects.filter(profile__municipality=entry.municipality())
                     emails = [ user.email for user in municipal_users ]
                     
-                    body = get_template('mail_templates/new_pending_edit.html').render(
+                    body = get_template('mail_templates/new_published_edit.html').render(
                         Context({
                             'project_id' : entry.project.dd_id,
                             'project_name' : entry.project.ddname,
                             'municipality_name' : entry.municipality().name,
-                            'project': entry
+                            'project': entry,
+                            'domain': request.META['HTTP_HOST'],
                        })
                     )
 
                     send_mail(
-                        'Development Database: New Edit',
+                        'Development Database: New Published Edit',
                         body,
                         emails.pop(),
                         emails,
@@ -197,12 +198,13 @@ def update(request, dd_id):
                             'project_id' : entry.project.dd_id,
                             'project_name' : entry.project.ddname,
                             'municipality_name' : entry.municipality().name,
-                            'project': entry
+                            'project': entry,
+                            'domain': request.META['HTTP_HOST'],
                        })
                     )
 
                     send_mail(
-                        'Development Database: New Edit',
+                        'Development Database: New Pending Edit',
                         body,
                         emails.pop(),
                         emails,

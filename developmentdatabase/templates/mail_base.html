@@ -1,0 +1,54 @@
+{% load i18n %}
+
+<head>
+  {% block style %}
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+  {% endblock style %}
+</head>
+
+<body style="background-color:#FFF">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-2">
+        <img src="http://www.mapc.org/sites/default/files/mapc_logo.png" width="140">
+      </div>
+      <div class="col-md-6" style="color:rgb(4, 67, 136); font-size:20px; font-weight:500; text-shadow: rgb(255, 255, 255) 0px 1px 0px; padding-top: 10px;">
+        <h2>
+          Development Database
+        </h2>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+      <div class="col-md-8">
+
+        {% block title %}
+        {% endblock title %}
+      
+      </div>
+    </div>
+
+    <br/>
+
+    <div class="row">
+      <div class="col-md-8">
+      
+        {% block body %}
+        {% endblock body %}
+      
+      </div>
+    </div>
+
+    <p>
+      {% trans "Thank you" %}, <br/>
+      <em>
+        {% trans "The Development Database Team" %}
+      </em>
+    </p>
+
+  </div>
+
+</body>
+

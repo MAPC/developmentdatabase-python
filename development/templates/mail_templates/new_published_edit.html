@@ -1,29 +1,27 @@
 {% extends "mail_base.html" %}
 {% load i18n %}
 
-<!--A Trusted User or Municipal User edited a project in your municipality.-->
-
 {% block title %}
   {% blocktrans with project_name=project_name %}
-    A Trusted User Updated {{ project_name }}.
+    <h3>
+      A Trusted User updated
+    </h3>
+    <h1>
+      {{ project_name }}.
+    </h1>
   {% endblocktrans %}
 {% endblock %}
 
 {% block body %}
 
   <p>
-    {% blocktrans with project_name=project_name municipality_name=municipality_name %}
-      A trusted contributor has submitted an edit for <a href="{{ protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> in your municipality, {{ municipality_name }}.
+    {% blocktrans with project_name=project_name municipality_name=municipality_name domain=domain %}
+      A trusted contributor has updated <a href="{{ domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> in {{ municipality_name }}.
     {% endblocktrans %}
   </p>
 
   <p>
     {% trans "No action is required, we just wanted to let you know." %}
   </p>
-
-  {% include "../_moderated_project.html" with project=project %}
-
-  {% trans "Thank you" %},
-  {% trans "The Development Database Team" %}
 
 {% endblock body %}

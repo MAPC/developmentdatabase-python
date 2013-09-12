@@ -1,29 +1,34 @@
-{% extends "mail_templates/mail_base.html" %}
+{% extends "mail_base.html" %}
 {% load i18n %}
 
-<!--A Registered User edited a project in your municipality, and awaits moderation.-->
-
-{% block title %}A New Edit on {{ project_name }} Requires Moderation{% endblock %}
+{% block title %}
+  {% blocktrans with project_name=project_name %}
+    <h3>
+      A New Edit to
+    </h3>
+    <h1>
+      {{ project_name }}
+    </h1>
+    <h3>
+      requires moderation.
+    </h3>
+  {% endblocktrans %}
+{% endblock %}
 
 {% block body %}
 
+  <h3 align="center">
+    {% blocktrans with domain=domain municipality_name=municipality_name %}
+      <a href="{{ domain }}/moderate/{{ municipality_name }}">Moderate Projects in {{ municipality_name }}</a>
+    {% endblocktrans %}
+  </h3>
+
+  <br/>
+
   <p>
-    {% blocktrans with project_name=project_name municipality_name=municipality_name %}
-      A registered user has submitted an edit for <a href="{{ request.protocol }}://{{ site.domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> in your municipality, {{ municipality_name }}.
+    {% blocktrans with domain=domain municipality_name=municipality_name %}
+      Please <a href="{{ domain }}/moderate/{{ municipality_name }}">review the proposed edits to development projects in {{ municipality_name }}</a>, and accept or decline as appropriate.
     {% endblocktrans %}
   </p>
-
-  <p>
-    {% trans "Action is required. Please approve or decline the proposed changes." %}
-  </p>
-
-  <p>
-    <a href="{{ protocol }}://{{ site.domain }}/moderate/{{ municipality_name.lower }}">
-      Moderate edits for {{ municipality_name }}
-    </a>
-  </p>
-
-  {% trans "Thank you" %},
-  {% trans "The Development Database Team" %}
 
 {% endblock body %}
