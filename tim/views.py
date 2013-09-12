@@ -114,7 +114,7 @@ def municipality(request, municipality):
 @user_who_may_moderate
 def accept(request, project):
     project.accept()
-    send_completed_notification(project, project.user)
+    send_completed_notification(request, project, project.user)
     messages.add_message(request, messages.INFO, 'You accepted changes to %s.' % ( project.name() ))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -122,13 +122,13 @@ def accept(request, project):
 @user_who_may_moderate
 def decline(request, project):
     project.decline()
-    send_completed_notification(project, project.user)
+    send_completed_notification(request, project, project.user)
     messages.add_message(request, messages.INFO, 'You declined changes to %s.' % ( project.name() ))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 # TODO: Should this helper / mailer function be kept elsewhere?
-def send_completed_notification(project, user):
+def send_completed_notification(request, project, user):
     if not user.profile.is_municipal() or not user.profile.is_trusted():
         if project.accepted:
             edit_status = "accepted"
