@@ -1,1 +1,5 @@
 -r base.txt
+
+bpython==0.12
+django-debug-toolbar==0.9.4
+yolk==0.4.3

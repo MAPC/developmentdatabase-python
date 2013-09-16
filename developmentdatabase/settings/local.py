@@ -1,21 +1,23 @@
 # LOCAL / DEVELOPMENT ENVIRONMENT SETTINGS
 from .base import *
 
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+#'default': dj_database_url.config()
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'ddtest',                      # developmentdatabase is serious; ddtest is play
-        'USER': 'mapcuser',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    'ENGINE': 'django.contrib.gis.db.backends.postgis',
+    'NAME': 'ddtest',
+    'USER': 'mapcuser',
+    'PASSWORD': '',
+    'HOST': '',
+    'PORT': '', 
     }
 }
 
-# # Additional locations of static files
+# Additional locations of static files
 # STATICFILES_DIRS += (
 #     # Put strings here, like "/home/html/static" or "C:/www/django/static".
 #     # Always use forward slashes, even on Windows.
@@ -76,3 +78,8 @@ INSTALLED_APPS += (
     'south',
     'debug_toolbar',
 )
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Allow all host headers
+ALLOWED_HOSTS = ['*']
