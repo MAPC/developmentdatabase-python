@@ -1,21 +1,22 @@
 # LOCAL / DEVELOPMENT ENVIRONMENT SETTINGS
 from .base import *
 
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-#'default': dj_database_url.config()
-DATABASES = {
-    'default': {
-    'ENGINE': 'django.contrib.gis.db.backends.postgis',
-    'NAME': 'ddtest',
-    'USER': 'mapcuser',
-    'PASSWORD': '',
-    'HOST': '',
-    'PORT': '', 
-    }
-}
+
+# DATABASES = {
+#     'default': {
+#     'ENGINE': 'django.contrib.gis.db.backends.postgis',
+#     'NAME': 'ddtest',
+#     'USER': 'mapcuser',
+#     'PASSWORD': '',
+#     'HOST': '',
+#     'PORT': '', 
+#     }
+# }
+
+#  'ENGINE': 'django.contrib.gis.db.backends.postgis', 'NAME': 'ddtest', 'USER': 'mapcuser', 'PASSWORD': '', 'HOST': '', 'PORT': '', 
 
 # Additional locations of static files
 # STATICFILES_DIRS += (

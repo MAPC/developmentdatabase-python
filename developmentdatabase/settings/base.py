@@ -1,6 +1,5 @@
 # BASE SETTINGS COMMON TO ALL ENVIRONMENTS
-import os, sys
-import dj_database_url
+import os, sys, dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 
 def get_env_variable(var_name):
@@ -31,6 +30,10 @@ SECRET_KEY   = get_env_variable("SECRET_KEY")
 BING_API_KEY = get_env_variable("BING_API_KEY")
 WSAPIKEY     = get_env_variable("WSAPIKEY")
 
+
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config()
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
 
 # Local time zone for this installation. Choices can be found here:
