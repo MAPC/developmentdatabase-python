@@ -35,8 +35,6 @@ DATABASES = {}
 DATABASES['default'] = dj_database_url.config()
 DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
-GEOS_LIBRARY_PATH='/developmentdatabase/.geodjango/geos/lib/libgeos_c.so'
-GDAL_LIBRARY_PATH='/developmentdatabase/.geodjango/gdal/lib/libgdal.so'
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.

@@ -4,39 +4,6 @@ from .base import *
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-
-# DATABASES = {
-#     'default': {
-#     'ENGINE': 'django.contrib.gis.db.backends.postgis',
-#     'NAME': 'ddtest',
-#     'USER': 'mapcuser',
-#     'PASSWORD': '',
-#     'HOST': '',
-#     'PORT': '', 
-#     }
-# }
-
-#  'ENGINE': 'django.contrib.gis.db.backends.postgis', 'NAME': 'ddtest', 'USER': 'mapcuser', 'PASSWORD': '', 'HOST': '', 'PORT': '', 
-
-# Additional locations of static files
-# STATICFILES_DIRS += (
-#     # Put strings here, like "/home/html/static" or "C:/www/django/static".
-#     # Always use forward slashes, even on Windows.
-#     # Don't forget to use absolute paths, not relative paths.  <-- IN NO WAY is this best practice
-#     # '/vagrant/developmentdatabase/static',
-#     # '/vagrant/developmentdatabase/development/static',
-# )
-
-# TEMPLATE_DIRS += (
-#     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-#     # Always use forward slashes, even on Windows.
-#     # Don't forget to use absolute paths, not relative paths. <-- IN NO WAY is this best practice
-#     # '/vagrant/developmentdatabase/templates',
-#     # '/home/vagrant/virtualenvs/dd/lib/python2.6/site-packages/django/contrib/gis/templates',
-# )
-
-# Email
-
 to_file = 'django.core.mail.backends.filebased.EmailBackend'
 dummy   = 'django.core.mail.backends.dummy.EmailBackend'
 
