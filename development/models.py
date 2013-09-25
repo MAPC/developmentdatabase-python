@@ -252,7 +252,8 @@ class Parcel(models.Model):
 class DisplayProjectManager(models.GeoManager):
     def get_query_set(self):
         moderated_project = get_model('tim','ModeratedProject')
-        return super(DisplayProjectManager, self).get_query_set().exclude( dd_id__in=[m.dd_id for m in moderated_project.objects.all()] )
+        return super(DisplayProjectManager, self).get_query_set().exclude(status__name='Conceptual').exclude( dd_id__in=[m.dd_id for m in moderated_project.objects.all()] )
+
 
 class Project(models.Model):
     """
@@ -337,7 +338,6 @@ class Project(models.Model):
     
     class Meta:
         ordering = ['dd_id', ]
-
 
     def save(self, *args, **kwargs):
 
