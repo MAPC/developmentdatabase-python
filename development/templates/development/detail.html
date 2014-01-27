@@ -27,12 +27,12 @@
                 
                 <h3>Overview</h3>
 
-                {% include "development/_property.html" with property=project.projecttype label="Project Type" %}
+                <!-- { include "development/_property.html" with property=project.projecttype label="Project Type" %} -->
                 {% include "development/_property.html" with property=project.projecttype_detail|truncatewords:10 label="Project Type Detail" %}
-                {% include "development/_property.html" with property=project.status label="Status" %}
+                <!-- { include "development/_property.html" with property=project.status label="Status" %} -->
                 {% include "development/_property.html" with property=project.complyr label="Year of Completion (estimated or actual)" %}
                 {% include "development/_property.html" with property=project.prjacrs|intcomma label="Project Site Area (acres)" %}
-                {% include "development/_property.html" with property=project.url|url|default:"-"|safe label="Project Website" %}
+                <!-- { include "development/_property.html" with property=project.url|url|default:"-"|safe label="Project Website" %} -->
                 {% include "development/_property.html" with property=project.url_add|url|default:"-"|safe label="Additional Website" %}
                 {% include "development/_property.html" with property=project.last_modified|naturalday label="Last Updated" %}
                 {% include "development/_property.html" with property=project.stalled|yesno:"Yes,No" label="Stalled" %}
@@ -87,7 +87,7 @@
                         {% include "development/_property.html" with property=project.clustosrd|yesno:"Yes,No" label="Cluster Subdivision" %}
                         {% include "development/_property.html" with property=project.total_cost|currency label="Total project cost" %}
 
-                        {% include "development/_property.html" with property=project.todstation|default:"-"|title label="Nearest Transit Station" %}
+                        <!-- { include "development/_property.html" with property=project.todstation|default:"-"|title label="Nearest Transit Station" %} -->
 
                         <div class="fieldcontainer">
                             <div class="fieldlabel"><a href="{{ project.walkscore.ws_link }}" class="walkscore"><img src="{{ WS_LOGO_URL }}" alt="What's your Walk Score?" width="120" height="19" border="0">{{ project.walkscore|default:"-" }}</a><a href="{{ WS_MORE_INFO_LINK }}" target="_blank"><img src="{{ WS_MORE_INFO_ICON }}" width="13" height="13"></a></div>
