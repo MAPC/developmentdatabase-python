@@ -21,27 +21,26 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
-# The current environment. Set the environment variable ENV_TYPE in each environment
-# to one of: [local, staging, production].
-# TODO: DJANGO_SETTINGS_MODULE = eval(developmentdatabase.settings.#{get_env_variable("ENV_TYPE")})
+# The current environment. Set the environment variable DJANGO_ENV in each environment
+# to one of: [development, test, production].
+DJANGO_SETTINGS_MODULE = "developmentdatabase.settings.%s" % get_env_variable("DJANGO_ENV")
 
-DJANGO_SETTINGS_MODULE = get_env_variable("ENV_TYPE_FULL")
-SECRET_KEY   = get_env_variable("SECRET_KEY")
+SECRET_KEY   = get_env_variable("SECRET_KEY_BASE")
 BING_API_KEY = get_env_variable("BING_API_KEY")
 WSAPIKEY     = get_env_variable("WSAPIKEY")
 
 
-# DATABASES = {}
-# DATABASES['default'] = dj_database_url.config()
-# DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-DATABASES = {
-'default': { 'NAME':'ddtest',
-             'USER':'',
-             'PASSWORD':'',
-             'HOST':'localhost',
-             'ENGINE':'django.contrib.gis.db.backends.postgis'
-           }
-}
+DATABASES = {'default': dj_database_url.config(default='postgis://localhost/ddtest')}
+DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+
+# DATABASES = {
+# 'default': { 'NAME':'ddtest',
+#              'USER':'',
+#              'PASSWORD':'',
+#              'HOST':'localhost',
+#              'ENGINE':'django.contrib.gis.db.backends.postgis'
+#            }
+# }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -58,15 +57,13 @@ LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
 
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
+# Use Internationalization
 USE_I18N = True
 
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale.
+# Use Localization
 USE_L10N = True
 
-# If you set this to False, Django will not use timezone-aware datetimes.
+# Use Timezones
 USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
@@ -216,14 +213,14 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # TODO: Why are these set here? Why is this not in URLConfs?
-AUTH_PROFILE_MODULE = 'profiles.Profile'
-LOGIN_REDIRECT_URL = '/projects/search/'
-LOGIN_URL = '/accounts/signin/'
-LOGOUT_URL = '/accounts/signout/'
-USERENA_MUGSHOT_GRAVATAR = False
-USERENA_MUGSHOT_DEFAULT = STATIC_URL + 'img/mugshot.png'
+AUTH_PROFILE_MODULE          = 'profiles.Profile'
+LOGIN_REDIRECT_URL           = '/projects/search/'
+LOGIN_URL                    = '/accounts/signin/'
+LOGOUT_URL                   = '/accounts/signout/'
+USERENA_MUGSHOT_GRAVATAR     = False
+USERENA_MUGSHOT_DEFAULT      = STATIC_URL + 'img/mugshot.png'
 USERENA_DISABLE_PROFILE_LIST = True
-USERENA_HIDE_EMAIL = True
+USERENA_HIDE_EMAIL           = True
 
 # Guardian
 ANONYMOUS_USER_ID = -1
@@ -231,5 +228,5 @@ ANONYMOUS_USER_ID = -1
 # WalkScore API
 WS_MORE_INFO_ICON = 'http://www2.walkscore.com/images/api-more-info.gif'
 WS_MORE_INFO_LINK = 'http://www.walkscore.com/how-it-works.shtml'
-WS_LOGO_URL = 'http://www2.walkscore.com/images/api-logo.gif'
+WS_LOGO_URL       = 'http://www2.walkscore.com/images/api-logo.gif'
 
