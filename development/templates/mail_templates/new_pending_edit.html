@@ -1,0 +1,34 @@
+{% extends "mail_base.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% blocktrans with project_name=project_name %}
+    <h3>
+      A New Edit to
+    </h3>
+    <h1>
+      {{ project_name }}
+    </h1>
+    <h3>
+      requires moderation.
+    </h3>
+  {% endblocktrans %}
+{% endblock %}
+
+{% block body %}
+
+  <h3 align="center">
+    {% blocktrans with domain=domain municipality_name=municipality_name %}
+      <a href="{{ domain }}/moderate/{{ municipality_name }}">Moderate Projects in {{ municipality_name }}</a>
+    {% endblocktrans %}
+  </h3>
+
+  <br/>
+
+  <p>
+    {% blocktrans with domain=domain municipality_name=municipality_name %}
+      Please <a href="{{ domain }}/moderate/{{ municipality_name }}">review the proposed edits to development projects in {{ municipality_name }}</a>, and accept or decline as appropriate.
+    {% endblocktrans %}
+  </p>
+
+{% endblock body %}

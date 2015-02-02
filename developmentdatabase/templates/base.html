@@ -1,0 +1,134 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>{% block title %}{% endblock %} | MAPC Development Database</title>
+    <meta name="description" content="MAPC Developments Database">
+    <meta name="keywords" content="Boston, Metro, Planning, Housing, Commercial, Economic, Development, Real Estate">
+    <meta name="author" content="MAPC">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+    <!-- geotags -->
+    <meta name="DC.title" content="Development Database"> 
+    <meta name="geo.placename" content="Boston">
+    <meta name="geo.position" content="42.34;-71.08">
+    <meta name="geo.region" content="US-MA">
+    <meta name="ICBM" content="42.34;-71.08">
+    
+    {% block style %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/base.css">
+    <!--[if lte IE 8]>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/ie8.css">
+    <![endif]-->
+    {% endblock %}
+    
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-5547782-7']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+
+</head>
+<body>
+
+    <div class="navbar navbar-fixed-top">
+
+        <div class="navbar-inner">
+          <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="{% url home %}">Development Database</a>
+            <div class="nav-collapse">
+              <ul class="nav pull-right">
+                <li class="navbar-search">
+                    <input type="text" class="search-query span2" placeholder="Search Projects" data-source="[&quot;Alabama&quot;,&quot;Alaska&quot;,&quot;Arizona&quot;]" data-provide="typeahead" data-items="4">
+                </li>
+                <li>
+                  <a href="/projects/search/">Advanced Search</a>
+                </li>
+                <li class="divider-vertical"></li>
+                
+                {% include '_dropdown_menu.html' %}
+                
+              </ul>
+            </div><!-- /.nav-collapse -->
+          </div>
+        </div>
+
+    </div>
+
+    <div class="main container">
+
+        <header class="page-header">
+            <div class="row">
+              <div class="span12">
+                {% include '_flash.html' %}
+                {% block pageheader %}{% endblock pageheader %}
+              </div>
+            </div>
+        </header>
+
+        {% block body %}{% endblock body %}
+
+        <footer class="footer">
+            <p>
+                &copy; <a href="http://www.mapc.org" title="Metropolitan Area Planning Council">MAPC</a> 2013
+            </p>    
+        </footer>
+    
+    </div>
+
+    <!-- JavaScripts -->
+    {% block javascript %}
+        <script src="{{ STATIC_URL }}lib/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}lib/jquery/jquery.url.js" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}lib/lodash/lodash.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            // global dd namespace
+            window.dd = window.dd || {
+                BING_API_KEY: "{{ BING_API_KEY }}"
+            };
+        </script>
+        <script src="{{ STATIC_URL }}js/dd.js" type="text/javascript"></script>
+
+        <script type="text/javascript">
+            $(function() {
+                $(".navbar input.search-query").keyup(function(event) {
+                    if(event.which == 13) {
+                        var ddname = $(this).val();
+                        if (ddname !== "") {
+                            ddname.replace(" ", "+");
+                            window.location = "{% url search %}?ddname__icontains=" + ddname;
+                        }
+                    }
+                });
+            });
+        </script>
+
+    {% endblock %}
+   <script type="text/javascript">
+  var uvOptions = {};
+  (function() {
+    var uv = document.createElement('script'); uv.type = 'text/javascript'; uv.async = true;
+    uv.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'widget.uservoice.com/uKSJWrydk5gsbJrrE2Llw.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(uv, s);
+  })();
+</script> 
+</body>
+</html>

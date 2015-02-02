@@ -1,0 +1,67 @@
+{% extends "_map_inc.html" %}
+
+{% block title %}Search for Development Projects{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+
+<!-- operator select template -->
+<script type="text/template" class="operator-select">
+    <select class="operator span1 <%= field %>">
+        <option value="__lt">&lt;</option>
+        <option value="__exact" selected>=</option>
+        <option value="__gt">&gt;</option>
+    </select>
+</script>
+
+
+<script type="text/javascript">
+$( document ).ready(function() {
+
+    dd.initSearchPage( {
+        {% if user.get_profile.municipality.muni_id %}
+        query: {
+            taz__municipality: {{ user.get_profile.municipality.muni_id }}
+        }
+        {% endif %}
+    } );
+
+});
+</script>
+{% endblock %}
+
+
+{% block pageheader %}
+<h1 class="front-page">Search for Development Projects</h1>
+{% endblock pageheader %}
+
+
+{% block body %}
+    <section>
+        <div class="row">
+            <div class="span5">
+                <form class="form-horizontal projectfilters">
+                    {{ projectfilterform }}
+                </form>
+            </div>
+            <div class="span7">
+                <div class="well" id="map_canvas"></div>
+
+                <div id="resultinfo">
+                    <a id="search-permalink"></a>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button class="btn reset">Reset</button>
+                    {% if user.is_authenticated %}
+                        <a href="{% url add %}" id="add-project" class="btn btn-primary pull-right">Add New Project</a>
+                        {% else %}
+                        <a href="{% url add %}" class="btn btn-primary disabled pull-right" title="Log in to add new project">Add New Project</a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

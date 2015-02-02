@@ -1,0 +1,159 @@
+{% extends "_map_inc.html" %}
+
+{% load humanize %}
+{% load development_tags %}
+
+{% block title %}Explore Projects{% endblock %}
+
+{% block pageheader %}
+<h1 class="front-page">{{ project.ddname }} 
+    <span class="update-title">in 
+        <a href="/projects/search/?taz__municipality={{ project.municipality.muni_id }}" title="View more projects in {{ project.municipality.name }}">
+            {{ project.municipality.name }}
+        </a>
+    </span>
+</h1>
+{% if project.parcel_address != None %}
+    <h6>{{ project.parcel_address }}</h6>
+{% endif %}
+{% if project.description %}<p class="lead">{{ project.description|truncatewords:50 }}</p>{% endif %}
+{% endblock pageheader %}
+
+
+{% block body %}
+    <section>
+        <div class="row">
+            <div class="span6">
+                
+                <h3>Overview</h3>
+
+                <!-- { include "development/_property.html" with property=project.projecttype label="Project Type" %} -->
+                {% include "development/_property.html" with property=project.projecttype_detail|truncatewords:10 label="Project Type Detail" %}
+                <!-- { include "development/_property.html" with property=project.status label="Status" %} -->
+                {% include "development/_property.html" with property=project.complyr label="Year of Completion (estimated or actual)" %}
+                {% include "development/_property.html" with property=project.prjacrs|intcomma label="Project Site Area (acres)" %}
+                <!-- { include "development/_property.html" with property=project.url|url|default:"-"|safe label="Project Website" %} -->
+                {% include "development/_property.html" with property=project.url_add|url|default:"-"|safe label="Additional Website" %}
+                {% include "development/_property.html" with property=project.last_modified|naturalday label="Last Updated" %}
+                {% include "development/_property.html" with property=project.stalled|yesno:"Yes,No" label="Stalled" %}
+                {% include "development/_property.html" with property=project.phased|yesno:"Yes,No" label="Phased" %}
+            </div>
+            <div class="span6">
+                <div class="well" id="map_canvas"></div>
+            </div>
+        </div>
+        <div class="row">
+                <div class="span6">
+
+                        <h3>Housing</h3>
+
+                        {% include "development/_property.html" with property=project.tothu|floatformat:0|intcomma label="Total Housing Units" %}
+                        {% include "development/_property.html" with property=project.singfamhu|floatformat:0 label="Detached Single Family" %}
+                        {% include "development/_property.html" with property=project.twnhsmmult|floatformat:0 label="Townhouse and Small Multifamily" %}
+                        {% include "development/_property.html" with property=project.lgmultifam|floatformat:0 label="Large Multifamily" %}
+                        {% include "development/_property.html" with property=project.ovr55|yesno:"Yes,No" label="Age Restricted (any part)" %}
+                        {% include "development/_property.html" with property=project.pctaffall|percentage label="Affordable Units" %}
+                        {% include "development/_property.html" with property=project.affordable_comment label="Affordability Comments" %}
+                        {% include "development/_property.html" with property=project.gqpop|floatformat:0|intcomma label="Group Quarters (beds)" %}
+
+                </div>
+                <div class="span6">
+
+                        <h3>Nonresidential Development</h3>
+
+                        {% include "development/_property.html" with property=project.commsf|floatformat:0|intcomma label="Total Nonresidential Development (square feet)" %}
+                        {% include "development/_property.html" with property=project.retpct|percentage label="Retail or Restaurant" %}
+                        {% include "development/_property.html" with property=project.ofcmdpct|percentage label="Office or Medical" %}
+                        {% include "development/_property.html" with property=project.indmfpct|percentage label="Manufacturing or Industrial" %}
+                        {% include "development/_property.html" with property=project.whspct|percentage label="Warehouse or Trucking" %}
+                        {% include "development/_property.html" with property=project.rndpct|percentage label="Lab or R&amp;D" %}
+                        {% include "development/_property.html" with property=project.edinstpct|percentage label="Educational or Institution" %}
+                        {% include "development/_property.html" with property=project.othpct|percentage label="Other" %}
+                        {% include "development/_property.html" with property=project.hotelrms|floatformat:0 label="Hotel rooms" %}
+                        {% include "development/_property.html" with property=project.rptdemp|floatformat:0|intcomma label="Reported Employment" %}
+                        {% include "development/_property.html" with property=project.est_employment|floatformat:0|intcomma label="MAPC Estimated Employment Potential" %}
+
+                </div>
+        </div>
+        <div class="row">
+                <div class="span6">
+                        <h3>Project Attributes</h3>
+
+                        {% include "development/_property.html" with property=project.parking_spaces|floatformat:0 label="Parking Spaces" %}
+                        {% include "development/_property.html" with property=project.rdv|yesno:"Yes,No" label="Redevelopment" %}
+                        {% include "development/_property.html" with property=project.mxduse|yesno:"Yes,No" label="Mixed use project" %}
+                        {% include "development/_property.html" with property=project.as_of_right|yesno:"Yes,No" label="As-of-Right" %}
+                        {% include "development/_property.html" with property=project.ch40 label="Zoning Tool" %}
+                        {% include "development/_property.html" with property=project.clustosrd|yesno:"Yes,No" label="Cluster Subdivision" %}
+                        {% include "development/_property.html" with property=project.total_cost|currency label="Total project cost" %}
+
+                        <!-- { include "development/_property.html" with property=project.todstation|default:"-"|title label="Nearest Transit Station" %} -->
+
+                        <div class="fieldcontainer">
+                            <div class="fieldlabel"><a href="{{ project.walkscore.ws_link }}" class="walkscore"><img src="{{ WS_LOGO_URL }}" alt="What's your Walk Score?" width="120" height="19" border="0">{{ project.walkscore|default:"-" }}</a><a href="{{ WS_MORE_INFO_LINK }}" target="_blank"><img src="{{ WS_MORE_INFO_ICON }}" width="13" height="13"></a></div>
+                        </div>
+
+                </div>
+                <div class="span6">
+                        <h3>Development Team</h3>
+
+                        {% include "development/_property.html" with property=project.dev_name label="Lead Developer" %}
+                        {# include "development/_property.html" with property=project.[NEW TXT] label="Lead Architect" #}
+                        {# include "development/_property.html" with property=project.[NEW TXT] label="Other Development Team" #}
+                        {# include "development/_property.html" with property=project.[NEW TXT] label="Other Development Team" #}
+                        {# include "development/_property.html" with property=project.[NEW TXT] label="Leasing/Sales Agent" #}
+                </div>
+                <div class="span6">
+                        <h3>Land Parcel Information</h3>
+                        {% if project.parcel.fy != None %}
+                            <h6>AS OF FY {{ project.parcel.fy }}</h6>
+                        {% endif %}
+                        {% include "development/_property.html" with property=project.parcel.land_value|intcomma|currency label="Land Value" %}
+                        {% include "development/_property.html" with property=project.parcel.bldg_value|intcomma|currency label="Building Value" %}
+                        {% include "development/_property.html" with property=project.parcel.othr_value|intcomma|currency label="Other Value" %}
+                        {% include "development/_property.html" with property=project.parcel.total_valu|intcomma|currency label="Total Value" %}
+                        
+                        {% include "development/_property.html" with property=project.parcel.lot_areaft|intcomma label="Lot Area (square feet)" %}
+                        {% include "development/_property.html" with property=project.parcel.bldg_area|intcomma label="Building Area (square feet)" %}
+                        
+                        {% include "development/_property.html" with property=project.parcel.units_num  label="Number of Units" %}
+                        {% include "development/_property.html" with property=project.parcel.owner_data label="Owner Information" %}
+
+                </div>
+        </div>
+        <div class="row">
+                <div class="span12">
+                        <div class="form-actions">
+                            {% if permissions %}
+                            <a href="{% url update project.dd_id %}" class="btn btn-primary">Edit Project</a>
+                            {% else %}
+                            <a href="{% if user.is_authenticated %}javascript:void(0){% else %}{% url userena_signin %}{% endif %}" class="btn btn-primary disabled" title="{% if user.is_authenticated %}You are only allowed to edit projects in your municipality.{% else %}Log in to edit this project{% endif %}">Edit Project</a>
+                            {% endif %}
+                        </div>
+                </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block style %}
+{{ block.super }}
+<style type="text/css">
+        #map_canvas {
+            height: 300px;
+        }
+</style>
+{% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$( document ).ready(function() {
+
+    dd.initDetailPage( {
+        dd_id: {{ project.dd_id }}
+    } );
+
+});
+</script>
+{% endblock %}

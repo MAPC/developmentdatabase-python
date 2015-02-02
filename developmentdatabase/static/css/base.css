@@ -1,0 +1,295 @@
+a, a:hover {
+  color: #044388;
+}
+
+/* Topnav header
+-------------------------------------------------- */
+
+.navbar-inner {
+  border-bottom: 1px solid #8f939c;
+  background-color: #8C96A0;
+  background-image: -moz-linear-gradient(top, #fafdff, #8C96A0); /* FF3.6+ */
+  background-image: -ms-linear-gradient(top, #fafdff, #8C96A0); /* IE10+ */
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fafdff), to(#8C96A0)); /* Chrome,Safari4+ */
+  background-image: -webkit-linear-gradient(top, #fafdff, #8C96A0); /* Chrome10+,Safari5.1+ */
+  background-image: -o-linear-gradient(top, #fafdff, #8C96A0); /* Opera 11.10+ */
+  background-image: linear-gradient(top, #fafdff, #8C96A0); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafdff', endColorstr='#8C96A0', GradientType=0); /* IE6-9 */
+  background-repeat: repeat-x;
+  color: #044388;
+}
+
+.navbar .brand {
+  background: url("../img/mapc-logo.png") 4px center no-repeat;
+  padding-left: 80px;
+  font-weight: 500;
+}
+
+.navbar .brand, .navbar .nav > li > a {
+  color: #333;
+}
+
+.navbar .brand, .navbar .nav > li > a:hover {
+  color: #044388;
+}
+
+.navbar .nav > li > a {
+  text-shadow: none;
+}
+
+.dropdown-menu li > a:hover, .dropdown-menu .active > a, .dropdown-menu .active > a:hover {
+  background-color: #044388;
+}
+
+.navbar .divider-vertical {
+  background-color: transparent;
+  border-right: 1px solid #8C96A0;
+}
+
+.navbar-search .search-query:-moz-placeholder {
+  color: #fafdff;
+}
+
+.navbar-search .search-query {
+  background-color: lightgray;
+  border: 1px solid #8f939c;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset, 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.navbar-search .search-query:focus, .navbar-search .search-query.focused {
+  background-color: #fafdff;
+  color: #666;
+  text-shadow: none;
+}
+
+
+/* Flash
+-------------------------------------------------- */
+.flash {
+  background-color: rgb(223, 240, 216);
+  border: thin solid rgb(214, 214, 214);
+  display: block;
+  position: absolute;
+  top: 30px;
+  width: 100%;
+  padding: 6px 2px 0 2px;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+.flash ul {
+  list-style-type: none;
+}
+
+/* Page header
+-------------------------------------------------- */
+.page-header {
+  position: relative;
+  padding-top: 60px;
+  padding-bottom: 0px;
+  margin-bottom: 20px;
+  border: none;
+}
+.page-header h1 {
+  margin-bottom: 20px;
+  font-size: 32px;
+  letter-spacing: -1px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+/* Front Page
+-------------------------------------------------- */
+
+.lead {
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  line-height: 18px
+}
+.browse-projects {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Content
+-------------------------------------------------- */
+
+h3 {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+/* Footer
+-------------------------------------------------- */
+
+.footer {
+  margin-top: 40px;
+  padding: 35px 0 36px;
+  text-align: center;
+  border-top: 1px solid #E5E5E5;
+}
+
+/* map
+-------------------------------------------------- */
+
+#map_canvas {
+    height: 400px;
+    margin-bottom: 0px;
+}
+.leaflet-control-layers-base input, .leaflet-control-layers-overlays input {
+    float: left;
+    margin-right: 6px;
+}
+
+/* mapc
+-------------------------------------------------- */
+
+#map {
+  height: 400px;
+  margin-bottom: 20px;
+}
+
+#map-caption {
+  margin-top: 10px;
+}
+
+/* Filter form
+-------------------------------------------------- */
+
+.form-horizontal .control-label {
+  width: 140px;
+}
+.form-horizontal .controls {
+    margin-left: 160px;
+}
+.form-horizontal .control-group {
+    margin-bottom: 10px;
+}
+
+#resultinfo {
+  padding: 8px;
+  margin-top: 0px;
+  margin-bottom: 18px;
+}
+
+label.control-label, .fieldlabel {
+  color: #666;
+  font-style: italic;
+  font-weight: 300;
+}
+
+.form-horizontal .form-actions {
+  padding-left: 160px;
+}
+
+/* Detail page
+-------------------------------------------------- */
+
+.fieldcontainer {
+  margin-bottom: 2px;
+  display: block;
+  clear: both;
+}
+
+.fieldlabel {
+  float: left;
+  width: 300px;
+  display: block;
+}
+
+.fieldvalue {
+  display: block;
+  padding-left: 300px;
+/*  font-weight: 700;*/
+}
+
+/* Edit page
+-------------------------------------------------- */
+
+.required {
+  color: #B94A48;
+}
+
+.more-info {
+  margin-left: 160px;
+  margin-bottom: 20px;
+}
+
+.form-info {
+  margin-left: 160px;
+  margin-top: 20px;
+}
+
+
+.error {
+  color: #B94A48;
+  display: inline-block;
+  padding-left: 5px;
+}
+
+span.error {
+  display: block;
+  margin-bottom: 0;
+  margin-top: 9px;
+}
+
+.update-title {
+  color: #999;
+}
+
+.update-title a {
+  color: #999;
+  text-decoration: underline;
+}
+
+/* Userena
+-------------------------------------------------- */
+
+.userena .control-label {
+  font-style: normal;
+  color: #333;
+}
+
+.userena input.required {
+  color: #555;
+}
+
+.userena .signin-help {
+  padding-left: 160px;
+}
+
+ul.errorlist {
+  list-style-type: none;
+  color: #B94A48;
+  padding-left: 5px;
+}
+
+img.mughshot {
+  margin-right: 6px;
+}
+
+/* Walk Score branding
+-------------------------------------------------- */
+
+.walkscore img {
+  margin-right: 10px;
+  position: relative;
+  top: -4px;
+}
+
+.walkscore, .walkscore:hover {
+  color: #B14900;
+  font-weight: bold;
+  font-size: 15px;
+  text-decoration: none;
+  line-height: 17px;
+  position: relative;
+  top: 4px;
+  margin-right: 8px;
+}
+

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}All Pending Edits{% endblock %}
+
+{% block pageheader %}
+<h1 class="front-page">
+  <span class="update-title">
+    Pending Edits for 
+  </span>
+  All Municipalities
+</h1>
+{% endblock pageheader %}
+
+{% block body %}
+
+{% for project in pending_projects %}
+  {% include "_moderated_project.html" with project=project %}
+{% endfor %}
+
+{% endblock body %}

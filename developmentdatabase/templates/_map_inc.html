@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block style %}
+{{ block.super }}
+    <!-- leaflet -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.css" />
+    <!--[if lte IE 8]><link rel="stylesheet" href="{{ STATIC_URL }}lib/leaflet/leaflet.ie.css" /><![endif]-->
+{% endblock %}
+
+{% block javascript %}
+{{ block.super }}
+    <script src="{{ STATIC_URL }}lib/leaflet/leaflet.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}lib/leaflet/plugins/shramov/layer/tile/Bing.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}lib/mapc/layers.js" type="text/javascript"></script>
+
+    <!-- map popup template -->
+    <script type="text/template" class="map-popup">
+      <h5><a href="<%= url %>"><%= ddname %></a></h5>
+    </script>
+{% endblock %}

@@ -1,17 +1,28 @@
-# Development Database
+# MAPC's Development Database
 
-Project team: Tim Reardon, Meghna Dutta, Rob Goodspeed, Christian Spanring.
+[![Build Status](https://travis-ci.org/MAPC/developmentdatabase.svg)](https://travis-ci.org/MAPC/developmentdatabase) [![Code Climate](https://codeclimate.com/github/MAPC/developmentdatabase/badges/gpa.svg)](https://codeclimate.com/github/MAPC/developmentdatabase) [![Test Coverage](https://codeclimate.com/github/MAPC/developmentdatabase/badges/coverage.svg)](https://codeclimate.com/github/MAPC/developmentdatabase)
 
-## Scope
+A database that tracks development projects throughout Metro Boston.
 
-* Collect information about housing and economic developments in the MAPC region
-* Base for MAPC Population and Employment Projections Updates
-* Related MetroFuture Strategy: [2.b MAPC should develop a regional development database](http://metrofuture.org/recommendation/2a-2)
+Features:
 
-## Installation
+* Project search
+* Project forms
+* Tastypie Data API
+* Comments
 
-	$ pip install -r requirements.txt
+MAPC Project team: Tim Reardon, Meghna Dutta, Rob Goodspeed, Christian Spanring, Matt Cloyd
+
+## Dependencies
+
+A PostgreSQL/PostGIS database is required for data storage and GeoDjango functionality. To create one, execute:
+
+    $ createdb developmentdatabase -T template_postgis
+
+Python dependencies can be installed through the pip requirements file:
+
+    $ pip install -r requirements.txt
 
 ---
 
-Copyright 2012 [MAPC](http://mapc.org)
+Copyright 2013 MAPC

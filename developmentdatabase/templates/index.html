@@ -1,0 +1,26 @@
+{% extends "_map_inc.html" %}
+
+{% block title %}Welcome!{% endblock %}
+
+{% block body %}
+
+<h1 class="front-page">Welcome to MAPC's Development Database!</h1>
+
+<div class="well" id="map_canvas"></div>
+
+<p class="lead">
+In order to better track the region's growth and forecast its future, MAPC Data Services has initiated a Development Database for the 101 cities and towns of Metro Boston.  This database includes information on {{ project_count }} development projects recently completed, in construction, or planned. Much of the data comes municipal planning staff, augmented by MAPC research.</p>
+<p class="lead">This database provides a unique insight into development patterns in the region over the past ten years, and can also be used to support population and employment projections for the region.  The database was a key input into the MetroFuture 2035 Projections Update prepared by MAPC to support the Regional Transportation Plan currently under development by the Boston MPO. MAPC will also be using the development database to create growth projections for the I-495 Development Compact project and other local and regional planning efforts.</p>
+{% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+$( document ).ready(function() {
+    // initialize map and load all projects
+    dd.initMap( { showLayerControl: false });
+    dd.searchProjects();
+});
+</script>
+{% endblock %}

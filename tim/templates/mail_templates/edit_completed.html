@@ -1,0 +1,24 @@
+{% extends "mail_base.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% blocktrans with action_taken=action_taken %}
+    <h1>
+      Your Edit Has Been {{ action_taken }}.
+    </h1>
+  {% endblocktrans %}
+{% endblock %}
+
+{% block body %}
+
+  {% blocktrans with domain=domain project_name=project_name project_id=project_id action_taken=action_taken was_updated=was_updated %}
+    <p>
+      Your edits to <a href="{{ domain }}/projects/detail/{{ project_id }}">{{ project_name }}</a> were {{ action_taken }}.
+    </p>
+
+    <p>
+      <a href="{{ domain }}/projects/detail/{{ project_id }}">View the {{ was_updated }}project.</a>
+    </p>
+  {% endblocktrans %}
+
+{% endblock body %}

@@ -1,0 +1,161 @@
+{% extends "_map_inc.html" %}
+
+{% block title %}Explore Projects{% endblock %}
+
+{% block pageheader %}
+<h1 class="front-page">{% if project.ddname.value %}<span class="update-title">Editing Project</span> {{ project.ddname.value }}{% else %}Add a new development project{% endif %}</h1>
+{% endblock pageheader %}
+
+
+{% block body %}
+    <section>
+
+        <form class="projectdata form-horizontal" method="POST">
+        
+        {% csrf_token %}
+
+
+        <div class="row">
+                <div class="span5">
+
+                        {% include "development/_property_form.html" with property=project.ddname label="Project Name" tooltip="If the project is not named please use the street address, such as '2 Adams Street'" %}
+                        {% include "development/_property_form.html" with property=project.description label="Project Description" tooltip="Brief summary of the project, 200 words maximum" %}
+                        {% include "development/_property_form.html" with property=project.projecttype label="Project Type" %}
+                        {% include "development/_property_form.html" with property=project.projecttype_detail label="Project Type Details" tooltip="Clarify project type, if necessary." %}
+                        {% include "development/_property_form.html" with property=project.status label="Status" tooltip="Projected: Known opportunity or planning priority but no specific proposal or developer; Planning/Permitting: Specific proposal &amp; proponent, building permit not yet issued; Construction: Commencement of site work to receipt of final occupancy permit; Completed: Development is occupied or available for occupancy; Cancelled: Developer/Owner has indicated project is cancelled; Stalled: Project is in planning/permitting or construction phase but is not actively moving forward" %}
+                        {% include "development/_property_form.html" with property=project.complyr label="Year of Completion" %}
+                        {% include "development/_property_form.html" with property=project.prjacrs label="Project Site Area" %}
+                        {% include "development/_property_form.html" with property=project.stalled label="Stalled" tooltip="Check here if project is in Planning/Permitting or Construction phase but not actively moving forward" %}
+                        {% include "development/_property_form.html" with property=project.phased label="Phased" tooltip="Indicate phase and enter data only for this phase." %}
+                        {% include "development/_property_form.html" with property=project.url label="Project Website" tooltip="Main project website (if applicable)" %}
+                        {% include "development/_property_form.html" with property=project.url_add label="Additional Website" tooltip="Other website, especially if used to substantiate project data (additional URLS can be added in the comment field.)" %}
+                </div>
+                <div class="span7">
+                        <div class="well" id="map_canvas"></div>
+                        <div id="map-caption">
+                            <button id="center-marker" class="btn btn-mini pull-right">center marker</button>
+                            <p>Drag and drop the marker to locate the project.</p>
+                                
+                        </div>
+                        {{ project.location }}
+                </div>
+        </div>
+
+        <div class="row">
+                <div class="span5">
+
+                        <h3>Housing</h3>
+
+                        {% include "development/_property_form.html" with property=project.tothu label="Total Housing Units" tooltip="Enter the total number of housing units, not including hotel rooms." %}
+
+                        <div class="housing collapse">
+
+                        {% include "development/_property_form.html" with property=project.singfamhu label="Detached Single Family" tooltip="Units in single family homes." %}
+                        {% include "development/_property_form.html" with property=project.twnhsmmult label="Townhouse and Small Multifamily" tooltip="Units in townhouses, attached single family, or small multifamily buildings (2 - 4 units)" %}
+                        {% include "development/_property_form.html" with property=project.lgmultifam label="Large Multifamily" tooltip="Units in mixed use buildings or buildings with 5 or more residential units" %}
+                        {% include "development/_property_form.html" with property=project.ovr55 label="Age Restricted" tooltip="Percent of units which are deed restricted for residents older than a certain age" %}
+                        {% include "development/_property_form_pct.html" with property=project.pctaffall label="Affordable Units" tooltip="Percent of subsidized or deed-restricted affordable units." %}
+                        {% include "development/_property_form.html" with property=project.affordable_comment label="Affordability Comments" tooltip="Provide additional information about the level(s) of affordability" %}
+                        {% include "development/_property_form.html" with property=project.gqpop label="Group Quarters" tooltip="Number of beds in a Dormitory, Nursing Home, Assisted Living, or other group quarters situation." %}
+
+                        </div>
+
+                        <div class="more-info"><a href="javascript:void(0)" data-toggle="collapse" data-target="div.housing">Toggle additional Housing fields.</a></div>
+
+
+                        <h3>Nonresidential Development</h3>
+
+                        {% include "development/_property_form.html" with property=project.commsf label="Total Nonresidential Development" %}
+
+                        <div class="non-res collapse">
+
+                        {% include "development/_property_form_pct.html" with property=project.retpct label="Retail or Restaurant" %}
+                        {% include "development/_property_form_pct.html" with property=project.ofcmdpct label="Office or Medical" %}
+                        {% include "development/_property_form_pct.html" with property=project.indmfpct label="Manufacturing or Industrial" %}
+                        {% include "development/_property_form_pct.html" with property=project.whspct label="Warehouse or Trucking" %}
+                        {% include "development/_property_form_pct.html" with property=project.rndpct label="Lab or R&amp;D" %}
+                        {% include "development/_property_form_pct.html" with property=project.edinstpct label="Educational or Institution" %}
+                        {% include "development/_property_form_pct.html" with property=project.othpct label="Other" %}
+                        {% include "development/_property_form.html" with property=project.otheremprat2 label="Estimated Sq Ft / Employee for Other Building Usage" tooltip="If you filled in Other(%) above, how many square feet per employee do you estimate?" %}
+                        {% include "development/_property_form.html" with property=project.hotelrms label="Hotel rooms" %}
+                        {% include "development/_property_form.html" with property=project.rptdemp label="Reported Employment" %}
+
+                        </div>
+
+                        <div class="more-info"><a href="javascript:void(0)" data-toggle="collapse" data-target="div.non-res">Toggle additional Nonresidential Development fields.</a></div>
+
+
+                        <div class="project-attr collapse">
+
+                        <h3>Project Attributes</h3>
+
+                        {% include "development/_property_form.html" with property=project.parking_spaces label="Parking Spaces" tooltip="Total number of on-site parking spaces in lots or structures." %}
+                        {% include "development/_property_form.html" with property=project.rdv label="Redevelopment" tooltip="Check if the project is on a previously developed site" %}
+                        {% include "development/_property_form.html" with property=project.mxduse label="Mixed use project" tooltip="Select if the project contains two or more different uses, such as residential and commercial, either in the same building or on the same site." %}
+                        {% include "development/_property_form.html" with property=project.as_of_right label="As-of-Right" tooltip="Indicate if the project required no special permit or variance" %}
+                        {% include "development/_property_form.html" with property=project.ch40 label="Zoning Tool" tooltip="Select if the project was approved under these three zoning tools." %}
+                        {% include "development/_property_form.html" with property=project.clustosrd label="Cluster Subdivision" tooltip="Cluster subdivision or Open Space Residential Development" %}
+                        {% include "development/_property_form.html" with property=project.total_cost label="Total project cost" tooltip="Estimated Construction Cost" %}
+
+                        </div>
+
+                        <div class="more-info"><a href="javascript:void(0)" data-toggle="collapse" data-target="div.project-attr">Toggle additional Project Attributes.</a></div>
+
+
+                        <div class="dev-team collapse">
+
+                        <h3>Development Team</h3>
+
+                        {% include "development/_property_form.html" with property=project.dev_name label="Lead Developer" %}
+                        {# include "development/_property_form.html" with property=project.[NEW TXT] label="Lead Architect" #}
+                        {# include "development/_property_form.html" with property=project.[NEW TXT] label="Other Development Team" #}
+                        {# include "development/_property_form.html" with property=project.[NEW TXT] label="Other Development Team" #}
+                        {# include "development/_property_form.html" with property=project.[NEW TXT] label="Leasing/Sales Agent" #}
+
+                        </div>
+
+                        <div class="more-info"><a href="javascript:void(0)" data-toggle="collapse" data-target="div.dev-team">Toggle additional Development Team fields.</a></div>
+                </div>
+        </div>
+
+        <div class="row">
+                <div class="span12">
+                        <div class="form-info"><span class="required">*</span> indicates required fields</div>
+                </div>
+        </div>
+
+        <div class="row">
+                <div class="span12">
+                        <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save Project</button>
+                        </div>
+                </div>
+        </div>
+
+        </form>
+
+    </section>
+{% endblock %}
+
+{% block style %}
+{{ block.super }}
+<style type="text/css">
+        #map_canvas {
+            height: 300px;
+        }
+</style>
+{% endblock %}
+
+
+{% block javascript %}
+{{ block.super }}
+<script src="{{ STATIC_URL }}lib/jquery/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+$( document ).ready(function() {
+
+    // initialize map
+    dd.initUpdatePage();
+        
+});
+</script>
+{% endblock %}

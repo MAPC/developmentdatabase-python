@@ -1,0 +1,7 @@
+language: python
+notifications:
+  slack:
+    secure: aObmYdbc5gcPCHcXBdSIgiVNlugePt7pekg3AQUuL1LJcZCBSCV1Q+no3f1wGwI90fTJyRVJ8CMVoqcfnWyS5bFEv4p25BYuwbgsslrkh7sULN696Nyh9nYLovtuE1qoAKesKiA78ex2rTQnLJbQMcnorqe8I5o86fvJb9UmKpI=
+addons:
+  code_climate:
+    repo_token: 3b748ec1f9d19b3d402b93431ec361aa4109e7f999614cd7faa97c50487863a1

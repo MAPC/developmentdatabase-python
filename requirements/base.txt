@@ -1,0 +1,22 @@
+Django==1.4.1
+PIL==1.1.7
+Pygments==1.6
+South==0.7.6
+dj-database-url==0.2.2
+-e git://github.com/wnh/dj-static.git@b2405dafb57e05bcccf62c855b3404045463a76b#egg=dj-static-fix14
+-e git://github.com/cspanring/django-bootstrap.git@72da4df2c1e6779a815bb420dc151d827de6be01#egg=bootstrap-master
+django-grappelli==2.4.2
+django-guardian==1.0.4
+django-model-utils==1.3.0
+django-reversion==1.6.3
+-e git+https://github.com/toastdriven/django-tastypie.git@9819db55ff1fa409c7bc9d1fefce9033f156eb32#egg=django_tastypie-dev
+django-userena==1.1.2
+easy-thumbnails==1.1
+gunicorn==18.0
+mimeparse==0.1.3
+psycopg2==2.4.5
+python-dateutil==2.1
+pytz==2012h
+requests==0.14.2
+six==1.2.0
+wsgiref==0.1.2
